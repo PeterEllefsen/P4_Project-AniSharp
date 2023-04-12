@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:/Users/pelle/RiderProjects/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
+// Generated from C:/Users/pelle/OneDrive/Skrivebord/Kode/GitHub/P4-Project/P4-Project/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -291,16 +291,6 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitParameter([NotNull] AnimationLanguageRulesParser.ParameterContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecls"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterFuncDecls([NotNull] AnimationLanguageRulesParser.FuncDeclsContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecls"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitFuncDecls([NotNull] AnimationLanguageRulesParser.FuncDeclsContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -391,6 +381,16 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitCondition([NotNull] AnimationLanguageRulesParser.ConditionContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.logicOpp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLogicOpp([NotNull] AnimationLanguageRulesParser.LogicOppContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.logicOpp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLogicOpp([NotNull] AnimationLanguageRulesParser.LogicOppContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.comparator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -410,6 +410,26 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitConditional([NotNull] AnimationLanguageRulesParser.ConditionalContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.elseif"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterElseif([NotNull] AnimationLanguageRulesParser.ElseifContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.elseif"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitElseif([NotNull] AnimationLanguageRulesParser.ElseifContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.else"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterElse([NotNull] AnimationLanguageRulesParser.ElseContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.else"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitElse([NotNull] AnimationLanguageRulesParser.ElseContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.sequences"/>.
 	/// </summary>
@@ -500,16 +520,6 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitTimelineBlock([NotNull] AnimationLanguageRulesParser.TimelineBlockContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDefs"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterFrameDefs([NotNull] AnimationLanguageRulesParser.FrameDefsContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDefs"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitFrameDefs([NotNull] AnimationLanguageRulesParser.FrameDefsContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDef"/>.
 	/// </summary>

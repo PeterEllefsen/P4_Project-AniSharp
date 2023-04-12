@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:/Users/pelle/RiderProjects/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
+// Generated from C:/Users/pelle/OneDrive/Skrivebord/Kode/GitHub/P4-Project/P4-Project/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -188,12 +188,6 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitParameter([NotNull] AnimationLanguageRulesParser.ParameterContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecls"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitFuncDecls([NotNull] AnimationLanguageRulesParser.FuncDeclsContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -248,6 +242,12 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitCondition([NotNull] AnimationLanguageRulesParser.ConditionContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.logicOpp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLogicOpp([NotNull] AnimationLanguageRulesParser.LogicOppContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.comparator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -259,6 +259,18 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitConditional([NotNull] AnimationLanguageRulesParser.ConditionalContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.elseif"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitElseif([NotNull] AnimationLanguageRulesParser.ElseifContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.else"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitElse([NotNull] AnimationLanguageRulesParser.ElseContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.sequences"/>.
 	/// </summary>
@@ -313,12 +325,6 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitTimelineBlock([NotNull] AnimationLanguageRulesParser.TimelineBlockContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDefs"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitFrameDefs([NotNull] AnimationLanguageRulesParser.FrameDefsContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDef"/>.
 	/// </summary>

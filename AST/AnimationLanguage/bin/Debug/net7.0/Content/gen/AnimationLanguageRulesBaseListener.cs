@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:/Users/pelle/RiderProjects/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
+// Generated from C:/Users/pelle/OneDrive/Skrivebord/Kode/GitHub/P4-Project/P4-Project/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -348,18 +348,6 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitParameter([NotNull] AnimationLanguageRulesParser.ParameterContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecls"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFuncDecls([NotNull] AnimationLanguageRulesParser.FuncDeclsContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecls"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFuncDecls([NotNull] AnimationLanguageRulesParser.FuncDeclsContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -468,6 +456,18 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitCondition([NotNull] AnimationLanguageRulesParser.ConditionContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.logicOpp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLogicOpp([NotNull] AnimationLanguageRulesParser.LogicOppContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.logicOpp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLogicOpp([NotNull] AnimationLanguageRulesParser.LogicOppContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.comparator"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -491,6 +491,30 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitConditional([NotNull] AnimationLanguageRulesParser.ConditionalContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.elseif"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterElseif([NotNull] AnimationLanguageRulesParser.ElseifContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.elseif"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitElseif([NotNull] AnimationLanguageRulesParser.ElseifContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.else"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterElse([NotNull] AnimationLanguageRulesParser.ElseContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.else"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitElse([NotNull] AnimationLanguageRulesParser.ElseContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.sequences"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -599,18 +623,6 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitTimelineBlock([NotNull] AnimationLanguageRulesParser.TimelineBlockContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDefs"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFrameDefs([NotNull] AnimationLanguageRulesParser.FrameDefsContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDefs"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFrameDefs([NotNull] AnimationLanguageRulesParser.FrameDefsContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDef"/>.
 	/// <para>The default implementation does nothing.</para>

@@ -7,6 +7,7 @@ TIMELINE: 'timeline';
 FOR: 'for';
 WHILE: 'while';
 IF: 'if';
+ELSE: 'else';
 SEQ: 'seq';
 VOID: 'void';
 GROUP: 'group';
@@ -39,6 +40,10 @@ NE: '!=';
 EQUAL: '=';
 PLUSEQUAL: '+=';
 MINUSEQUAL: '-=';
+
+// Logical Opps
+AND: 'and';
+OR: 'or';
 
 // Unary ops
 INC: '++';
@@ -76,11 +81,12 @@ STRING: QUOTE (LETTER | DIGIT | SPECIAL_CHAR | WS_CHAR)* QUOTE;
 WS: [ \t\r\n]+ -> skip;
 COMMENT: '//' ~[\r\n]* -> skip;
 
-
+//-------------------------------------------------------------------------------------------------------------------//
 // Rules
 s: program EOF;
 
-program: (SETUP setupBlock)? (PROTOTYPE LBRACE prototypes RBRACE funcDecls)? sequences? TIMELINE timelineBlock?;
+program: (PROTOTYPE LBRACE prototypes RBRACE)? (SETUP setupBlock)? funcDecl* sequences? TIMELINE timelineBlock?;
+
 
 setupBlock: grouping SEMICOLON;
 
@@ -98,7 +104,7 @@ assignment: type? IDENTIFIER assOps (expression | IDENTIFIER) SEMICOLON?
             | unary IDENTIFIER SEMICOLON?
             | IDENTIFIER grouping SEMICOLON
             ;
-unary: (DEC | INC);
+unary: DEC | INC;
 
 assOps: (EQUAL | PLUSEQUAL | MINUSEQUAL);
 
@@ -122,7 +128,7 @@ boolean: TRUE | FALSE;
 
 operator: PLUS | MINUS | MULTIPLY | DIVIDE | MODULO;
 
-funcCall: IDENTIFIER LPAREN call_parameters RPAREN;
+funcCall: IDENTIFIER LPAREN call_parameters? RPAREN;
 
 shapeinit: (POLYGON | CIRCLE) LPAREN argName arg (COMMA argName arg)* RPAREN; 
 
@@ -139,19 +145,15 @@ call_parameter: (argName arg | arg);
 
 prototypes: prototype (COMMA prototypes)?;
 
-prototype: (type | VOID | GROUP) FUNCTION IDENTIFIER LPAREN parameters RPAREN SEMICOLON;
+prototype: (type | VOID | GROUP) FUNCTION IDENTIFIER LPAREN parameters? RPAREN SEMICOLON;
 
 parameters: parameter (COMMA parameters)?
            | parameter
-           | /* epsilon */
            ;
 
 parameter: type IDENTIFIER (COMMA parameters)?
          | type IDENTIFIER
-         | /* epsilon */
          ;
-
-funcDecls: funcDecl*;
 
 funcDecl: (type | VOID | GROUP) FUNCTION IDENTIFIER LPAREN parameters RPAREN block;
 
@@ -159,12 +161,11 @@ block: LBRACE statements return? RBRACE;
 
 statements: statement  statements
           | statement 
-          | /* epsilon */
           ;
 
-statement: assignment | GROUP IDENTIFIER grouping | loop | conditional;
+statement: assignment | IDENTIFIER grouping | loop | conditional;
 
-return: RETURN IDENTIFIER SEMICOLON
+return: RETURN expression SEMICOLON
         | RETURN grouping SEMICOLON
         ;
 
@@ -174,15 +175,21 @@ for_loop: FOR LPAREN assignment condition SEMICOLON assignment RPAREN block;
 
 while_loop: WHILE LPAREN condition RPAREN block;
 
-condition: expression comparator expression ;
+condition: expression (comparator | logicOpp) expression ((comparator | logicOpp) expression)*  ;
+
+logicOpp: AND | OR;
 
 comparator: LT | GT | LE | GE | EQ | NE;
 
-conditional: IF LPAREN condition RPAREN block;
+conditional: IF LPAREN condition RPAREN block (elseif)* (else)?;
+
+elseif: ELSE IF LPAREN condition RPAREN block;
+
+else: ELSE block;
 
 sequences: sequence sequences?;
 
-sequence: SEQ IDENTIFIER LPAREN parameters RPAREN seqBlock;
+sequence: SEQ IDENTIFIER LPAREN parameters? RPAREN seqBlock;
 
 seqBlock: LBRACE seqBlockParts RBRACE;
 
@@ -205,8 +212,6 @@ transition: ARROW LPAREN call_parameters RPAREN;
 
 command: ARROW IDENTIFIER LPAREN call_parameters? RPAREN;
 
-timelineBlock: LBRACE frameDefs RBRACE;
+timelineBlock: LBRACE frameDef* RBRACE;
 
-frameDefs: frameDef* ;
-
-frameDef: FRAME INTEGER COLON IDENTIFIER LPAREN parameters RPAREN SEMICOLON ;
+frameDef: FRAME INTEGER COLON IDENTIFIER LPAREN parameters? RPAREN SEMICOLON ;

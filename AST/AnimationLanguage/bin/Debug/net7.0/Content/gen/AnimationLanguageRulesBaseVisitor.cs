@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:/Users/pelle/RiderProjects/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
+// Generated from C:/Users/pelle/OneDrive/Skrivebord/Kode/GitHub/P4-Project/P4-Project/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -295,16 +295,6 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// <return>The visitor result.</return>
 	public virtual Result VisitParameter([NotNull] AnimationLanguageRulesParser.ParameterContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecls"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitFuncDecls([NotNull] AnimationLanguageRulesParser.FuncDeclsContext context) { return VisitChildren(context); }
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.funcDecl"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -395,6 +385,16 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// <return>The visitor result.</return>
 	public virtual Result VisitCondition([NotNull] AnimationLanguageRulesParser.ConditionContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.logicOpp"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitLogicOpp([NotNull] AnimationLanguageRulesParser.LogicOppContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.comparator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -414,6 +414,26 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitConditional([NotNull] AnimationLanguageRulesParser.ConditionalContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.elseif"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitElseif([NotNull] AnimationLanguageRulesParser.ElseifContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.else"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitElse([NotNull] AnimationLanguageRulesParser.ElseContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.sequences"/>.
 	/// <para>
@@ -504,16 +524,6 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitTimelineBlock([NotNull] AnimationLanguageRulesParser.TimelineBlockContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDefs"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitFrameDefs([NotNull] AnimationLanguageRulesParser.FrameDefsContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.frameDef"/>.
 	/// <para>
