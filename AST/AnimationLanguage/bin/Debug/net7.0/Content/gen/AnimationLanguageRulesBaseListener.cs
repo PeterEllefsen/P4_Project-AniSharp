@@ -180,17 +180,131 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitType([NotNull] AnimationLanguageRulesParser.TypeContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// Enter a parse tree produced by the <c>binaryExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpression([NotNull] AnimationLanguageRulesParser.ExpressionContext context) { }
+	public virtual void EnterBinaryExpression([NotNull] AnimationLanguageRulesParser.BinaryExpressionContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// Exit a parse tree produced by the <c>binaryExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpression([NotNull] AnimationLanguageRulesParser.ExpressionContext context) { }
+	public virtual void ExitBinaryExpression([NotNull] AnimationLanguageRulesParser.BinaryExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>stringExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterStringExpression([NotNull] AnimationLanguageRulesParser.StringExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>stringExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitStringExpression([NotNull] AnimationLanguageRulesParser.StringExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>identifierExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterIdentifierExpression([NotNull] AnimationLanguageRulesParser.IdentifierExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>identifierExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitIdentifierExpression([NotNull] AnimationLanguageRulesParser.IdentifierExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>functionCallExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFunctionCallExpression([NotNull] AnimationLanguageRulesParser.FunctionCallExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>functionCallExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFunctionCallExpression([NotNull] AnimationLanguageRulesParser.FunctionCallExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>integerExression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterIntegerExression([NotNull] AnimationLanguageRulesParser.IntegerExressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>integerExression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitIntegerExression([NotNull] AnimationLanguageRulesParser.IntegerExressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>shapeInitExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterShapeInitExpression([NotNull] AnimationLanguageRulesParser.ShapeInitExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>shapeInitExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitShapeInitExpression([NotNull] AnimationLanguageRulesParser.ShapeInitExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>booleanExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBooleanExpression([NotNull] AnimationLanguageRulesParser.BooleanExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>booleanExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBooleanExpression([NotNull] AnimationLanguageRulesParser.BooleanExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>termExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterTermExpression([NotNull] AnimationLanguageRulesParser.TermExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>termExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitTermExpression([NotNull] AnimationLanguageRulesParser.TermExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>floatExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFloatExpression([NotNull] AnimationLanguageRulesParser.FloatExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>floatExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFloatExpression([NotNull] AnimationLanguageRulesParser.FloatExpressionContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.boolean"/>.
 	/// <para>The default implementation does nothing.</para>

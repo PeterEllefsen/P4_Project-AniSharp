@@ -15,5 +15,3 @@ var animationLanguageParser = new AnimationLanguageRulesParser(commonTokenStream
 var animationLanguageContext = animationLanguageParser.program();
 var visitor = new AnimationVisitor();        
 visitor.Visit(animationLanguageContext);
-
-var i = 1;

@@ -1035,23 +1035,18 @@ public partial class AnimationLanguageRulesParser : Parser {
 	}
 
 	public partial class ExpressionContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode INTEGER() { return GetToken(AnimationLanguageRulesParser.INTEGER, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUS() { return GetToken(AnimationLanguageRulesParser.MINUS, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FLOAT() { return GetToken(AnimationLanguageRulesParser.FLOAT, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING() { return GetToken(AnimationLanguageRulesParser.STRING, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public BooleanContext boolean() {
-			return GetRuleContext<BooleanContext>(0);
+		public ExpressionContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(AnimationLanguageRulesParser.IDENTIFIER, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public FuncCallContext funcCall() {
-			return GetRuleContext<FuncCallContext>(0);
+		public override int RuleIndex { get { return RULE_expression; } }
+	 
+		public ExpressionContext() { }
+		public virtual void CopyFrom(ExpressionContext context) {
+			base.CopyFrom(context);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ShapeinitContext shapeinit() {
-			return GetRuleContext<ShapeinitContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public TermContext term() {
-			return GetRuleContext<TermContext>(0);
-		}
+	}
+	public partial class BinaryExpressionContext : ExpressionContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext[] expression() {
 			return GetRuleContexts<ExpressionContext>();
 		}
@@ -1061,25 +1056,191 @@ public partial class AnimationLanguageRulesParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public OperatorContext @operator() {
 			return GetRuleContext<OperatorContext>(0);
 		}
-		public ExpressionContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_expression; } }
+		public BinaryExpressionContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
 			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
-			if (typedListener != null) typedListener.EnterExpression(this);
+			if (typedListener != null) typedListener.EnterBinaryExpression(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
 			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
-			if (typedListener != null) typedListener.ExitExpression(this);
+			if (typedListener != null) typedListener.ExitBinaryExpression(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpression(this);
+			if (typedVisitor != null) return typedVisitor.VisitBinaryExpression(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class StringExpressionContext : ExpressionContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING() { return GetToken(AnimationLanguageRulesParser.STRING, 0); }
+		public StringExpressionContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.EnterStringExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.ExitStringExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStringExpression(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class IdentifierExpressionContext : ExpressionContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(AnimationLanguageRulesParser.IDENTIFIER, 0); }
+		public IdentifierExpressionContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.EnterIdentifierExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.ExitIdentifierExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIdentifierExpression(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class FunctionCallExpressionContext : ExpressionContext {
+		[System.Diagnostics.DebuggerNonUserCode] public FuncCallContext funcCall() {
+			return GetRuleContext<FuncCallContext>(0);
+		}
+		public FunctionCallExpressionContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.EnterFunctionCallExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.ExitFunctionCallExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFunctionCallExpression(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class IntegerExressionContext : ExpressionContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode INTEGER() { return GetToken(AnimationLanguageRulesParser.INTEGER, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUS() { return GetToken(AnimationLanguageRulesParser.MINUS, 0); }
+		public IntegerExressionContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.EnterIntegerExression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.ExitIntegerExression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIntegerExression(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class ShapeInitExpressionContext : ExpressionContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ShapeinitContext shapeinit() {
+			return GetRuleContext<ShapeinitContext>(0);
+		}
+		public ShapeInitExpressionContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.EnterShapeInitExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.ExitShapeInitExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitShapeInitExpression(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class BooleanExpressionContext : ExpressionContext {
+		[System.Diagnostics.DebuggerNonUserCode] public BooleanContext boolean() {
+			return GetRuleContext<BooleanContext>(0);
+		}
+		public BooleanExpressionContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.EnterBooleanExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.ExitBooleanExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBooleanExpression(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class TermExpressionContext : ExpressionContext {
+		[System.Diagnostics.DebuggerNonUserCode] public TermContext term() {
+			return GetRuleContext<TermContext>(0);
+		}
+		public TermExpressionContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.EnterTermExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.ExitTermExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTermExpression(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class FloatExpressionContext : ExpressionContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FLOAT() { return GetToken(AnimationLanguageRulesParser.FLOAT, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUS() { return GetToken(AnimationLanguageRulesParser.MINUS, 0); }
+		public FloatExpressionContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.EnterFloatExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.ExitFloatExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFloatExpression(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1106,6 +1267,10 @@ public partial class AnimationLanguageRulesParser : Parser {
 			switch ( Interpreter.AdaptivePredict(TokenStream,17,Context) ) {
 			case 1:
 				{
+				_localctx = new IntegerExressionContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
+
 				State = 196;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
@@ -1122,6 +1287,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 				break;
 			case 2:
 				{
+				_localctx = new FloatExpressionContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
 				State = 200;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
@@ -1138,36 +1306,54 @@ public partial class AnimationLanguageRulesParser : Parser {
 				break;
 			case 3:
 				{
+				_localctx = new StringExpressionContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
 				State = 203;
 				Match(STRING);
 				}
 				break;
 			case 4:
 				{
+				_localctx = new BooleanExpressionContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
 				State = 204;
 				boolean();
 				}
 				break;
 			case 5:
 				{
+				_localctx = new IdentifierExpressionContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
 				State = 205;
 				Match(IDENTIFIER);
 				}
 				break;
 			case 6:
 				{
+				_localctx = new FunctionCallExpressionContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
 				State = 206;
 				funcCall();
 				}
 				break;
 			case 7:
 				{
+				_localctx = new ShapeInitExpressionContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
 				State = 207;
 				shapeinit();
 				}
 				break;
 			case 8:
 				{
+				_localctx = new TermExpressionContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
 				State = 208;
 				term();
 				}
@@ -1184,7 +1370,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 					_prevctx = _localctx;
 					{
 					{
-					_localctx = new ExpressionContext(_parentctx, _parentState);
+					_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 					PushNewRecursionContext(_localctx, _startState, RULE_expression);
 					State = 211;
 					if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");

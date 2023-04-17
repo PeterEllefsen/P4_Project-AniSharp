@@ -112,15 +112,15 @@ term: LPAREN (expression | IDENTIFIER | term)  RPAREN;
 
 type: INT | FLOAT_TYPE | STRING_TYPE | BOOL | CIRCLE | POLYGON;
 
-expression: MINUS? INTEGER
-          | MINUS? FLOAT
-          | STRING
-          | boolean
-          | expression operator expression
-          | IDENTIFIER
-          | funcCall
-          | shapeinit
-          | term
+expression: MINUS? INTEGER                          #integerExression
+          | MINUS? FLOAT                            #floatExpression
+          | STRING                                  #stringExpression
+          | boolean                                 #booleanExpression
+          | expression operator expression          #binaryExpression
+          | IDENTIFIER                              #identifierExpression
+          | funcCall                                #functionCallExpression
+          | shapeinit                               #shapeInitExpression
+          | term                                    #termExpression
           ;
 
 

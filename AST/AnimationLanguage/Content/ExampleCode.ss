@@ -1,7 +1,3 @@
-prototypes {
-    group function ColorBasedOnNumber(int number);
-}
-
 setup [
     sceneWidth = 500,
     sceneHeight = 300,
@@ -9,6 +5,10 @@ setup [
     backgroundColor = rgb(255, 255, 255)
 
 ];
+
+prototypes {
+    group function ColorBasedOnNumber(int number);
+}
 
 group function ColorBasedOnNumber(int number) {
     
