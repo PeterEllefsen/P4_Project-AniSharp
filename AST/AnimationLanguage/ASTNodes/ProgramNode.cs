@@ -13,14 +13,14 @@ public class ProgramNode : IASTNode
     public SetupNode? Setup { get; set; } //Represents the setup block of the program.
     public IList<FunctionDeclarationNode> FunctionDeclarations { get; } = new List<FunctionDeclarationNode>(); //Represents the function declarations of the program.
     public IList<SequenceNode> Sequences { get; } = new List<SequenceNode>(); //Represents the sequences of the program.
-    public TimelineNode? Timeline { get; set; } //Represents the timeline of the program.
+    public TimelineBlockNode? Timeline { get; set; } //Represents the timeline of the program.
 
     public ProgramNode(
         IEnumerable<PrototypeNode> prototypes,
         SetupNode? setup,
         IEnumerable<FunctionDeclarationNode> functionDeclarations,
         IEnumerable<SequenceNode> sequences,
-        TimelineNode? timeline,
+        TimelineBlockNode? timeline,
         SourceLocation sourceLocation)
     {
         Prototypes = new List<PrototypeNode>(prototypes); //Add all prototypes to the list.

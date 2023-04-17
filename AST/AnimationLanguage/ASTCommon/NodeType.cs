@@ -33,5 +33,5 @@ public enum NodeType //This enum is used to determine what type of node is being
     WhileLoop,
     Return,
     Sequence,
-    Timeline,
+    TimelineBlock,
 }
