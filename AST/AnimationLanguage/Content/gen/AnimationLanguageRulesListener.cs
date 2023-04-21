@@ -199,17 +199,17 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFunctionCallExpression([NotNull] AnimationLanguageRulesParser.FunctionCallExpressionContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>integerExression</c>
+	/// Enter a parse tree produced by the <c>integerExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterIntegerExression([NotNull] AnimationLanguageRulesParser.IntegerExressionContext context);
+	void EnterIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>integerExression</c>
+	/// Exit a parse tree produced by the <c>integerExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitIntegerExression([NotNull] AnimationLanguageRulesParser.IntegerExressionContext context);
+	void ExitIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>shapeInitExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.

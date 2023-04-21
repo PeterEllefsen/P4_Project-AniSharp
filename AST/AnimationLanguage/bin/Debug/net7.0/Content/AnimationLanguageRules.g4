@@ -155,7 +155,7 @@ parameter: type IDENTIFIER (COMMA parameters)?
          | type IDENTIFIER
          ;
 
-funcDecl: (type | VOID | GROUP) FUNCTION IDENTIFIER LPAREN parameters RPAREN block;
+funcDecl: (type | VOID | GROUP) FUNCTION IDENTIFIER LPAREN (parameters)? RPAREN block;
 
 block: LBRACE statements return? RBRACE;
 

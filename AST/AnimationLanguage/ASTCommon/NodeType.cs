@@ -19,7 +19,7 @@ public enum NodeType //This enum is used to determine what type of node is being
     Prototype,
     Parameter,
     Grouping,
-    GroupingElement,
+    GroupingElements,
     Setup,
     KeyValuePair,
     Type,
@@ -34,4 +34,7 @@ public enum NodeType //This enum is used to determine what type of node is being
     Return,
     Sequence,
     TimelineBlock,
+    Animation,
+    Command,
+    Transition,
 }

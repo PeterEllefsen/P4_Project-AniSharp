@@ -8,13 +8,13 @@ public class SetupNode : IASTNode
     public NodeType NodeType => NodeType.Setup;
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
 
-    public GroupingNode Grouping { get; set; } //The grouping node of the setup node.
+    public GroupingElementsNode GroupingElements { get; set; } //The grouping elements of the setup node.
 
-    public SetupNode(GroupingNode grouping, SourceLocation sourceLocation)
+    public SetupNode(GroupingElementsNode groupingElements, SourceLocation sourceLocation)
     {
-        Grouping = grouping; 
+        GroupingElements = groupingElements; 
         SourceLocation = sourceLocation;
 
-        Children.Add(grouping);
+        Children.Add(groupingElements);
     }
 }
