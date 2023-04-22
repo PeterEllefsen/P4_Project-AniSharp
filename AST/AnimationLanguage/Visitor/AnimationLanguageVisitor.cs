@@ -3,7 +3,7 @@ using AnimationLanguage.ASTNodes;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<object>
+public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNode>
 {
     public override IASTNode VisitProgram(AnimationLanguageRulesParser.ProgramContext context) // This method is called when the parser visits the program node.
     {
@@ -77,8 +77,8 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<object
             }
             else if (item is AnimationLanguageRulesParser.ExpressionContext expressionContext) // If the visited item is an expression, visit it and add the result to the list of expressions.
             {
-                ExpressionNode expressionNode = (ExpressionNode)VisitExpression(expressionContext);
-                expressions.Add(expressionNode);
+                //ExpressionNode expressionNode = (ExpressionNode)VisitExpression(expressionContext);
+                //expressions.Add(expressionNode);
             }
             else if (item is ITerminalNode terminalNode && terminalNode.Symbol.Type == AnimationLanguageRulesParser.IDENTIFIER) // If the visited item is a terminal node, and it fits the properties of an IDENTIFIER, create an identifier node and add it to the list of identifiers.
             {
@@ -96,39 +96,67 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<object
     public override KeyValuePairNode VisitKeyValuePair(AnimationLanguageRulesParser.KeyValuePairContext context)
     {
         // Retrieve the identifier and expression nodes from the context.
-        IdentifierNode identifier = (IdentifierNode)Visit(context.IDENTIFIER());
-        ExpressionNode expression = (ExpressionNode)Visit(context.expression());
+        
+        IdentifierNode identifier = (IdentifierNode)Visit(context.IDENTIFIER()); // Visit the IDENTIFIER context and get the IdentifierNode.
+        ExpressionNode expression = (ExpressionNode)Visit(context.expression()); // Visit the expression context and get the ExpressionNode.
 
-        // Create a new KeyValuePairNode with the identifier and expression.
+        // Create a new KeyValuePairNode with the retrieved identifier and expression data.
         KeyValuePairNode keyValuePairNode = new KeyValuePairNode(identifier, expression, GetSourceLocation(context.Start));
 
         return keyValuePairNode;
     }
     
     
-    public override IASTNode VisitAssignment(AnimationLanguageRulesParser.AssignmentContext context)
+    public override IASTNode VisitTerminal(ITerminalNode node)
     {
-        IdentifierNode identifier = (IdentifierNode)VisitIdentifier(context.IDENTIFIER()); // Visit the identifier of the assignment, and store the result as an identifier node.
-        ExpressionNode expression = (ExpressionNode)VisitExpression(context.expression()); // Do the same with the expression
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+        if (node.Symbol.Type == AnimationLanguageRulesParser.IDENTIFIER)
+        {
+            return new IdentifierNode(node.GetText(), GetSourceLocation(node.Symbol));
+        }
 
-        AssignmentNode assignmentNode = new AssignmentNode(identifier, expression, sourceLocation);
-        return assignmentNode;
-    }
-
-
-    public override IASTNode VisitIdentifier(AnimationLanguageRulesParser.IdentifierContext context)
-    {
-        // Get the identifier text from the context
-        string identifierText = context.GetText();
-
-        // Create an IdentifierNode with the identifier text and set its SourceLocation
-        IdentifierNode identifierNode = new IdentifierNode(identifierText, GetSourceLocation(context.Start));
-
-        return identifierNode;
+        return base.VisitTerminal(node);
     }
 
     
+    //This method visits an assignment context and returns an AssignmentNode.
+    public override IASTNode VisitAssignment(AnimationLanguageRulesParser.AssignmentContext context)
+    {
+        AssignmentOperator assignmentOperator = VisitAssOps(context.assOps()); // Visit the assignment operator context and get the current AssignmentOperator.
+        IdentifierNode identifierNode = (IdentifierNode)VisitTerminal((ITerminalNode)context.GetChild(0)); // Visit the IDENTIFIER context and get the IdentifierNode.
+        ExpressionNode expression = (ExpressionNode)Visit(context.GetChild(2)); // Visit the expression context and get the ExpressionNode.
+
+        //Create a new AssignmentNode with the retrieved identifier, assignment operator and expression data.
+        AssignmentNode assignmentNode = new AssignmentNode(identifierNode, assignmentOperator, expression, GetSourceLocation(context.Start));
+        return assignmentNode;
+    }
+
+    //This method visits the assignment operator context and returns the current AssignmentOperator.
+    public AssignmentOperator VisitAssOps(AnimationLanguageRulesParser.AssOpsContext context)
+    {
+        if (context.EQUAL() != null)
+        {
+            return AssignmentOperator.Assign;
+        }
+        else if (context.PLUSEQUAL() != null)
+        {
+            return AssignmentOperator.PlusEqual;
+        }
+        else if (context.MINUSEQUAL() != null)
+        {
+            return AssignmentOperator.MinusEqual;
+        }
+        else
+        {
+            throw new InvalidOperationException("Unexpected assignment operator");
+        }
+    }
+
+
+
+
+
+
+
     //---------------------------Helper methods---------------------------//
     private SourceLocation GetSourceLocation(IToken token)
     {

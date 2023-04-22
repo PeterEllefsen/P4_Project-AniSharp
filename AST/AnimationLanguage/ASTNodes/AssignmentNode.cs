@@ -11,15 +11,25 @@ public class AssignmentNode : IASTNode
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
     
     public IdentifierNode Identifier { get; set; } //This is the identifier (variable) that is being assigned to.
+    public AssignmentOperator AssignmentOperator { get; set; } // Add the AssignmentOperator property
     public ExpressionNode Expression { get; set; } //This is the expression that is being assigned to the identifier.
 
     //Constructor taking in the identifier, expression, and source location:
-    public AssignmentNode(IdentifierNode identifier, ExpressionNode expression, SourceLocation sourceLocation)
+    public AssignmentNode(IdentifierNode identifier, AssignmentOperator assignmentOperator, ExpressionNode expression, SourceLocation sourceLocation)
     {
         Identifier = identifier;
+        AssignmentOperator = assignmentOperator; // Assign the value of the assignmentOperator parameter
         Expression = expression;
         SourceLocation = sourceLocation; //Assign the value of the sourceLocation parameter to the SourceLocation property.
         Children.Add(identifier);
         Children.Add(expression);
     }
+}
+
+
+public enum AssignmentOperator //The different types of assignment operators.
+{
+    Assign,
+    PlusEqual,
+    MinusEqual,
 }
