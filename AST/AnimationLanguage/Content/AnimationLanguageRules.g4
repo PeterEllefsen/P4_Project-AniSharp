@@ -163,7 +163,13 @@ statements: statement  statements
           | statement 
           ;
 
-statement: assignment | IDENTIFIER grouping | loop | conditional;
+statement: assignment
+          | identifierGrouping
+          | loop
+          | conditional
+          ;
+          
+identifierGrouping: IDENTIFIER groupingElements;
 
 return: RETURN expression SEMICOLON
         | RETURN grouping SEMICOLON

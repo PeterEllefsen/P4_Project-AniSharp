@@ -147,6 +147,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         }
         else
         {
+            // TODO: mby return EmptyNode instead of throwing error, instead of throwing errors
             throw new InvalidOperationException("Unexpected assignment operator");
         }
     }
@@ -184,6 +185,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         }
         else
         {
+            // TODO: mby return EmptyNode instead.
             throw new NotSupportedException($"Unsupported type encountered at line {context.Start.Line} column {context.Start.Column}");
         }
 
@@ -239,6 +241,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         }
         else
         {
+            // TODO: mby consider the thought of having an EmptyNode node instead of throwing exceptions.
             throw new InvalidOperationException($"Unexpected expression type in VisitExpression at {GetSourceLocation(context.Start)}");
         }
     }
@@ -312,15 +315,211 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         return new ShapeInitNode(shapeType, arguments, sourceLocation);
     }
 
+    
+    //This method is called when a term is encountered in the code.
     public override IASTNode VisitTerm(AnimationLanguageRulesParser.TermContext context)
     {
-        IASTNode innerExpression = Visit(context.GetChild(1));
+        IASTNode innerExpression = Visit(context.GetChild(1)); //Visit the inner expression of the term and store the result in a variable.
         return innerExpression;
     }
 
 
+    public override IASTNode VisitTuple(AnimationLanguageRulesParser.TupleContext context)
+    {
+        Dictionary<string, IASTNode> arguments = new Dictionary<string, IASTNode>(); // Create a dictionary to store the tuple arguments.
+
+        for (int i = 0; i < context.argName().Length; i++) // Loop through the arguments of the tuple. argName.Length retrieves the amount of times an argument rule appears in the tuple context
+        {
+            string argName = context.argName(i).GetText().TrimEnd(':'); // Get the name of the argument and remove the colon at the end.
+            IASTNode argValue = Visit(context.arg(i)); // Visit the argument and store the value of the argument in a variable.
+            arguments.Add(argName, argValue);
+        }
+
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+        return new TupleNode(arguments, sourceLocation);
+    }
 
 
+    //This method is called when the prototype rule is encountered in the code.
+    public override IASTNode VisitPrototypes(AnimationLanguageRulesParser.PrototypesContext context)
+    {
+        List<IASTNode> prototypes = new List<IASTNode>(); //Create a list of IASTNodes to store the prototypes.
+
+        foreach (var prototypeContext in context.GetRuleContexts<AnimationLanguageRulesParser.PrototypeContext>())
+        {
+            prototypes.Add(VisitPrototype(prototypeContext)); //Visit each prototype and add it to the list.
+        }
+
+        return new NodeList<IASTNode>(prototypes, GetSourceLocation(context.Start)); //Return a NodeList containing the prototypes.
+    }
+
+
+
+    //This method visits the individual prototype rule.
+    public override IASTNode VisitPrototype(AnimationLanguageRulesParser.PrototypeContext context)
+    {
+        DataType returnType = GetDataTypeFromTypeContext(context.type()); //Get the return type of the prototype.
+        string functionName = context.IDENTIFIER().GetText(); //Get the name of the function.
+        List<ParameterNode> parameters = new List<ParameterNode>(); //Create a list of ParameterNodes to store the parameters of the prototype.
+
+        if (context.parameters() != null) //If the prototype has parameters, visit them and add them to the list.
+        {
+            parameters = ((NodeList<ParameterNode>)VisitParameters(context.parameters())).ToList();
+        }
+
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+        return new PrototypeNode(returnType, functionName, parameters, sourceLocation);
+    }
+
+    //This method is used to return the DataType of a type context.
+    private DataType GetDataTypeFromTypeContext(AnimationLanguageRulesParser.TypeContext context)
+    {
+        if (context.INT() != null)
+        {
+            return DataType.Int;
+        }
+        else if (context.FLOAT_TYPE() != null)
+        {
+            return DataType.Float;
+        }
+        else if (context.STRING_TYPE() != null)
+        {
+            return DataType.String;
+        }
+        else if (context.BOOL() != null)
+        {
+            return DataType.Bool;
+        }
+        else if (context.CIRCLE() != null)
+        {
+            return DataType.Circle;
+        }
+        else if (context.POLYGON() != null)
+        {
+            return DataType.Polygon;
+        }
+        else
+        {
+            // TODO: Maybe return EmptyNode.
+            throw new NotSupportedException($"Type '{context.GetText()}' is not supported.");
+        }
+    }
+
+    
+    //This method is called when the parameters rule is encountered in the code.
+    public IList<ParameterNode> VisitParameters(AnimationLanguageRulesParser.ParametersContext context)
+    {
+        List<ParameterNode> parameterNodes = new List<ParameterNode>();
+
+        foreach (var parameterContext in context.GetRuleContexts<AnimationLanguageRulesParser.ParameterContext>())
+        {
+            ParameterNode parameterNode = (ParameterNode)Visit(parameterContext);
+            if (parameterNode != null)
+            {
+                parameterNodes.Add(parameterNode);
+            }
+        }
+
+        return parameterNodes;
+    }
+
+
+    //This method is called when the parameter rule is encountered in the code.
+    public override IASTNode VisitParameter(AnimationLanguageRulesParser.ParameterContext context)
+    {
+        DataType dataType = GetDataTypeFromTypeContext(context.type()); //Get the data type of the parameter.
+        string parameterName = context.IDENTIFIER().GetText(); //Get the namew of the parameter.
+        SourceLocation sourceLocation = GetSourceLocation(context.Start); 
+
+        return new ParameterNode(dataType, parameterName, sourceLocation);
+    }
+
+
+    // This method is called when a function is being declared in the code
+    public override IASTNode VisitFuncDecl(AnimationLanguageRulesParser.FuncDeclContext context)
+    {
+        string functionName = context.IDENTIFIER().GetText(); //Get the name of the function.
+        IdentifierNode identifierNode = new IdentifierNode(functionName, GetSourceLocation(context.IDENTIFIER().Symbol)); //Create an identifier node for the function name.
+
+        IList<ParameterNode> parameters = new List<ParameterNode>(); //Create a list of ParameterNodes to store the parameters of the function.
+        if (context.parameters() != null) //If the function has any parameters, visit them and add them to the list.
+        {
+            parameters = VisitParameters(context.parameters());
+        }
+
+        BlockNode blockNode = (BlockNode)VisitBlock(context.block()); //Visit the block of the function and store it in a variable.
+        SourceLocation sourceLocation = GetSourceLocation(context.Start); 
+
+        return new FunctionDeclarationNode(identifierNode, parameters, blockNode, sourceLocation);
+    }
+
+    
+    // this method is being called when a block is being declared in the code.
+    public override IASTNode VisitBlock(AnimationLanguageRulesParser.BlockContext context)
+    {
+        IList<StatementNode> statementNodes = new List<StatementNode>(); //Create a list of StatementNodes to store the statements of the block.
+        if (context.statements() != null) 
+        {
+            statementNodes = VisitStatements(context.statements()); //Visit the statements of the block and add them to the list.
+        }
+
+        BlockNode blockNode = new BlockNode(statementNodes, GetSourceLocation(context.Start)); //Create a block node with the list of statements and the source location of the block
+        return blockNode;
+    }
+
+
+    // The VisitStatements method is called when the statements rule is encountered in the code.
+    public IList<StatementNode> VisitStatements(AnimationLanguageRulesParser.StatementsContext context)
+    {
+        List<StatementNode> statementNodes = new List<StatementNode>(); //Create a list of StatementNodes to store the statements.
+
+        foreach (var statementContext in context.GetRuleContexts<AnimationLanguageRulesParser.StatementContext>()) 
+        {
+            StatementNode statementNode = (StatementNode)Visit(statementContext); 
+            if (statementNode != null)
+            {
+                statementNodes.Add(statementNode); //Visit each statement and add it to the list.
+            }
+        }
+        return statementNodes;
+    }
+
+
+    // this method visits the individual statement rule.
+    public override IASTNode VisitStatement(AnimationLanguageRulesParser.StatementContext context)
+    {
+        if (context.assignment() != null) //If the statement is an assignment, visit it
+        {
+            return Visit(context.assignment());
+        }
+        else if (context.identifierGrouping() != null)  //If the statement is an identifier, visit the following grouping
+        {
+            return Visit(context.identifierGrouping());
+        }
+        else if (context.loop() != null) //If the statement is a loop, visit it
+        {
+            return Visit(context.loop());
+        }
+        else if (context.conditional() != null) //If the statement is a conditional, visit it
+        {
+            return Visit(context.conditional());
+        }
+        else
+        {
+            throw new InvalidOperationException($"Unrecognized statement at {GetSourceLocation(context.Start)}");
+        }
+    }
+
+    public IASTNode VisitIdentifierGrouping(AnimationLanguageRulesParser.IdentifierGroupingContext context)
+    {
+        IdentifierNode identifier = new IdentifierNode(context.IDENTIFIER().GetText(), GetSourceLocation(context.IDENTIFIER().Symbol));
+        GroupingElementsNode groupingElements = (GroupingElementsNode)VisitGroupingElements(context.groupingElements());
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        return new IdentifierGroupingNode(identifier, groupingElements, sourceLocation);
+    }
+
+    
     
     //---------------------------Helper methods---------------------------//
     private SourceLocation GetSourceLocation(IToken token)

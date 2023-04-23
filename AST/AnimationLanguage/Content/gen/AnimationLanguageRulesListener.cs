@@ -199,18 +199,6 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFunctionCallExpression([NotNull] AnimationLanguageRulesParser.FunctionCallExpressionContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>integerExpression</c>
-	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>integerExpression</c>
-	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
-	/// <summary>
 	/// Enter a parse tree produced by the <c>shapeInitExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// </summary>
@@ -234,6 +222,18 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitBooleanExpression([NotNull] AnimationLanguageRulesParser.BooleanExpressionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>integerExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>integerExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>termExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
@@ -428,6 +428,16 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitStatement([NotNull] AnimationLanguageRulesParser.StatementContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.identifierGrouping"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterIdentifierGrouping([NotNull] AnimationLanguageRulesParser.IdentifierGroupingContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.identifierGrouping"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitIdentifierGrouping([NotNull] AnimationLanguageRulesParser.IdentifierGroupingContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.return"/>.
 	/// </summary>

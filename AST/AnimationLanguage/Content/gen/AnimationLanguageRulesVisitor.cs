@@ -132,13 +132,6 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitFunctionCallExpression([NotNull] AnimationLanguageRulesParser.FunctionCallExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>integerExpression</c>
-	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>shapeInitExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// </summary>
@@ -152,6 +145,13 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitBooleanExpression([NotNull] AnimationLanguageRulesParser.BooleanExpressionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>integerExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>termExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
@@ -268,6 +268,12 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitStatement([NotNull] AnimationLanguageRulesParser.StatementContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.identifierGrouping"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIdentifierGrouping([NotNull] AnimationLanguageRulesParser.IdentifierGroupingContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.return"/>.
 	/// </summary>

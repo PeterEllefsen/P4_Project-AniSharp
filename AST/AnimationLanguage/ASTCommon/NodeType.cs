@@ -37,4 +37,7 @@ public enum NodeType //This enum is used to determine what type of node is being
     Animation,
     Command,
     Transition,
+    Tuple,
+    List,
+    IdentifierGrouping,
 }
