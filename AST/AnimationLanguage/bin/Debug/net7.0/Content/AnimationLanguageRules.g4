@@ -9,7 +9,6 @@ WHILE: 'while';
 IF: 'if';
 ELSE: 'else';
 SEQ: 'seq';
-VOID: 'void';
 GROUP: 'group';
 INT: 'int';
 FLOAT_TYPE: 'float';
@@ -145,7 +144,7 @@ call_parameter: (argName arg | arg);
 
 prototypes: prototype (COMMA prototypes)?;
 
-prototype: (type | VOID | GROUP) FUNCTION IDENTIFIER LPAREN parameters? RPAREN SEMICOLON;
+prototype: (type | GROUP) FUNCTION IDENTIFIER LPAREN parameters? RPAREN SEMICOLON;
 
 parameters: parameter (COMMA parameters)?
            | parameter
@@ -155,9 +154,9 @@ parameter: type IDENTIFIER (COMMA parameters)?
          | type IDENTIFIER
          ;
 
-funcDecl: (type | VOID | GROUP) FUNCTION IDENTIFIER LPAREN (parameters)? RPAREN block;
+funcDecl: (type | GROUP) FUNCTION IDENTIFIER LPAREN (parameters)? RPAREN block;
 
-block: LBRACE statements return? RBRACE;
+block: LBRACE statements return RBRACE;
 
 statements: statement  statements
           | statement 

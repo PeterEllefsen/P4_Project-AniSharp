@@ -510,23 +510,202 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         }
     }
 
-    public IASTNode VisitIdentifierGrouping(AnimationLanguageRulesParser.IdentifierGroupingContext context)
+    //The VisitIdentifierGrouping method is called when the identifierGrouping rule is encountered in the code.
+    public override IASTNode VisitIdentifierGrouping(AnimationLanguageRulesParser.IdentifierGroupingContext context)
     {
-        IdentifierNode identifier = new IdentifierNode(context.IDENTIFIER().GetText(), GetSourceLocation(context.IDENTIFIER().Symbol));
-        GroupingElementsNode groupingElements = (GroupingElementsNode)VisitGroupingElements(context.groupingElements());
+        IdentifierNode identifier = new IdentifierNode(context.IDENTIFIER().GetText(), GetSourceLocation(context.IDENTIFIER().Symbol)); //Create an identifier node for the identifier.
+        GroupingElementsNode groupingElements = (GroupingElementsNode)VisitGroupingElements(context.groupingElements()); //Visit the grouping elements of the identifier.
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
         return new IdentifierGroupingNode(identifier, groupingElements, sourceLocation);
     }
 
+    // This method is called when a return statement is encountered in the code.
+    public override IASTNode VisitReturn(AnimationLanguageRulesParser.ReturnContext context)
+    {
+        ExpressionNode? returnExpression = null;
     
+        if (context.expression() != null)
+        {
+            returnExpression = (ExpressionNode)Visit(context.expression());
+        }
     
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+        return new ReturnNode(returnExpression, sourceLocation);
+    }
+
+    
+    //VisitLoop is a method used to handle the loop rule in the code.
+    public override IASTNode VisitLoop(AnimationLanguageRulesParser.LoopContext context)
+    {
+        if (context.for_loop() != null) //If the loop is a for loop, visit it.
+        {
+            return VisitFor_loop(context.for_loop());
+        }
+        else if (context.while_loop() != null)
+        {
+            return VisitWhile_loop(context.while_loop()); //If the loop is a while loop, visit it.
+        }
+        else
+        {
+            throw new InvalidOperationException($"Unrecognized loop type at {GetSourceLocation(context.Start)}");
+        }
+    }
+
+    //This method is called when a for loop is encountered in the code.
+    public override IASTNode VisitFor_loop(AnimationLanguageRulesParser.For_loopContext context)
+    {
+        AssignmentNode startExpression = (AssignmentNode)VisitAssignment(context.assignment(0)); //Visit the start expression of the for loop.
+        ConditionNode condition = (ConditionNode)VisitCondition(context.condition()); //Visit the condition of the for loop.
+        AssignmentNode endExpression = (AssignmentNode)VisitAssignment(context.assignment(1)); //Visit the end expression of the for loop.
+        BlockNode block = (BlockNode)VisitBlock(context.block()); //Visit the block of the for loop.
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        return new ForLoopNode(startExpression, condition, endExpression, block, sourceLocation);
+    }
+
+    
+    //This method in run when a while loop is met in the code.
+    public override IASTNode VisitWhile_loop(AnimationLanguageRulesParser.While_loopContext context)
+    {
+        ConditionNode condition = (ConditionNode)VisitCondition(context.condition()); //Visit the condition of the while loop.
+        BlockNode body = (BlockNode)VisitBlock(context.block()); //Visit the block of the while loop.
+        SourceLocation sourceLocation = GetSourceLocation(context.Start); 
+
+        return new WhileLoopNode(condition, body, sourceLocation);
+    }
+
+
+    
+    //he VisitCondition method is used when a condition is met in the code. 
+    public IASTNode VisitCondition(AnimationLanguageRulesParser.ConditionContext context)
+    {
+        IASTNode leftExpression = Visit(context.expression(0));
+        IASTNode rightExpression = Visit(context.expression(1));
+        OperatorNode? comparisonOperator = context.comparator().Length > 0 ? (OperatorNode)Visit(context.comparator(0)) : null; //Visit the comparator of the condition if it exists. (0)) : null means that if there is no comparator, it will be null.
+        OperatorNode? logicalOperator = context.logicOpp().Length > 0 ? (OperatorNode)Visit(context.logicOpp(0)) : null; //Visit the logical operator of the condition if it exists. (0)) : null means that if there is no logical operator, it will be null.
+
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        return new ConditionNode(leftExpression, rightExpression, comparisonOperator, logicalOperator, sourceLocation);
+    }
+
+
+    //This method is called when a conditional is encountered in the code.
+    public override IASTNode VisitConditional(AnimationLanguageRulesParser.ConditionalContext context)
+    {
+        ExpressionNode condition = (ExpressionNode)Visit(context.condition()); //Visit the condition of the conditional.
+        BlockNode ifBlock = (BlockNode)VisitBlock(context.block()); //Visit the block of the conditional.
+
+        IList<ElseIfNode> elseIfBranches = new List<ElseIfNode>(); //Create a list to contain all of the else if branches related to the conditional.
+        for (int i = 0; i < context.elseif().Length; i++)
+        {
+            elseIfBranches.Add((ElseIfNode)VisitElseif(context.elseif(i))); //Visit each of the else if branches.
+        }
+
+        ElseNode? elseBranch = null; //Creates a variable to contain the else branch of the conditional. Its set to null, as an if-statement can both have an else, and not have an else.
+        if (context.@else() != null) 
+        {
+            elseBranch = (ElseNode)VisitElse(context.@else()); //Visit the else branch if it exists.
+        }
+
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        return new IfStatementNode(condition, ifBlock, elseIfBranches, elseBranch, sourceLocation);
+    }
+
+
+    //This method is called when an else if branch is encountered in the code.
+    public override IASTNode VisitElseif(AnimationLanguageRulesParser.ElseifContext context)
+    {
+        ExpressionNode condition = (ExpressionNode)Visit(context.condition()); //Visit the condition of the else if branch.
+        BlockNode block = (BlockNode)VisitBlock(context.block()); //Visit the block of the else if branch.
+        SourceLocation sourceLocation = GetSourceLocation(context.Start); 
+
+        return new ElseIfNode(condition, block, sourceLocation);
+    }
+
+
+    //This method is called when an else branch is encountered in the code.
+    public override IASTNode VisitElse(AnimationLanguageRulesParser.ElseContext context)
+    {
+        BlockNode block = (BlockNode)VisitBlock(context.block()); //Visit the block of the else branch.
+        SourceLocation sourceLocation = GetSourceLocation(context.Start); //Get the source location of the else branch.
+
+        return new ElseNode(block, sourceLocation);
+    }
+
+    
+    //This method is called when the sequences rule is encountered in the code.
+    public List<SequenceNode> VisitAndGetSequences(AnimationLanguageRulesParser.SequencesContext context)
+    {
+        var sequences = new List<SequenceNode>(); //Create a list to contain all of the individual sequences.
+
+        foreach (var child in context.children) //For each child of thesequences rule, visit it.
+        {
+            if (child is AnimationLanguageRulesParser.SequenceContext sequenceContext) 
+            {
+                sequences.Add((SequenceNode)Visit(sequenceContext)); //If the child is a sequence, visit it and add it to the list.
+            }
+        }
+        return sequences;
+    }
+
+
+    //this method in run when a sequence is met in the code.
+    public override IASTNode VisitSequence(AnimationLanguageRulesParser.SequenceContext context)
+    {
+        var identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER()); //Visit the identifier of the sequence.
+        var parameters = context.parameters() != null ? VisitParameters(context.parameters()) : new List<ParameterNode>(); //Visit the parameters of the sequence if it has any.
+        var seqBlockNode = VisitSeqBlock(context.seqBlock()); //Visit the block of the sequence.
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        return new SequenceNode(identifierNode, parameters, (SeqBlockNode)seqBlockNode, sourceLocation);
+    }
+
+
+    //This method is called when a sequence block is encountered in the code.
+    public override IASTNode VisitSeqBlock(AnimationLanguageRulesParser.SeqBlockContext context)
+    {
+        var seqBlockParts = new List<SeqBlockPartNode>(); //Create a list to contain all of the parts of the sequence block.
+
+        foreach (var child in context.children) //For each child of the sequence block, visit it.
+        {
+            if (child is AnimationLanguageRulesParser.SeqBlockPartsContext seqBlockPartsContext)
+            {
+                seqBlockParts.Add((SeqBlockPartNode)VisitSeqBlockPart(seqBlockPartsContext)); //If the child is a sequence block part, visit it and add it to the list.
+            }
+        }
+
+        return new SeqBlockNode(seqBlockParts, GetSourceLocation(context.Start));
+    }
+
+    //This method is called when a sequence block part is encountered in the code.
+    public IASTNode VisitSeqBlockPart(AnimationLanguageRulesParser.SeqBlockPartsContext context)
+    {
+        if (context.statement() != null) //If the sequence block part is a statement, visit it.
+        {
+            return VisitStatement(context.statement());
+        }
+        else if (context.animation() != null) //If the sequence block part is an animation, visit it.
+        {
+            return VisitAnimation(context.animation());
+        }
+        else
+        {
+            throw new InvalidOperationException($"Unexpcted child in SeqBlockPartsContext: {context.GetText()}");
+        }
+    }
+
+
+
     //---------------------------Helper methods---------------------------//
     private SourceLocation GetSourceLocation(IToken token)
     {
         return new SourceLocation(token.Line, token.Column);
     }
 
+    
     
 
 }

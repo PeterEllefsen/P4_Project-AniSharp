@@ -7,10 +7,10 @@ public class ForLoopNode : IASTNode
     public NodeType NodeType => NodeType.ForLoop;
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
 
-    public IASTNode Initialization { get; set; } // Represents the initialization of the for loop.
-    public IASTNode Condition { get; set; } // Represents the condition that must be met for the for loop to continue.
-    public IASTNode Update { get; set; } // Represents the update of the for loop.
-    public BlockNode Body { get; set; } // Represents the body of the for loop.
+    public IASTNode Initialization { get; set; } // Represents the initialization of the for loop. (e.g. int i = 0)
+    public IASTNode Condition { get; set; } // Represents the condition that must be met for the for loop to continue. (e.g. i < 10)
+    public IASTNode Update { get; set; } // Represents the update of the for loop. (e.g. i++)
+    public BlockNode Body { get; set; } // Represents the body of the for loop. 
 
     public ForLoopNode(
         IASTNode initialization,

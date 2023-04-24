@@ -40,4 +40,7 @@ public enum NodeType //This enum is used to determine what type of node is being
     Tuple,
     List,
     IdentifierGrouping,
+    Condition,
+    SeqBlock,
+    SeqBlockPart,
 }
