@@ -152,6 +152,7 @@ parameters: parameter (COMMA parameters)?
 
 parameter: type IDENTIFIER (COMMA parameters)?
          | type IDENTIFIER
+         | funcCall
          ;
 
 funcDecl: (type | GROUP) FUNCTION IDENTIFIER LPAREN (parameters)? RPAREN block;
@@ -196,6 +197,8 @@ sequences: sequence sequences?;
 
 sequence: SEQ IDENTIFIER LPAREN parameters? RPAREN seqBlock;
 
+sequenceCall: IDENTIFIER LPAREN call_parameters? RPAREN;
+
 seqBlock: LBRACE seqBlockParts RBRACE;
 
 seqBlockParts: statement seqBlockParts
@@ -219,4 +222,4 @@ command: ARROW IDENTIFIER LPAREN call_parameters? RPAREN;
 
 timelineBlock: LBRACE frameDef* RBRACE;
 
-frameDef: FRAME INTEGER COLON IDENTIFIER LPAREN parameters? RPAREN SEMICOLON ;
+frameDef: FRAME INTEGER COLON sequenceCall SEMICOLON;

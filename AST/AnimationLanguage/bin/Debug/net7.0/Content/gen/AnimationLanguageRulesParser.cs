@@ -56,9 +56,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 		RULE_identifierGrouping = 30, RULE_return = 31, RULE_loop = 32, RULE_for_loop = 33, 
 		RULE_while_loop = 34, RULE_condition = 35, RULE_logicOpp = 36, RULE_comparator = 37, 
 		RULE_conditional = 38, RULE_elseif = 39, RULE_else = 40, RULE_sequences = 41, 
-		RULE_sequence = 42, RULE_seqBlock = 43, RULE_seqBlockParts = 44, RULE_animation = 45, 
-		RULE_transitions = 46, RULE_transition = 47, RULE_command = 48, RULE_timelineBlock = 49, 
-		RULE_frameDef = 50;
+		RULE_sequence = 42, RULE_sequenceCall = 43, RULE_seqBlock = 44, RULE_seqBlockParts = 45, 
+		RULE_animation = 46, RULE_transitions = 47, RULE_transition = 48, RULE_command = 49, 
+		RULE_timelineBlock = 50, RULE_frameDef = 51;
 	public static readonly string[] ruleNames = {
 		"s", "program", "setupBlock", "grouping", "groupingElements", "keyValuePair", 
 		"assignments", "assignment", "unary", "assOps", "term", "type", "expression", 
@@ -66,9 +66,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 		"call_parameters", "call_parameter", "prototypes", "prototype", "parameters", 
 		"parameter", "funcDecl", "block", "statements", "statement", "identifierGrouping", 
 		"return", "loop", "for_loop", "while_loop", "condition", "logicOpp", "comparator", 
-		"conditional", "elseif", "else", "sequences", "sequence", "seqBlock", 
-		"seqBlockParts", "animation", "transitions", "transition", "command", 
-		"timelineBlock", "frameDef"
+		"conditional", "elseif", "else", "sequences", "sequence", "sequenceCall", 
+		"seqBlock", "seqBlockParts", "animation", "transitions", "transition", 
+		"command", "timelineBlock", "frameDef"
 	};
 
 	private static readonly string[] _LiteralNames = {
@@ -157,9 +157,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 102;
+			State = 104;
 			program();
-			State = 103;
+			State = 105;
 			Match(Eof);
 			}
 		}
@@ -229,66 +229,66 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 110;
+			State = 112;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==PROTOTYPE) {
 				{
-				State = 105;
-				Match(PROTOTYPE);
-				State = 106;
-				Match(LBRACE);
 				State = 107;
-				prototypes();
+				Match(PROTOTYPE);
 				State = 108;
+				Match(LBRACE);
+				State = 109;
+				prototypes();
+				State = 110;
 				Match(RBRACE);
 				}
 			}
 
-			State = 114;
+			State = 116;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==SETUP) {
 				{
-				State = 112;
+				State = 114;
 				Match(SETUP);
-				State = 113;
+				State = 115;
 				setupBlock();
 				}
 			}
 
-			State = 119;
+			State = 121;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 65024L) != 0)) {
 				{
 				{
-				State = 116;
+				State = 118;
 				funcDecl();
 				}
 				}
-				State = 121;
+				State = 123;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 123;
+			State = 125;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==SEQ) {
 				{
-				State = 122;
+				State = 124;
 				sequences();
 				}
 			}
 
-			State = 125;
-			Match(TIMELINE);
 			State = 127;
+			Match(TIMELINE);
+			State = 129;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==LBRACE) {
 				{
-				State = 126;
+				State = 128;
 				timelineBlock();
 				}
 			}
@@ -341,9 +341,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 129;
+			State = 131;
 			grouping();
-			State = 130;
+			State = 132;
 			Match(SEMICOLON);
 			}
 		}
@@ -394,11 +394,11 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 132;
-			Match(LBRACKET);
-			State = 133;
-			groupingElements();
 			State = 134;
+			Match(LBRACKET);
+			State = 135;
+			groupingElements();
+			State = 136;
 			Match(RBRACKET);
 			}
 		}
@@ -456,36 +456,36 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 139;
+			State = 141;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,5,Context) ) {
 			case 1:
 				{
-				State = 136;
+				State = 138;
 				keyValuePair();
 				}
 				break;
 			case 2:
 				{
-				State = 137;
+				State = 139;
 				expression(0);
 				}
 				break;
 			case 3:
 				{
-				State = 138;
+				State = 140;
 				Match(IDENTIFIER);
 				}
 				break;
 			}
-			State = 143;
+			State = 145;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==COMMA) {
 				{
-				State = 141;
+				State = 143;
 				Match(COMMA);
-				State = 142;
+				State = 144;
 				groupingElements();
 				}
 			}
@@ -539,11 +539,11 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 145;
-			Match(IDENTIFIER);
-			State = 146;
-			Match(EQUAL);
 			State = 147;
+			Match(IDENTIFIER);
+			State = 148;
+			Match(EQUAL);
+			State = 149;
 			expression(0);
 			}
 		}
@@ -596,16 +596,16 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 149;
+			State = 151;
 			assignment();
-			State = 152;
+			State = 154;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,7,Context) ) {
 			case 1:
 				{
-				State = 150;
+				State = 152;
 				Match(SEMICOLON);
-				State = 151;
+				State = 153;
 				assignments();
 				}
 				break;
@@ -673,48 +673,48 @@ public partial class AnimationLanguageRulesParser : Parser {
 		EnterRule(_localctx, 14, RULE_assignment);
 		int _la;
 		try {
-			State = 180;
+			State = 182;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,13,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 155;
+				State = 157;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 64512L) != 0)) {
 					{
-					State = 154;
+					State = 156;
 					type();
 					}
 				}
 
-				State = 157;
+				State = 159;
 				Match(IDENTIFIER);
-				State = 158;
+				State = 160;
 				assOps();
-				State = 161;
+				State = 163;
 				ErrorHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(TokenStream,9,Context) ) {
 				case 1:
 					{
-					State = 159;
+					State = 161;
 					expression(0);
 					}
 					break;
 				case 2:
 					{
-					State = 160;
+					State = 162;
 					Match(IDENTIFIER);
 					}
 					break;
 				}
-				State = 164;
+				State = 166;
 				ErrorHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(TokenStream,10,Context) ) {
 				case 1:
 					{
-					State = 163;
+					State = 165;
 					Match(SEMICOLON);
 					}
 					break;
@@ -724,16 +724,16 @@ public partial class AnimationLanguageRulesParser : Parser {
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 166;
+				State = 168;
 				Match(IDENTIFIER);
-				State = 167;
-				unary();
 				State = 169;
+				unary();
+				State = 171;
 				ErrorHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(TokenStream,11,Context) ) {
 				case 1:
 					{
-					State = 168;
+					State = 170;
 					Match(SEMICOLON);
 					}
 					break;
@@ -743,16 +743,16 @@ public partial class AnimationLanguageRulesParser : Parser {
 			case 3:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 171;
+				State = 173;
 				unary();
-				State = 172;
-				Match(IDENTIFIER);
 				State = 174;
+				Match(IDENTIFIER);
+				State = 176;
 				ErrorHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(TokenStream,12,Context) ) {
 				case 1:
 					{
-					State = 173;
+					State = 175;
 					Match(SEMICOLON);
 					}
 					break;
@@ -762,11 +762,11 @@ public partial class AnimationLanguageRulesParser : Parser {
 			case 4:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 176;
-				Match(IDENTIFIER);
-				State = 177;
-				grouping();
 				State = 178;
+				Match(IDENTIFIER);
+				State = 179;
+				grouping();
+				State = 180;
 				Match(SEMICOLON);
 				}
 				break;
@@ -817,7 +817,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 182;
+			State = 184;
 			_la = TokenStream.LA(1);
 			if ( !(_la==INC || _la==DEC) ) {
 			ErrorHandler.RecoverInline(this);
@@ -874,7 +874,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 184;
+			State = 186;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 30064771072L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -936,31 +936,31 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 186;
+			State = 188;
 			Match(LPAREN);
-			State = 190;
+			State = 192;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,14,Context) ) {
 			case 1:
 				{
-				State = 187;
+				State = 189;
 				expression(0);
 				}
 				break;
 			case 2:
 				{
-				State = 188;
+				State = 190;
 				Match(IDENTIFIER);
 				}
 				break;
 			case 3:
 				{
-				State = 189;
+				State = 191;
 				term();
 				}
 				break;
 			}
-			State = 192;
+			State = 194;
 			Match(RPAREN);
 			}
 		}
@@ -1013,7 +1013,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 194;
+			State = 196;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 64512L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -1263,7 +1263,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 211;
+			State = 213;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,17,Context) ) {
 			case 1:
@@ -1272,17 +1272,17 @@ public partial class AnimationLanguageRulesParser : Parser {
 				Context = _localctx;
 				_prevctx = _localctx;
 
-				State = 198;
+				State = 200;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==MINUS) {
 					{
-					State = 197;
+					State = 199;
 					Match(MINUS);
 					}
 				}
 
-				State = 200;
+				State = 202;
 				Match(INTEGER);
 				}
 				break;
@@ -1291,17 +1291,17 @@ public partial class AnimationLanguageRulesParser : Parser {
 				_localctx = new FloatExpressionContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 202;
+				State = 204;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==MINUS) {
 					{
-					State = 201;
+					State = 203;
 					Match(MINUS);
 					}
 				}
 
-				State = 204;
+				State = 206;
 				Match(FLOAT);
 				}
 				break;
@@ -1310,7 +1310,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 				_localctx = new StringExpressionContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 205;
+				State = 207;
 				Match(STRING);
 				}
 				break;
@@ -1319,7 +1319,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 				_localctx = new BooleanExpressionContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 206;
+				State = 208;
 				boolean();
 				}
 				break;
@@ -1328,7 +1328,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 				_localctx = new IdentifierExpressionContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 207;
+				State = 209;
 				Match(IDENTIFIER);
 				}
 				break;
@@ -1337,7 +1337,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 				_localctx = new FunctionCallExpressionContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 208;
+				State = 210;
 				funcCall();
 				}
 				break;
@@ -1346,7 +1346,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 				_localctx = new ShapeInitExpressionContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 209;
+				State = 211;
 				shapeinit();
 				}
 				break;
@@ -1355,13 +1355,13 @@ public partial class AnimationLanguageRulesParser : Parser {
 				_localctx = new TermExpressionContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 210;
+				State = 212;
 				term();
 				}
 				break;
 			}
 			Context.Stop = TokenStream.LT(-1);
-			State = 219;
+			State = 221;
 			ErrorHandler.Sync(this);
 			_alt = Interpreter.AdaptivePredict(TokenStream,18,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
@@ -1373,16 +1373,16 @@ public partial class AnimationLanguageRulesParser : Parser {
 					{
 					_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 					PushNewRecursionContext(_localctx, _startState, RULE_expression);
-					State = 213;
-					if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
-					State = 214;
-					@operator();
 					State = 215;
+					if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
+					State = 216;
+					@operator();
+					State = 217;
 					expression(6);
 					}
 					} 
 				}
-				State = 221;
+				State = 223;
 				ErrorHandler.Sync(this);
 				_alt = Interpreter.AdaptivePredict(TokenStream,18,Context);
 			}
@@ -1433,7 +1433,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 222;
+			State = 224;
 			_la = TokenStream.LA(1);
 			if ( !(_la==TRUE || _la==FALSE) ) {
 			ErrorHandler.RecoverInline(this);
@@ -1492,7 +1492,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 224;
+			State = 226;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 65011712L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -1552,21 +1552,21 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 226;
+			State = 228;
 			Match(IDENTIFIER);
-			State = 227;
-			Match(LPAREN);
 			State = 229;
+			Match(LPAREN);
+			State = 231;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 67554544170811392L) != 0)) {
 				{
-				State = 228;
+				State = 230;
 				call_parameters(0);
 				}
 			}
 
-			State = 231;
+			State = 233;
 			Match(RPAREN);
 			}
 		}
@@ -1633,7 +1633,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 233;
+			State = 235;
 			_la = TokenStream.LA(1);
 			if ( !(_la==CIRCLE || _la==POLYGON) ) {
 			ErrorHandler.RecoverInline(this);
@@ -1642,31 +1642,31 @@ public partial class AnimationLanguageRulesParser : Parser {
 				ErrorHandler.ReportMatch(this);
 			    Consume();
 			}
-			State = 234;
-			Match(LPAREN);
-			State = 235;
-			argName();
 			State = 236;
+			Match(LPAREN);
+			State = 237;
+			argName();
+			State = 238;
 			arg();
-			State = 243;
+			State = 245;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==COMMA) {
 				{
 				{
-				State = 237;
-				Match(COMMA);
-				State = 238;
-				argName();
 				State = 239;
+				Match(COMMA);
+				State = 240;
+				argName();
+				State = 241;
 				arg();
 				}
 				}
-				State = 245;
+				State = 247;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 246;
+			State = 248;
 			Match(RPAREN);
 			}
 		}
@@ -1714,9 +1714,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 248;
+			State = 250;
 			Match(IDENTIFIER);
-			State = 249;
+			State = 251;
 			Match(COLON);
 			}
 		}
@@ -1769,24 +1769,24 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 254;
+			State = 256;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,21,Context) ) {
 			case 1:
 				{
-				State = 251;
+				State = 253;
 				tuple();
 				}
 				break;
 			case 2:
 				{
-				State = 252;
+				State = 254;
 				expression(0);
 				}
 				break;
 			case 3:
 				{
-				State = 253;
+				State = 255;
 				Match(IDENTIFIER);
 				}
 				break;
@@ -1854,37 +1854,37 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 256;
-			Match(LPAREN);
-			State = 257;
-			argName();
 			State = 258;
-			arg();
+			Match(LPAREN);
 			State = 259;
-			Match(COMMA);
-			State = 260;
 			argName();
-			State = 261;
+			State = 260;
 			arg();
-			State = 268;
+			State = 261;
+			Match(COMMA);
+			State = 262;
+			argName();
+			State = 263;
+			arg();
+			State = 270;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==COMMA) {
 				{
 				{
-				State = 262;
-				Match(COMMA);
-				State = 263;
-				argName();
 				State = 264;
+				Match(COMMA);
+				State = 265;
+				argName();
+				State = 266;
 				arg();
 				}
 				}
-				State = 270;
+				State = 272;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 271;
+			State = 273;
 			Match(RPAREN);
 			}
 		}
@@ -1947,11 +1947,11 @@ public partial class AnimationLanguageRulesParser : Parser {
 			EnterOuterAlt(_localctx, 1);
 			{
 			{
-			State = 274;
+			State = 276;
 			call_parameter();
 			}
 			Context.Stop = TokenStream.LT(-1);
-			State = 281;
+			State = 283;
 			ErrorHandler.Sync(this);
 			_alt = Interpreter.AdaptivePredict(TokenStream,23,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
@@ -1963,16 +1963,16 @@ public partial class AnimationLanguageRulesParser : Parser {
 					{
 					_localctx = new Call_parametersContext(_parentctx, _parentState);
 					PushNewRecursionContext(_localctx, _startState, RULE_call_parameters);
-					State = 276;
-					if (!(Precpred(Context, 2))) throw new FailedPredicateException(this, "Precpred(Context, 2)");
-					State = 277;
-					Match(COMMA);
 					State = 278;
+					if (!(Precpred(Context, 2))) throw new FailedPredicateException(this, "Precpred(Context, 2)");
+					State = 279;
+					Match(COMMA);
+					State = 280;
 					call_parameter();
 					}
 					} 
 				}
-				State = 283;
+				State = 285;
 				ErrorHandler.Sync(this);
 				_alt = Interpreter.AdaptivePredict(TokenStream,23,Context);
 			}
@@ -2026,20 +2026,20 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 288;
+			State = 290;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,24,Context) ) {
 			case 1:
 				{
-				State = 284;
+				State = 286;
 				argName();
-				State = 285;
+				State = 287;
 				arg();
 				}
 				break;
 			case 2:
 				{
-				State = 287;
+				State = 289;
 				arg();
 				}
 				break;
@@ -2096,16 +2096,16 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 290;
+			State = 292;
 			prototype();
-			State = 293;
+			State = 295;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==COMMA) {
 				{
-				State = 291;
+				State = 293;
 				Match(COMMA);
-				State = 292;
+				State = 294;
 				prototypes();
 				}
 			}
@@ -2167,7 +2167,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 297;
+			State = 299;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case INT:
@@ -2177,38 +2177,38 @@ public partial class AnimationLanguageRulesParser : Parser {
 			case CIRCLE:
 			case POLYGON:
 				{
-				State = 295;
+				State = 297;
 				type();
 				}
 				break;
 			case GROUP:
 				{
-				State = 296;
+				State = 298;
 				Match(GROUP);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			State = 299;
-			Match(FUNCTION);
-			State = 300;
-			Match(IDENTIFIER);
 			State = 301;
-			Match(LPAREN);
+			Match(FUNCTION);
+			State = 302;
+			Match(IDENTIFIER);
 			State = 303;
+			Match(LPAREN);
+			State = 305;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 64512L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 18014398509546496L) != 0)) {
 				{
-				State = 302;
+				State = 304;
 				parameters();
 				}
 			}
 
-			State = 305;
+			State = 307;
 			Match(RPAREN);
-			State = 306;
+			State = 308;
 			Match(SEMICOLON);
 			}
 		}
@@ -2259,22 +2259,22 @@ public partial class AnimationLanguageRulesParser : Parser {
 		ParametersContext _localctx = new ParametersContext(Context, State);
 		EnterRule(_localctx, 48, RULE_parameters);
 		try {
-			State = 314;
+			State = 316;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,29,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 308;
+				State = 310;
 				parameter();
-				State = 311;
+				State = 313;
 				ErrorHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(TokenStream,28,Context) ) {
 				case 1:
 					{
-					State = 309;
+					State = 311;
 					Match(COMMA);
-					State = 310;
+					State = 312;
 					parameters();
 					}
 					break;
@@ -2284,7 +2284,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 313;
+				State = 315;
 				parameter();
 				}
 				break;
@@ -2309,6 +2309,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA() { return GetToken(AnimationLanguageRulesParser.COMMA, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ParametersContext parameters() {
 			return GetRuleContext<ParametersContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public FuncCallContext funcCall() {
+			return GetRuleContext<FuncCallContext>(0);
 		}
 		public ParameterContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -2338,24 +2341,24 @@ public partial class AnimationLanguageRulesParser : Parser {
 		ParameterContext _localctx = new ParameterContext(Context, State);
 		EnterRule(_localctx, 50, RULE_parameter);
 		try {
-			State = 325;
+			State = 328;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,31,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 316;
+				State = 318;
 				type();
-				State = 317;
+				State = 319;
 				Match(IDENTIFIER);
-				State = 320;
+				State = 322;
 				ErrorHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(TokenStream,30,Context) ) {
 				case 1:
 					{
-					State = 318;
+					State = 320;
 					Match(COMMA);
-					State = 319;
+					State = 321;
 					parameters();
 					}
 					break;
@@ -2365,10 +2368,17 @@ public partial class AnimationLanguageRulesParser : Parser {
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 322;
+				State = 324;
 				type();
-				State = 323;
+				State = 325;
 				Match(IDENTIFIER);
+				}
+				break;
+			case 3:
+				EnterOuterAlt(_localctx, 3);
+				{
+				State = 327;
+				funcCall();
 				}
 				break;
 			}
@@ -2430,7 +2440,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 329;
+			State = 332;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case INT:
@@ -2440,38 +2450,38 @@ public partial class AnimationLanguageRulesParser : Parser {
 			case CIRCLE:
 			case POLYGON:
 				{
-				State = 327;
+				State = 330;
 				type();
 				}
 				break;
 			case GROUP:
 				{
-				State = 328;
+				State = 331;
 				Match(GROUP);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			State = 331;
+			State = 334;
 			Match(FUNCTION);
-			State = 332;
-			Match(IDENTIFIER);
-			State = 333;
-			Match(LPAREN);
 			State = 335;
+			Match(IDENTIFIER);
+			State = 336;
+			Match(LPAREN);
+			State = 338;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 64512L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 18014398509546496L) != 0)) {
 				{
-				State = 334;
+				State = 337;
 				parameters();
 				}
 			}
 
-			State = 337;
+			State = 340;
 			Match(RPAREN);
-			State = 338;
+			State = 341;
 			block();
 			}
 		}
@@ -2525,13 +2535,13 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 340;
-			Match(LBRACE);
-			State = 341;
-			statements();
-			State = 342;
-			@return();
 			State = 343;
+			Match(LBRACE);
+			State = 344;
+			statements();
+			State = 345;
+			@return();
+			State = 346;
 			Match(RBRACE);
 			}
 		}
@@ -2581,22 +2591,22 @@ public partial class AnimationLanguageRulesParser : Parser {
 		StatementsContext _localctx = new StatementsContext(Context, State);
 		EnterRule(_localctx, 56, RULE_statements);
 		try {
-			State = 349;
+			State = 352;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,34,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 345;
+				State = 348;
 				statement();
-				State = 346;
+				State = 349;
 				statements();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 348;
+				State = 351;
 				statement();
 				}
 				break;
@@ -2654,34 +2664,34 @@ public partial class AnimationLanguageRulesParser : Parser {
 		StatementContext _localctx = new StatementContext(Context, State);
 		EnterRule(_localctx, 58, RULE_statement);
 		try {
-			State = 355;
+			State = 358;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,35,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 351;
+				State = 354;
 				assignment();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 352;
+				State = 355;
 				identifierGrouping();
 				}
 				break;
 			case 3:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 353;
+				State = 356;
 				loop();
 				}
 				break;
 			case 4:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 354;
+				State = 357;
 				conditional();
 				}
 				break;
@@ -2733,9 +2743,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 357;
+			State = 360;
 			Match(IDENTIFIER);
-			State = 358;
+			State = 361;
 			groupingElements();
 			}
 		}
@@ -2787,28 +2797,28 @@ public partial class AnimationLanguageRulesParser : Parser {
 		ReturnContext _localctx = new ReturnContext(Context, State);
 		EnterRule(_localctx, 62, RULE_return);
 		try {
-			State = 368;
+			State = 371;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,36,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 360;
+				State = 363;
 				Match(RETURN);
-				State = 361;
+				State = 364;
 				expression(0);
-				State = 362;
+				State = 365;
 				Match(SEMICOLON);
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 364;
+				State = 367;
 				Match(RETURN);
-				State = 365;
+				State = 368;
 				grouping();
-				State = 366;
+				State = 369;
 				Match(SEMICOLON);
 				}
 				break;
@@ -2860,20 +2870,20 @@ public partial class AnimationLanguageRulesParser : Parser {
 		LoopContext _localctx = new LoopContext(Context, State);
 		EnterRule(_localctx, 64, RULE_loop);
 		try {
-			State = 372;
+			State = 375;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case FOR:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 370;
+				State = 373;
 				for_loop();
 				}
 				break;
 			case WHILE:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 371;
+				State = 374;
 				while_loop();
 				}
 				break;
@@ -2939,21 +2949,21 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 374;
-			Match(FOR);
-			State = 375;
-			Match(LPAREN);
-			State = 376;
-			assignment();
 			State = 377;
-			condition();
+			Match(FOR);
 			State = 378;
-			Match(SEMICOLON);
+			Match(LPAREN);
 			State = 379;
 			assignment();
 			State = 380;
-			Match(RPAREN);
+			condition();
 			State = 381;
+			Match(SEMICOLON);
+			State = 382;
+			assignment();
+			State = 383;
+			Match(RPAREN);
+			State = 384;
 			block();
 			}
 		}
@@ -3008,15 +3018,15 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 383;
-			Match(WHILE);
-			State = 384;
-			Match(LPAREN);
-			State = 385;
-			condition();
 			State = 386;
-			Match(RPAREN);
+			Match(WHILE);
 			State = 387;
+			Match(LPAREN);
+			State = 388;
+			condition();
+			State = 389;
+			Match(RPAREN);
+			State = 390;
 			block();
 			}
 		}
@@ -3081,9 +3091,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 389;
-			expression(0);
 			State = 392;
+			expression(0);
+			State = 395;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case LT:
@@ -3093,29 +3103,29 @@ public partial class AnimationLanguageRulesParser : Parser {
 			case EQ:
 			case NE:
 				{
-				State = 390;
+				State = 393;
 				comparator();
 				}
 				break;
 			case AND:
 			case OR:
 				{
-				State = 391;
+				State = 394;
 				logicOpp();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			State = 394;
+			State = 397;
 			expression(0);
-			State = 403;
+			State = 406;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 107307073536L) != 0)) {
 				{
 				{
-				State = 397;
+				State = 400;
 				ErrorHandler.Sync(this);
 				switch (TokenStream.LA(1)) {
 				case LT:
@@ -3125,25 +3135,25 @@ public partial class AnimationLanguageRulesParser : Parser {
 				case EQ:
 				case NE:
 					{
-					State = 395;
+					State = 398;
 					comparator();
 					}
 					break;
 				case AND:
 				case OR:
 					{
-					State = 396;
+					State = 399;
 					logicOpp();
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
-				State = 399;
+				State = 402;
 				expression(0);
 				}
 				}
-				State = 405;
+				State = 408;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -3194,7 +3204,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 406;
+			State = 409;
 			_la = TokenStream.LA(1);
 			if ( !(_la==AND || _la==OR) ) {
 			ErrorHandler.RecoverInline(this);
@@ -3254,7 +3264,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 408;
+			State = 411;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 4227858432L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -3327,38 +3337,38 @@ public partial class AnimationLanguageRulesParser : Parser {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 410;
-			Match(IF);
-			State = 411;
-			Match(LPAREN);
-			State = 412;
-			condition();
 			State = 413;
-			Match(RPAREN);
+			Match(IF);
 			State = 414;
+			Match(LPAREN);
+			State = 415;
+			condition();
+			State = 416;
+			Match(RPAREN);
+			State = 417;
 			block();
-			State = 418;
+			State = 421;
 			ErrorHandler.Sync(this);
 			_alt = Interpreter.AdaptivePredict(TokenStream,41,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					State = 415;
+					State = 418;
 					elseif();
 					}
 					} 
 				}
-				State = 420;
+				State = 423;
 				ErrorHandler.Sync(this);
 				_alt = Interpreter.AdaptivePredict(TokenStream,41,Context);
 			}
-			State = 422;
+			State = 425;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==ELSE) {
 				{
-				State = 421;
+				State = 424;
 				@else();
 				}
 			}
@@ -3417,17 +3427,17 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 424;
-			Match(ELSE);
-			State = 425;
-			Match(IF);
-			State = 426;
-			Match(LPAREN);
 			State = 427;
-			condition();
+			Match(ELSE);
 			State = 428;
-			Match(RPAREN);
+			Match(IF);
 			State = 429;
+			Match(LPAREN);
+			State = 430;
+			condition();
+			State = 431;
+			Match(RPAREN);
+			State = 432;
 			block();
 			}
 		}
@@ -3477,9 +3487,9 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 431;
+			State = 434;
 			Match(ELSE);
-			State = 432;
+			State = 435;
 			block();
 			}
 		}
@@ -3532,14 +3542,14 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 434;
+			State = 437;
 			sequence();
-			State = 436;
+			State = 439;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==SEQ) {
 				{
-				State = 435;
+				State = 438;
 				sequences();
 				}
 			}
@@ -3599,26 +3609,93 @@ public partial class AnimationLanguageRulesParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 438;
+			State = 441;
 			Match(SEQ);
-			State = 439;
-			Match(IDENTIFIER);
-			State = 440;
-			Match(LPAREN);
 			State = 442;
+			Match(IDENTIFIER);
+			State = 443;
+			Match(LPAREN);
+			State = 445;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 64512L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 18014398509546496L) != 0)) {
 				{
-				State = 441;
+				State = 444;
 				parameters();
 				}
 			}
 
-			State = 444;
+			State = 447;
 			Match(RPAREN);
-			State = 445;
+			State = 448;
 			seqBlock();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class SequenceCallContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(AnimationLanguageRulesParser.IDENTIFIER, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAREN() { return GetToken(AnimationLanguageRulesParser.LPAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAREN() { return GetToken(AnimationLanguageRulesParser.RPAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public Call_parametersContext call_parameters() {
+			return GetRuleContext<Call_parametersContext>(0);
+		}
+		public SequenceCallContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_sequenceCall; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.EnterSequenceCall(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IAnimationLanguageRulesListener typedListener = listener as IAnimationLanguageRulesListener;
+			if (typedListener != null) typedListener.ExitSequenceCall(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAnimationLanguageRulesVisitor<TResult> typedVisitor = visitor as IAnimationLanguageRulesVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSequenceCall(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public SequenceCallContext sequenceCall() {
+		SequenceCallContext _localctx = new SequenceCallContext(Context, State);
+		EnterRule(_localctx, 86, RULE_sequenceCall);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 450;
+			Match(IDENTIFIER);
+			State = 451;
+			Match(LPAREN);
+			State = 453;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 67554544170811392L) != 0)) {
+				{
+				State = 452;
+				call_parameters(0);
+				}
+			}
+
+			State = 455;
+			Match(RPAREN);
 			}
 		}
 		catch (RecognitionException re) {
@@ -3664,15 +3741,15 @@ public partial class AnimationLanguageRulesParser : Parser {
 	[RuleVersion(0)]
 	public SeqBlockContext seqBlock() {
 		SeqBlockContext _localctx = new SeqBlockContext(Context, State);
-		EnterRule(_localctx, 86, RULE_seqBlock);
+		EnterRule(_localctx, 88, RULE_seqBlock);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 447;
+			State = 457;
 			Match(LBRACE);
-			State = 448;
+			State = 458;
 			seqBlockParts();
-			State = 449;
+			State = 459;
 			Match(RBRACE);
 			}
 		}
@@ -3723,40 +3800,40 @@ public partial class AnimationLanguageRulesParser : Parser {
 	[RuleVersion(0)]
 	public SeqBlockPartsContext seqBlockParts() {
 		SeqBlockPartsContext _localctx = new SeqBlockPartsContext(Context, State);
-		EnterRule(_localctx, 88, RULE_seqBlockParts);
+		EnterRule(_localctx, 90, RULE_seqBlockParts);
 		try {
-			State = 459;
+			State = 469;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,45,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,46,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 451;
+				State = 461;
 				statement();
-				State = 452;
+				State = 462;
 				seqBlockParts();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 454;
+				State = 464;
 				statement();
 				}
 				break;
 			case 3:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 455;
+				State = 465;
 				animation();
-				State = 456;
+				State = 466;
 				seqBlockParts();
 				}
 				break;
 			case 4:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 458;
+				State = 468;
 				animation();
 				}
 				break;
@@ -3807,28 +3884,28 @@ public partial class AnimationLanguageRulesParser : Parser {
 	[RuleVersion(0)]
 	public AnimationContext animation() {
 		AnimationContext _localctx = new AnimationContext(Context, State);
-		EnterRule(_localctx, 90, RULE_animation);
+		EnterRule(_localctx, 92, RULE_animation);
 		try {
-			State = 467;
+			State = 477;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,46,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,47,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 461;
+				State = 471;
 				Match(IDENTIFIER);
-				State = 462;
+				State = 472;
 				transitions();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 463;
+				State = 473;
 				Match(IDENTIFIER);
-				State = 464;
+				State = 474;
 				command();
-				State = 465;
+				State = 475;
 				transitions();
 				}
 				break;
@@ -3882,35 +3959,35 @@ public partial class AnimationLanguageRulesParser : Parser {
 	[RuleVersion(0)]
 	public TransitionsContext transitions() {
 		TransitionsContext _localctx = new TransitionsContext(Context, State);
-		EnterRule(_localctx, 92, RULE_transitions);
+		EnterRule(_localctx, 94, RULE_transitions);
 		try {
-			State = 478;
+			State = 488;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,47,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,48,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 469;
+				State = 479;
 				transition();
-				State = 470;
+				State = 480;
 				transitions();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 472;
+				State = 482;
 				transition();
-				State = 473;
+				State = 483;
 				Match(SEMICOLON);
 				}
 				break;
 			case 3:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 475;
+				State = 485;
 				command();
-				State = 476;
+				State = 486;
 				transitions();
 				}
 				break;
@@ -3960,17 +4037,17 @@ public partial class AnimationLanguageRulesParser : Parser {
 	[RuleVersion(0)]
 	public TransitionContext transition() {
 		TransitionContext _localctx = new TransitionContext(Context, State);
-		EnterRule(_localctx, 94, RULE_transition);
+		EnterRule(_localctx, 96, RULE_transition);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 480;
+			State = 490;
 			Match(ARROW);
-			State = 481;
+			State = 491;
 			Match(LPAREN);
-			State = 482;
+			State = 492;
 			call_parameters(0);
-			State = 483;
+			State = 493;
 			Match(RPAREN);
 			}
 		}
@@ -4019,28 +4096,28 @@ public partial class AnimationLanguageRulesParser : Parser {
 	[RuleVersion(0)]
 	public CommandContext command() {
 		CommandContext _localctx = new CommandContext(Context, State);
-		EnterRule(_localctx, 96, RULE_command);
+		EnterRule(_localctx, 98, RULE_command);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 485;
+			State = 495;
 			Match(ARROW);
-			State = 486;
+			State = 496;
 			Match(IDENTIFIER);
-			State = 487;
+			State = 497;
 			Match(LPAREN);
-			State = 489;
+			State = 499;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 67554544170811392L) != 0)) {
 				{
-				State = 488;
+				State = 498;
 				call_parameters(0);
 				}
 			}
 
-			State = 491;
+			State = 501;
 			Match(RPAREN);
 			}
 		}
@@ -4090,28 +4167,28 @@ public partial class AnimationLanguageRulesParser : Parser {
 	[RuleVersion(0)]
 	public TimelineBlockContext timelineBlock() {
 		TimelineBlockContext _localctx = new TimelineBlockContext(Context, State);
-		EnterRule(_localctx, 98, RULE_timelineBlock);
+		EnterRule(_localctx, 100, RULE_timelineBlock);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 493;
+			State = 503;
 			Match(LBRACE);
-			State = 497;
+			State = 507;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==FRAME) {
 				{
 				{
-				State = 494;
+				State = 504;
 				frameDef();
 				}
 				}
-				State = 499;
+				State = 509;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 500;
+			State = 510;
 			Match(RBRACE);
 			}
 		}
@@ -4130,13 +4207,10 @@ public partial class AnimationLanguageRulesParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FRAME() { return GetToken(AnimationLanguageRulesParser.FRAME, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode INTEGER() { return GetToken(AnimationLanguageRulesParser.INTEGER, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(AnimationLanguageRulesParser.COLON, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(AnimationLanguageRulesParser.IDENTIFIER, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAREN() { return GetToken(AnimationLanguageRulesParser.LPAREN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAREN() { return GetToken(AnimationLanguageRulesParser.RPAREN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AnimationLanguageRulesParser.SEMICOLON, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ParametersContext parameters() {
-			return GetRuleContext<ParametersContext>(0);
+		[System.Diagnostics.DebuggerNonUserCode] public SequenceCallContext sequenceCall() {
+			return GetRuleContext<SequenceCallContext>(0);
 		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AnimationLanguageRulesParser.SEMICOLON, 0); }
 		public FrameDefContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -4163,34 +4237,19 @@ public partial class AnimationLanguageRulesParser : Parser {
 	[RuleVersion(0)]
 	public FrameDefContext frameDef() {
 		FrameDefContext _localctx = new FrameDefContext(Context, State);
-		EnterRule(_localctx, 100, RULE_frameDef);
-		int _la;
+		EnterRule(_localctx, 102, RULE_frameDef);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 502;
+			State = 512;
 			Match(FRAME);
-			State = 503;
+			State = 513;
 			Match(INTEGER);
-			State = 504;
+			State = 514;
 			Match(COLON);
-			State = 505;
-			Match(IDENTIFIER);
-			State = 506;
-			Match(LPAREN);
-			State = 508;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 64512L) != 0)) {
-				{
-				State = 507;
-				parameters();
-				}
-			}
-
-			State = 510;
-			Match(RPAREN);
-			State = 511;
+			State = 515;
+			sequenceCall();
+			State = 516;
 			Match(SEMICOLON);
 			}
 		}
@@ -4226,174 +4285,175 @@ public partial class AnimationLanguageRulesParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,57,514,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,57,519,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
 		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,2,21,7,21,
 		2,22,7,22,2,23,7,23,2,24,7,24,2,25,7,25,2,26,7,26,2,27,7,27,2,28,7,28,
 		2,29,7,29,2,30,7,30,2,31,7,31,2,32,7,32,2,33,7,33,2,34,7,34,2,35,7,35,
 		2,36,7,36,2,37,7,37,2,38,7,38,2,39,7,39,2,40,7,40,2,41,7,41,2,42,7,42,
 		2,43,7,43,2,44,7,44,2,45,7,45,2,46,7,46,2,47,7,47,2,48,7,48,2,49,7,49,
-		2,50,7,50,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,3,1,111,8,1,1,1,1,1,3,1,115,
-		8,1,1,1,5,1,118,8,1,10,1,12,1,121,9,1,1,1,3,1,124,8,1,1,1,1,1,3,1,128,
-		8,1,1,2,1,2,1,2,1,3,1,3,1,3,1,3,1,4,1,4,1,4,3,4,140,8,4,1,4,1,4,3,4,144,
-		8,4,1,5,1,5,1,5,1,5,1,6,1,6,1,6,3,6,153,8,6,1,7,3,7,156,8,7,1,7,1,7,1,
-		7,1,7,3,7,162,8,7,1,7,3,7,165,8,7,1,7,1,7,1,7,3,7,170,8,7,1,7,1,7,1,7,
-		3,7,175,8,7,1,7,1,7,1,7,1,7,3,7,181,8,7,1,8,1,8,1,9,1,9,1,10,1,10,1,10,
-		1,10,3,10,191,8,10,1,10,1,10,1,11,1,11,1,12,1,12,3,12,199,8,12,1,12,1,
-		12,3,12,203,8,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,3,12,212,8,12,1,12,
-		1,12,1,12,1,12,5,12,218,8,12,10,12,12,12,221,9,12,1,13,1,13,1,14,1,14,
-		1,15,1,15,1,15,3,15,230,8,15,1,15,1,15,1,16,1,16,1,16,1,16,1,16,1,16,1,
-		16,1,16,5,16,242,8,16,10,16,12,16,245,9,16,1,16,1,16,1,17,1,17,1,17,1,
-		18,1,18,1,18,3,18,255,8,18,1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,
-		1,19,5,19,267,8,19,10,19,12,19,270,9,19,1,19,1,19,1,20,1,20,1,20,1,20,
-		1,20,1,20,5,20,280,8,20,10,20,12,20,283,9,20,1,21,1,21,1,21,1,21,3,21,
-		289,8,21,1,22,1,22,1,22,3,22,294,8,22,1,23,1,23,3,23,298,8,23,1,23,1,23,
-		1,23,1,23,3,23,304,8,23,1,23,1,23,1,23,1,24,1,24,1,24,3,24,312,8,24,1,
-		24,3,24,315,8,24,1,25,1,25,1,25,1,25,3,25,321,8,25,1,25,1,25,1,25,3,25,
-		326,8,25,1,26,1,26,3,26,330,8,26,1,26,1,26,1,26,1,26,3,26,336,8,26,1,26,
-		1,26,1,26,1,27,1,27,1,27,1,27,1,27,1,28,1,28,1,28,1,28,3,28,350,8,28,1,
-		29,1,29,1,29,1,29,3,29,356,8,29,1,30,1,30,1,30,1,31,1,31,1,31,1,31,1,31,
-		1,31,1,31,1,31,3,31,369,8,31,1,32,1,32,3,32,373,8,32,1,33,1,33,1,33,1,
-		33,1,33,1,33,1,33,1,33,1,33,1,34,1,34,1,34,1,34,1,34,1,34,1,35,1,35,1,
-		35,3,35,393,8,35,1,35,1,35,1,35,3,35,398,8,35,1,35,1,35,5,35,402,8,35,
-		10,35,12,35,405,9,35,1,36,1,36,1,37,1,37,1,38,1,38,1,38,1,38,1,38,1,38,
-		5,38,417,8,38,10,38,12,38,420,9,38,1,38,3,38,423,8,38,1,39,1,39,1,39,1,
-		39,1,39,1,39,1,39,1,40,1,40,1,40,1,41,1,41,3,41,437,8,41,1,42,1,42,1,42,
-		1,42,3,42,443,8,42,1,42,1,42,1,42,1,43,1,43,1,43,1,43,1,44,1,44,1,44,1,
-		44,1,44,1,44,1,44,1,44,3,44,460,8,44,1,45,1,45,1,45,1,45,1,45,1,45,3,45,
-		468,8,45,1,46,1,46,1,46,1,46,1,46,1,46,1,46,1,46,1,46,3,46,479,8,46,1,
-		47,1,47,1,47,1,47,1,47,1,48,1,48,1,48,1,48,3,48,490,8,48,1,48,1,48,1,49,
-		1,49,5,49,496,8,49,10,49,12,49,499,9,49,1,49,1,49,1,50,1,50,1,50,1,50,
-		1,50,1,50,3,50,509,8,50,1,50,1,50,1,50,1,50,0,2,24,40,51,0,2,4,6,8,10,
-		12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,
-		60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,92,94,96,98,100,0,8,1,
-		0,37,38,1,0,32,34,1,0,10,15,1,0,16,17,1,0,21,25,1,0,14,15,1,0,35,36,1,
-		0,26,31,529,0,102,1,0,0,0,2,110,1,0,0,0,4,129,1,0,0,0,6,132,1,0,0,0,8,
-		139,1,0,0,0,10,145,1,0,0,0,12,149,1,0,0,0,14,180,1,0,0,0,16,182,1,0,0,
-		0,18,184,1,0,0,0,20,186,1,0,0,0,22,194,1,0,0,0,24,211,1,0,0,0,26,222,1,
-		0,0,0,28,224,1,0,0,0,30,226,1,0,0,0,32,233,1,0,0,0,34,248,1,0,0,0,36,254,
-		1,0,0,0,38,256,1,0,0,0,40,273,1,0,0,0,42,288,1,0,0,0,44,290,1,0,0,0,46,
-		297,1,0,0,0,48,314,1,0,0,0,50,325,1,0,0,0,52,329,1,0,0,0,54,340,1,0,0,
-		0,56,349,1,0,0,0,58,355,1,0,0,0,60,357,1,0,0,0,62,368,1,0,0,0,64,372,1,
-		0,0,0,66,374,1,0,0,0,68,383,1,0,0,0,70,389,1,0,0,0,72,406,1,0,0,0,74,408,
-		1,0,0,0,76,410,1,0,0,0,78,424,1,0,0,0,80,431,1,0,0,0,82,434,1,0,0,0,84,
-		438,1,0,0,0,86,447,1,0,0,0,88,459,1,0,0,0,90,467,1,0,0,0,92,478,1,0,0,
-		0,94,480,1,0,0,0,96,485,1,0,0,0,98,493,1,0,0,0,100,502,1,0,0,0,102,103,
-		3,2,1,0,103,104,5,0,0,1,104,1,1,0,0,0,105,106,5,2,0,0,106,107,5,41,0,0,
-		107,108,3,44,22,0,108,109,5,42,0,0,109,111,1,0,0,0,110,105,1,0,0,0,110,
-		111,1,0,0,0,111,114,1,0,0,0,112,113,5,1,0,0,113,115,3,4,2,0,114,112,1,
-		0,0,0,114,115,1,0,0,0,115,119,1,0,0,0,116,118,3,52,26,0,117,116,1,0,0,
-		0,118,121,1,0,0,0,119,117,1,0,0,0,119,120,1,0,0,0,120,123,1,0,0,0,121,
-		119,1,0,0,0,122,124,3,82,41,0,123,122,1,0,0,0,123,124,1,0,0,0,124,125,
-		1,0,0,0,125,127,5,3,0,0,126,128,3,98,49,0,127,126,1,0,0,0,127,128,1,0,
-		0,0,128,3,1,0,0,0,129,130,3,6,3,0,130,131,5,46,0,0,131,5,1,0,0,0,132,133,
-		5,43,0,0,133,134,3,8,4,0,134,135,5,44,0,0,135,7,1,0,0,0,136,140,3,10,5,
-		0,137,140,3,24,12,0,138,140,5,54,0,0,139,136,1,0,0,0,139,137,1,0,0,0,139,
-		138,1,0,0,0,140,143,1,0,0,0,141,142,5,47,0,0,142,144,3,8,4,0,143,141,1,
-		0,0,0,143,144,1,0,0,0,144,9,1,0,0,0,145,146,5,54,0,0,146,147,5,32,0,0,
-		147,148,3,24,12,0,148,11,1,0,0,0,149,152,3,14,7,0,150,151,5,46,0,0,151,
-		153,3,12,6,0,152,150,1,0,0,0,152,153,1,0,0,0,153,13,1,0,0,0,154,156,3,
-		22,11,0,155,154,1,0,0,0,155,156,1,0,0,0,156,157,1,0,0,0,157,158,5,54,0,
-		0,158,161,3,18,9,0,159,162,3,24,12,0,160,162,5,54,0,0,161,159,1,0,0,0,
-		161,160,1,0,0,0,162,164,1,0,0,0,163,165,5,46,0,0,164,163,1,0,0,0,164,165,
-		1,0,0,0,165,181,1,0,0,0,166,167,5,54,0,0,167,169,3,16,8,0,168,170,5,46,
-		0,0,169,168,1,0,0,0,169,170,1,0,0,0,170,181,1,0,0,0,171,172,3,16,8,0,172,
-		174,5,54,0,0,173,175,5,46,0,0,174,173,1,0,0,0,174,175,1,0,0,0,175,181,
-		1,0,0,0,176,177,5,54,0,0,177,178,3,6,3,0,178,179,5,46,0,0,179,181,1,0,
-		0,0,180,155,1,0,0,0,180,166,1,0,0,0,180,171,1,0,0,0,180,176,1,0,0,0,181,
-		15,1,0,0,0,182,183,7,0,0,0,183,17,1,0,0,0,184,185,7,1,0,0,185,19,1,0,0,
-		0,186,190,5,39,0,0,187,191,3,24,12,0,188,191,5,54,0,0,189,191,3,20,10,
-		0,190,187,1,0,0,0,190,188,1,0,0,0,190,189,1,0,0,0,191,192,1,0,0,0,192,
-		193,5,40,0,0,193,21,1,0,0,0,194,195,7,2,0,0,195,23,1,0,0,0,196,198,6,12,
-		-1,0,197,199,5,22,0,0,198,197,1,0,0,0,198,199,1,0,0,0,199,200,1,0,0,0,
-		200,212,5,52,0,0,201,203,5,22,0,0,202,201,1,0,0,0,202,203,1,0,0,0,203,
-		204,1,0,0,0,204,212,5,53,0,0,205,212,5,55,0,0,206,212,3,26,13,0,207,212,
-		5,54,0,0,208,212,3,30,15,0,209,212,3,32,16,0,210,212,3,20,10,0,211,196,
-		1,0,0,0,211,202,1,0,0,0,211,205,1,0,0,0,211,206,1,0,0,0,211,207,1,0,0,
-		0,211,208,1,0,0,0,211,209,1,0,0,0,211,210,1,0,0,0,212,219,1,0,0,0,213,
-		214,10,5,0,0,214,215,3,28,14,0,215,216,3,24,12,6,216,218,1,0,0,0,217,213,
-		1,0,0,0,218,221,1,0,0,0,219,217,1,0,0,0,219,220,1,0,0,0,220,25,1,0,0,0,
-		221,219,1,0,0,0,222,223,7,3,0,0,223,27,1,0,0,0,224,225,7,4,0,0,225,29,
-		1,0,0,0,226,227,5,54,0,0,227,229,5,39,0,0,228,230,3,40,20,0,229,228,1,
-		0,0,0,229,230,1,0,0,0,230,231,1,0,0,0,231,232,5,40,0,0,232,31,1,0,0,0,
-		233,234,7,5,0,0,234,235,5,39,0,0,235,236,3,34,17,0,236,243,3,36,18,0,237,
-		238,5,47,0,0,238,239,3,34,17,0,239,240,3,36,18,0,240,242,1,0,0,0,241,237,
-		1,0,0,0,242,245,1,0,0,0,243,241,1,0,0,0,243,244,1,0,0,0,244,246,1,0,0,
-		0,245,243,1,0,0,0,246,247,5,40,0,0,247,33,1,0,0,0,248,249,5,54,0,0,249,
-		250,5,45,0,0,250,35,1,0,0,0,251,255,3,38,19,0,252,255,3,24,12,0,253,255,
-		5,54,0,0,254,251,1,0,0,0,254,252,1,0,0,0,254,253,1,0,0,0,255,37,1,0,0,
-		0,256,257,5,39,0,0,257,258,3,34,17,0,258,259,3,36,18,0,259,260,5,47,0,
-		0,260,261,3,34,17,0,261,268,3,36,18,0,262,263,5,47,0,0,263,264,3,34,17,
-		0,264,265,3,36,18,0,265,267,1,0,0,0,266,262,1,0,0,0,267,270,1,0,0,0,268,
-		266,1,0,0,0,268,269,1,0,0,0,269,271,1,0,0,0,270,268,1,0,0,0,271,272,5,
-		40,0,0,272,39,1,0,0,0,273,274,6,20,-1,0,274,275,3,42,21,0,275,281,1,0,
-		0,0,276,277,10,2,0,0,277,278,5,47,0,0,278,280,3,42,21,0,279,276,1,0,0,
-		0,280,283,1,0,0,0,281,279,1,0,0,0,281,282,1,0,0,0,282,41,1,0,0,0,283,281,
-		1,0,0,0,284,285,3,34,17,0,285,286,3,36,18,0,286,289,1,0,0,0,287,289,3,
-		36,18,0,288,284,1,0,0,0,288,287,1,0,0,0,289,43,1,0,0,0,290,293,3,46,23,
-		0,291,292,5,47,0,0,292,294,3,44,22,0,293,291,1,0,0,0,293,294,1,0,0,0,294,
-		45,1,0,0,0,295,298,3,22,11,0,296,298,5,9,0,0,297,295,1,0,0,0,297,296,1,
-		0,0,0,298,299,1,0,0,0,299,300,5,19,0,0,300,301,5,54,0,0,301,303,5,39,0,
-		0,302,304,3,48,24,0,303,302,1,0,0,0,303,304,1,0,0,0,304,305,1,0,0,0,305,
-		306,5,40,0,0,306,307,5,46,0,0,307,47,1,0,0,0,308,311,3,50,25,0,309,310,
-		5,47,0,0,310,312,3,48,24,0,311,309,1,0,0,0,311,312,1,0,0,0,312,315,1,0,
-		0,0,313,315,3,50,25,0,314,308,1,0,0,0,314,313,1,0,0,0,315,49,1,0,0,0,316,
-		317,3,22,11,0,317,320,5,54,0,0,318,319,5,47,0,0,319,321,3,48,24,0,320,
-		318,1,0,0,0,320,321,1,0,0,0,321,326,1,0,0,0,322,323,3,22,11,0,323,324,
-		5,54,0,0,324,326,1,0,0,0,325,316,1,0,0,0,325,322,1,0,0,0,326,51,1,0,0,
-		0,327,330,3,22,11,0,328,330,5,9,0,0,329,327,1,0,0,0,329,328,1,0,0,0,330,
-		331,1,0,0,0,331,332,5,19,0,0,332,333,5,54,0,0,333,335,5,39,0,0,334,336,
-		3,48,24,0,335,334,1,0,0,0,335,336,1,0,0,0,336,337,1,0,0,0,337,338,5,40,
-		0,0,338,339,3,54,27,0,339,53,1,0,0,0,340,341,5,41,0,0,341,342,3,56,28,
-		0,342,343,3,62,31,0,343,344,5,42,0,0,344,55,1,0,0,0,345,346,3,58,29,0,
-		346,347,3,56,28,0,347,350,1,0,0,0,348,350,3,58,29,0,349,345,1,0,0,0,349,
-		348,1,0,0,0,350,57,1,0,0,0,351,356,3,14,7,0,352,356,3,60,30,0,353,356,
-		3,64,32,0,354,356,3,76,38,0,355,351,1,0,0,0,355,352,1,0,0,0,355,353,1,
-		0,0,0,355,354,1,0,0,0,356,59,1,0,0,0,357,358,5,54,0,0,358,359,3,8,4,0,
-		359,61,1,0,0,0,360,361,5,20,0,0,361,362,3,24,12,0,362,363,5,46,0,0,363,
-		369,1,0,0,0,364,365,5,20,0,0,365,366,3,6,3,0,366,367,5,46,0,0,367,369,
-		1,0,0,0,368,360,1,0,0,0,368,364,1,0,0,0,369,63,1,0,0,0,370,373,3,66,33,
-		0,371,373,3,68,34,0,372,370,1,0,0,0,372,371,1,0,0,0,373,65,1,0,0,0,374,
-		375,5,4,0,0,375,376,5,39,0,0,376,377,3,14,7,0,377,378,3,70,35,0,378,379,
-		5,46,0,0,379,380,3,14,7,0,380,381,5,40,0,0,381,382,3,54,27,0,382,67,1,
-		0,0,0,383,384,5,5,0,0,384,385,5,39,0,0,385,386,3,70,35,0,386,387,5,40,
-		0,0,387,388,3,54,27,0,388,69,1,0,0,0,389,392,3,24,12,0,390,393,3,74,37,
-		0,391,393,3,72,36,0,392,390,1,0,0,0,392,391,1,0,0,0,393,394,1,0,0,0,394,
-		403,3,24,12,0,395,398,3,74,37,0,396,398,3,72,36,0,397,395,1,0,0,0,397,
-		396,1,0,0,0,398,399,1,0,0,0,399,400,3,24,12,0,400,402,1,0,0,0,401,397,
-		1,0,0,0,402,405,1,0,0,0,403,401,1,0,0,0,403,404,1,0,0,0,404,71,1,0,0,0,
-		405,403,1,0,0,0,406,407,7,6,0,0,407,73,1,0,0,0,408,409,7,7,0,0,409,75,
-		1,0,0,0,410,411,5,6,0,0,411,412,5,39,0,0,412,413,3,70,35,0,413,414,5,40,
-		0,0,414,418,3,54,27,0,415,417,3,78,39,0,416,415,1,0,0,0,417,420,1,0,0,
-		0,418,416,1,0,0,0,418,419,1,0,0,0,419,422,1,0,0,0,420,418,1,0,0,0,421,
-		423,3,80,40,0,422,421,1,0,0,0,422,423,1,0,0,0,423,77,1,0,0,0,424,425,5,
-		7,0,0,425,426,5,6,0,0,426,427,5,39,0,0,427,428,3,70,35,0,428,429,5,40,
-		0,0,429,430,3,54,27,0,430,79,1,0,0,0,431,432,5,7,0,0,432,433,3,54,27,0,
-		433,81,1,0,0,0,434,436,3,84,42,0,435,437,3,82,41,0,436,435,1,0,0,0,436,
-		437,1,0,0,0,437,83,1,0,0,0,438,439,5,8,0,0,439,440,5,54,0,0,440,442,5,
-		39,0,0,441,443,3,48,24,0,442,441,1,0,0,0,442,443,1,0,0,0,443,444,1,0,0,
-		0,444,445,5,40,0,0,445,446,3,86,43,0,446,85,1,0,0,0,447,448,5,41,0,0,448,
-		449,3,88,44,0,449,450,5,42,0,0,450,87,1,0,0,0,451,452,3,58,29,0,452,453,
-		3,88,44,0,453,460,1,0,0,0,454,460,3,58,29,0,455,456,3,90,45,0,456,457,
-		3,88,44,0,457,460,1,0,0,0,458,460,3,90,45,0,459,451,1,0,0,0,459,454,1,
-		0,0,0,459,455,1,0,0,0,459,458,1,0,0,0,460,89,1,0,0,0,461,462,5,54,0,0,
-		462,468,3,92,46,0,463,464,5,54,0,0,464,465,3,96,48,0,465,466,3,92,46,0,
-		466,468,1,0,0,0,467,461,1,0,0,0,467,463,1,0,0,0,468,91,1,0,0,0,469,470,
-		3,94,47,0,470,471,3,92,46,0,471,479,1,0,0,0,472,473,3,94,47,0,473,474,
-		5,46,0,0,474,479,1,0,0,0,475,476,3,96,48,0,476,477,3,92,46,0,477,479,1,
-		0,0,0,478,469,1,0,0,0,478,472,1,0,0,0,478,475,1,0,0,0,479,93,1,0,0,0,480,
-		481,5,48,0,0,481,482,5,39,0,0,482,483,3,40,20,0,483,484,5,40,0,0,484,95,
-		1,0,0,0,485,486,5,48,0,0,486,487,5,54,0,0,487,489,5,39,0,0,488,490,3,40,
-		20,0,489,488,1,0,0,0,489,490,1,0,0,0,490,491,1,0,0,0,491,492,5,40,0,0,
-		492,97,1,0,0,0,493,497,5,41,0,0,494,496,3,100,50,0,495,494,1,0,0,0,496,
-		499,1,0,0,0,497,495,1,0,0,0,497,498,1,0,0,0,498,500,1,0,0,0,499,497,1,
-		0,0,0,500,501,5,42,0,0,501,99,1,0,0,0,502,503,5,18,0,0,503,504,5,52,0,
-		0,504,505,5,45,0,0,505,506,5,54,0,0,506,508,5,39,0,0,507,509,3,48,24,0,
-		508,507,1,0,0,0,508,509,1,0,0,0,509,510,1,0,0,0,510,511,5,40,0,0,511,512,
-		5,46,0,0,512,101,1,0,0,0,51,110,114,119,123,127,139,143,152,155,161,164,
-		169,174,180,190,198,202,211,219,229,243,254,268,281,288,293,297,303,311,
-		314,320,325,329,335,349,355,368,372,392,397,403,418,422,436,442,459,467,
-		478,489,497,508
+		2,50,7,50,2,51,7,51,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,3,1,113,8,1,1,1,1,
+		1,3,1,117,8,1,1,1,5,1,120,8,1,10,1,12,1,123,9,1,1,1,3,1,126,8,1,1,1,1,
+		1,3,1,130,8,1,1,2,1,2,1,2,1,3,1,3,1,3,1,3,1,4,1,4,1,4,3,4,142,8,4,1,4,
+		1,4,3,4,146,8,4,1,5,1,5,1,5,1,5,1,6,1,6,1,6,3,6,155,8,6,1,7,3,7,158,8,
+		7,1,7,1,7,1,7,1,7,3,7,164,8,7,1,7,3,7,167,8,7,1,7,1,7,1,7,3,7,172,8,7,
+		1,7,1,7,1,7,3,7,177,8,7,1,7,1,7,1,7,1,7,3,7,183,8,7,1,8,1,8,1,9,1,9,1,
+		10,1,10,1,10,1,10,3,10,193,8,10,1,10,1,10,1,11,1,11,1,12,1,12,3,12,201,
+		8,12,1,12,1,12,3,12,205,8,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,3,12,214,
+		8,12,1,12,1,12,1,12,1,12,5,12,220,8,12,10,12,12,12,223,9,12,1,13,1,13,
+		1,14,1,14,1,15,1,15,1,15,3,15,232,8,15,1,15,1,15,1,16,1,16,1,16,1,16,1,
+		16,1,16,1,16,1,16,5,16,244,8,16,10,16,12,16,247,9,16,1,16,1,16,1,17,1,
+		17,1,17,1,18,1,18,1,18,3,18,257,8,18,1,19,1,19,1,19,1,19,1,19,1,19,1,19,
+		1,19,1,19,1,19,5,19,269,8,19,10,19,12,19,272,9,19,1,19,1,19,1,20,1,20,
+		1,20,1,20,1,20,1,20,5,20,282,8,20,10,20,12,20,285,9,20,1,21,1,21,1,21,
+		1,21,3,21,291,8,21,1,22,1,22,1,22,3,22,296,8,22,1,23,1,23,3,23,300,8,23,
+		1,23,1,23,1,23,1,23,3,23,306,8,23,1,23,1,23,1,23,1,24,1,24,1,24,3,24,314,
+		8,24,1,24,3,24,317,8,24,1,25,1,25,1,25,1,25,3,25,323,8,25,1,25,1,25,1,
+		25,1,25,3,25,329,8,25,1,26,1,26,3,26,333,8,26,1,26,1,26,1,26,1,26,3,26,
+		339,8,26,1,26,1,26,1,26,1,27,1,27,1,27,1,27,1,27,1,28,1,28,1,28,1,28,3,
+		28,353,8,28,1,29,1,29,1,29,1,29,3,29,359,8,29,1,30,1,30,1,30,1,31,1,31,
+		1,31,1,31,1,31,1,31,1,31,1,31,3,31,372,8,31,1,32,1,32,3,32,376,8,32,1,
+		33,1,33,1,33,1,33,1,33,1,33,1,33,1,33,1,33,1,34,1,34,1,34,1,34,1,34,1,
+		34,1,35,1,35,1,35,3,35,396,8,35,1,35,1,35,1,35,3,35,401,8,35,1,35,1,35,
+		5,35,405,8,35,10,35,12,35,408,9,35,1,36,1,36,1,37,1,37,1,38,1,38,1,38,
+		1,38,1,38,1,38,5,38,420,8,38,10,38,12,38,423,9,38,1,38,3,38,426,8,38,1,
+		39,1,39,1,39,1,39,1,39,1,39,1,39,1,40,1,40,1,40,1,41,1,41,3,41,440,8,41,
+		1,42,1,42,1,42,1,42,3,42,446,8,42,1,42,1,42,1,42,1,43,1,43,1,43,3,43,454,
+		8,43,1,43,1,43,1,44,1,44,1,44,1,44,1,45,1,45,1,45,1,45,1,45,1,45,1,45,
+		1,45,3,45,470,8,45,1,46,1,46,1,46,1,46,1,46,1,46,3,46,478,8,46,1,47,1,
+		47,1,47,1,47,1,47,1,47,1,47,1,47,1,47,3,47,489,8,47,1,48,1,48,1,48,1,48,
+		1,48,1,49,1,49,1,49,1,49,3,49,500,8,49,1,49,1,49,1,50,1,50,5,50,506,8,
+		50,10,50,12,50,509,9,50,1,50,1,50,1,51,1,51,1,51,1,51,1,51,1,51,1,51,0,
+		2,24,40,52,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,
+		44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,
+		92,94,96,98,100,102,0,8,1,0,37,38,1,0,32,34,1,0,10,15,1,0,16,17,1,0,21,
+		25,1,0,14,15,1,0,35,36,1,0,26,31,534,0,104,1,0,0,0,2,112,1,0,0,0,4,131,
+		1,0,0,0,6,134,1,0,0,0,8,141,1,0,0,0,10,147,1,0,0,0,12,151,1,0,0,0,14,182,
+		1,0,0,0,16,184,1,0,0,0,18,186,1,0,0,0,20,188,1,0,0,0,22,196,1,0,0,0,24,
+		213,1,0,0,0,26,224,1,0,0,0,28,226,1,0,0,0,30,228,1,0,0,0,32,235,1,0,0,
+		0,34,250,1,0,0,0,36,256,1,0,0,0,38,258,1,0,0,0,40,275,1,0,0,0,42,290,1,
+		0,0,0,44,292,1,0,0,0,46,299,1,0,0,0,48,316,1,0,0,0,50,328,1,0,0,0,52,332,
+		1,0,0,0,54,343,1,0,0,0,56,352,1,0,0,0,58,358,1,0,0,0,60,360,1,0,0,0,62,
+		371,1,0,0,0,64,375,1,0,0,0,66,377,1,0,0,0,68,386,1,0,0,0,70,392,1,0,0,
+		0,72,409,1,0,0,0,74,411,1,0,0,0,76,413,1,0,0,0,78,427,1,0,0,0,80,434,1,
+		0,0,0,82,437,1,0,0,0,84,441,1,0,0,0,86,450,1,0,0,0,88,457,1,0,0,0,90,469,
+		1,0,0,0,92,477,1,0,0,0,94,488,1,0,0,0,96,490,1,0,0,0,98,495,1,0,0,0,100,
+		503,1,0,0,0,102,512,1,0,0,0,104,105,3,2,1,0,105,106,5,0,0,1,106,1,1,0,
+		0,0,107,108,5,2,0,0,108,109,5,41,0,0,109,110,3,44,22,0,110,111,5,42,0,
+		0,111,113,1,0,0,0,112,107,1,0,0,0,112,113,1,0,0,0,113,116,1,0,0,0,114,
+		115,5,1,0,0,115,117,3,4,2,0,116,114,1,0,0,0,116,117,1,0,0,0,117,121,1,
+		0,0,0,118,120,3,52,26,0,119,118,1,0,0,0,120,123,1,0,0,0,121,119,1,0,0,
+		0,121,122,1,0,0,0,122,125,1,0,0,0,123,121,1,0,0,0,124,126,3,82,41,0,125,
+		124,1,0,0,0,125,126,1,0,0,0,126,127,1,0,0,0,127,129,5,3,0,0,128,130,3,
+		100,50,0,129,128,1,0,0,0,129,130,1,0,0,0,130,3,1,0,0,0,131,132,3,6,3,0,
+		132,133,5,46,0,0,133,5,1,0,0,0,134,135,5,43,0,0,135,136,3,8,4,0,136,137,
+		5,44,0,0,137,7,1,0,0,0,138,142,3,10,5,0,139,142,3,24,12,0,140,142,5,54,
+		0,0,141,138,1,0,0,0,141,139,1,0,0,0,141,140,1,0,0,0,142,145,1,0,0,0,143,
+		144,5,47,0,0,144,146,3,8,4,0,145,143,1,0,0,0,145,146,1,0,0,0,146,9,1,0,
+		0,0,147,148,5,54,0,0,148,149,5,32,0,0,149,150,3,24,12,0,150,11,1,0,0,0,
+		151,154,3,14,7,0,152,153,5,46,0,0,153,155,3,12,6,0,154,152,1,0,0,0,154,
+		155,1,0,0,0,155,13,1,0,0,0,156,158,3,22,11,0,157,156,1,0,0,0,157,158,1,
+		0,0,0,158,159,1,0,0,0,159,160,5,54,0,0,160,163,3,18,9,0,161,164,3,24,12,
+		0,162,164,5,54,0,0,163,161,1,0,0,0,163,162,1,0,0,0,164,166,1,0,0,0,165,
+		167,5,46,0,0,166,165,1,0,0,0,166,167,1,0,0,0,167,183,1,0,0,0,168,169,5,
+		54,0,0,169,171,3,16,8,0,170,172,5,46,0,0,171,170,1,0,0,0,171,172,1,0,0,
+		0,172,183,1,0,0,0,173,174,3,16,8,0,174,176,5,54,0,0,175,177,5,46,0,0,176,
+		175,1,0,0,0,176,177,1,0,0,0,177,183,1,0,0,0,178,179,5,54,0,0,179,180,3,
+		6,3,0,180,181,5,46,0,0,181,183,1,0,0,0,182,157,1,0,0,0,182,168,1,0,0,0,
+		182,173,1,0,0,0,182,178,1,0,0,0,183,15,1,0,0,0,184,185,7,0,0,0,185,17,
+		1,0,0,0,186,187,7,1,0,0,187,19,1,0,0,0,188,192,5,39,0,0,189,193,3,24,12,
+		0,190,193,5,54,0,0,191,193,3,20,10,0,192,189,1,0,0,0,192,190,1,0,0,0,192,
+		191,1,0,0,0,193,194,1,0,0,0,194,195,5,40,0,0,195,21,1,0,0,0,196,197,7,
+		2,0,0,197,23,1,0,0,0,198,200,6,12,-1,0,199,201,5,22,0,0,200,199,1,0,0,
+		0,200,201,1,0,0,0,201,202,1,0,0,0,202,214,5,52,0,0,203,205,5,22,0,0,204,
+		203,1,0,0,0,204,205,1,0,0,0,205,206,1,0,0,0,206,214,5,53,0,0,207,214,5,
+		55,0,0,208,214,3,26,13,0,209,214,5,54,0,0,210,214,3,30,15,0,211,214,3,
+		32,16,0,212,214,3,20,10,0,213,198,1,0,0,0,213,204,1,0,0,0,213,207,1,0,
+		0,0,213,208,1,0,0,0,213,209,1,0,0,0,213,210,1,0,0,0,213,211,1,0,0,0,213,
+		212,1,0,0,0,214,221,1,0,0,0,215,216,10,5,0,0,216,217,3,28,14,0,217,218,
+		3,24,12,6,218,220,1,0,0,0,219,215,1,0,0,0,220,223,1,0,0,0,221,219,1,0,
+		0,0,221,222,1,0,0,0,222,25,1,0,0,0,223,221,1,0,0,0,224,225,7,3,0,0,225,
+		27,1,0,0,0,226,227,7,4,0,0,227,29,1,0,0,0,228,229,5,54,0,0,229,231,5,39,
+		0,0,230,232,3,40,20,0,231,230,1,0,0,0,231,232,1,0,0,0,232,233,1,0,0,0,
+		233,234,5,40,0,0,234,31,1,0,0,0,235,236,7,5,0,0,236,237,5,39,0,0,237,238,
+		3,34,17,0,238,245,3,36,18,0,239,240,5,47,0,0,240,241,3,34,17,0,241,242,
+		3,36,18,0,242,244,1,0,0,0,243,239,1,0,0,0,244,247,1,0,0,0,245,243,1,0,
+		0,0,245,246,1,0,0,0,246,248,1,0,0,0,247,245,1,0,0,0,248,249,5,40,0,0,249,
+		33,1,0,0,0,250,251,5,54,0,0,251,252,5,45,0,0,252,35,1,0,0,0,253,257,3,
+		38,19,0,254,257,3,24,12,0,255,257,5,54,0,0,256,253,1,0,0,0,256,254,1,0,
+		0,0,256,255,1,0,0,0,257,37,1,0,0,0,258,259,5,39,0,0,259,260,3,34,17,0,
+		260,261,3,36,18,0,261,262,5,47,0,0,262,263,3,34,17,0,263,270,3,36,18,0,
+		264,265,5,47,0,0,265,266,3,34,17,0,266,267,3,36,18,0,267,269,1,0,0,0,268,
+		264,1,0,0,0,269,272,1,0,0,0,270,268,1,0,0,0,270,271,1,0,0,0,271,273,1,
+		0,0,0,272,270,1,0,0,0,273,274,5,40,0,0,274,39,1,0,0,0,275,276,6,20,-1,
+		0,276,277,3,42,21,0,277,283,1,0,0,0,278,279,10,2,0,0,279,280,5,47,0,0,
+		280,282,3,42,21,0,281,278,1,0,0,0,282,285,1,0,0,0,283,281,1,0,0,0,283,
+		284,1,0,0,0,284,41,1,0,0,0,285,283,1,0,0,0,286,287,3,34,17,0,287,288,3,
+		36,18,0,288,291,1,0,0,0,289,291,3,36,18,0,290,286,1,0,0,0,290,289,1,0,
+		0,0,291,43,1,0,0,0,292,295,3,46,23,0,293,294,5,47,0,0,294,296,3,44,22,
+		0,295,293,1,0,0,0,295,296,1,0,0,0,296,45,1,0,0,0,297,300,3,22,11,0,298,
+		300,5,9,0,0,299,297,1,0,0,0,299,298,1,0,0,0,300,301,1,0,0,0,301,302,5,
+		19,0,0,302,303,5,54,0,0,303,305,5,39,0,0,304,306,3,48,24,0,305,304,1,0,
+		0,0,305,306,1,0,0,0,306,307,1,0,0,0,307,308,5,40,0,0,308,309,5,46,0,0,
+		309,47,1,0,0,0,310,313,3,50,25,0,311,312,5,47,0,0,312,314,3,48,24,0,313,
+		311,1,0,0,0,313,314,1,0,0,0,314,317,1,0,0,0,315,317,3,50,25,0,316,310,
+		1,0,0,0,316,315,1,0,0,0,317,49,1,0,0,0,318,319,3,22,11,0,319,322,5,54,
+		0,0,320,321,5,47,0,0,321,323,3,48,24,0,322,320,1,0,0,0,322,323,1,0,0,0,
+		323,329,1,0,0,0,324,325,3,22,11,0,325,326,5,54,0,0,326,329,1,0,0,0,327,
+		329,3,30,15,0,328,318,1,0,0,0,328,324,1,0,0,0,328,327,1,0,0,0,329,51,1,
+		0,0,0,330,333,3,22,11,0,331,333,5,9,0,0,332,330,1,0,0,0,332,331,1,0,0,
+		0,333,334,1,0,0,0,334,335,5,19,0,0,335,336,5,54,0,0,336,338,5,39,0,0,337,
+		339,3,48,24,0,338,337,1,0,0,0,338,339,1,0,0,0,339,340,1,0,0,0,340,341,
+		5,40,0,0,341,342,3,54,27,0,342,53,1,0,0,0,343,344,5,41,0,0,344,345,3,56,
+		28,0,345,346,3,62,31,0,346,347,5,42,0,0,347,55,1,0,0,0,348,349,3,58,29,
+		0,349,350,3,56,28,0,350,353,1,0,0,0,351,353,3,58,29,0,352,348,1,0,0,0,
+		352,351,1,0,0,0,353,57,1,0,0,0,354,359,3,14,7,0,355,359,3,60,30,0,356,
+		359,3,64,32,0,357,359,3,76,38,0,358,354,1,0,0,0,358,355,1,0,0,0,358,356,
+		1,0,0,0,358,357,1,0,0,0,359,59,1,0,0,0,360,361,5,54,0,0,361,362,3,8,4,
+		0,362,61,1,0,0,0,363,364,5,20,0,0,364,365,3,24,12,0,365,366,5,46,0,0,366,
+		372,1,0,0,0,367,368,5,20,0,0,368,369,3,6,3,0,369,370,5,46,0,0,370,372,
+		1,0,0,0,371,363,1,0,0,0,371,367,1,0,0,0,372,63,1,0,0,0,373,376,3,66,33,
+		0,374,376,3,68,34,0,375,373,1,0,0,0,375,374,1,0,0,0,376,65,1,0,0,0,377,
+		378,5,4,0,0,378,379,5,39,0,0,379,380,3,14,7,0,380,381,3,70,35,0,381,382,
+		5,46,0,0,382,383,3,14,7,0,383,384,5,40,0,0,384,385,3,54,27,0,385,67,1,
+		0,0,0,386,387,5,5,0,0,387,388,5,39,0,0,388,389,3,70,35,0,389,390,5,40,
+		0,0,390,391,3,54,27,0,391,69,1,0,0,0,392,395,3,24,12,0,393,396,3,74,37,
+		0,394,396,3,72,36,0,395,393,1,0,0,0,395,394,1,0,0,0,396,397,1,0,0,0,397,
+		406,3,24,12,0,398,401,3,74,37,0,399,401,3,72,36,0,400,398,1,0,0,0,400,
+		399,1,0,0,0,401,402,1,0,0,0,402,403,3,24,12,0,403,405,1,0,0,0,404,400,
+		1,0,0,0,405,408,1,0,0,0,406,404,1,0,0,0,406,407,1,0,0,0,407,71,1,0,0,0,
+		408,406,1,0,0,0,409,410,7,6,0,0,410,73,1,0,0,0,411,412,7,7,0,0,412,75,
+		1,0,0,0,413,414,5,6,0,0,414,415,5,39,0,0,415,416,3,70,35,0,416,417,5,40,
+		0,0,417,421,3,54,27,0,418,420,3,78,39,0,419,418,1,0,0,0,420,423,1,0,0,
+		0,421,419,1,0,0,0,421,422,1,0,0,0,422,425,1,0,0,0,423,421,1,0,0,0,424,
+		426,3,80,40,0,425,424,1,0,0,0,425,426,1,0,0,0,426,77,1,0,0,0,427,428,5,
+		7,0,0,428,429,5,6,0,0,429,430,5,39,0,0,430,431,3,70,35,0,431,432,5,40,
+		0,0,432,433,3,54,27,0,433,79,1,0,0,0,434,435,5,7,0,0,435,436,3,54,27,0,
+		436,81,1,0,0,0,437,439,3,84,42,0,438,440,3,82,41,0,439,438,1,0,0,0,439,
+		440,1,0,0,0,440,83,1,0,0,0,441,442,5,8,0,0,442,443,5,54,0,0,443,445,5,
+		39,0,0,444,446,3,48,24,0,445,444,1,0,0,0,445,446,1,0,0,0,446,447,1,0,0,
+		0,447,448,5,40,0,0,448,449,3,88,44,0,449,85,1,0,0,0,450,451,5,54,0,0,451,
+		453,5,39,0,0,452,454,3,40,20,0,453,452,1,0,0,0,453,454,1,0,0,0,454,455,
+		1,0,0,0,455,456,5,40,0,0,456,87,1,0,0,0,457,458,5,41,0,0,458,459,3,90,
+		45,0,459,460,5,42,0,0,460,89,1,0,0,0,461,462,3,58,29,0,462,463,3,90,45,
+		0,463,470,1,0,0,0,464,470,3,58,29,0,465,466,3,92,46,0,466,467,3,90,45,
+		0,467,470,1,0,0,0,468,470,3,92,46,0,469,461,1,0,0,0,469,464,1,0,0,0,469,
+		465,1,0,0,0,469,468,1,0,0,0,470,91,1,0,0,0,471,472,5,54,0,0,472,478,3,
+		94,47,0,473,474,5,54,0,0,474,475,3,98,49,0,475,476,3,94,47,0,476,478,1,
+		0,0,0,477,471,1,0,0,0,477,473,1,0,0,0,478,93,1,0,0,0,479,480,3,96,48,0,
+		480,481,3,94,47,0,481,489,1,0,0,0,482,483,3,96,48,0,483,484,5,46,0,0,484,
+		489,1,0,0,0,485,486,3,98,49,0,486,487,3,94,47,0,487,489,1,0,0,0,488,479,
+		1,0,0,0,488,482,1,0,0,0,488,485,1,0,0,0,489,95,1,0,0,0,490,491,5,48,0,
+		0,491,492,5,39,0,0,492,493,3,40,20,0,493,494,5,40,0,0,494,97,1,0,0,0,495,
+		496,5,48,0,0,496,497,5,54,0,0,497,499,5,39,0,0,498,500,3,40,20,0,499,498,
+		1,0,0,0,499,500,1,0,0,0,500,501,1,0,0,0,501,502,5,40,0,0,502,99,1,0,0,
+		0,503,507,5,41,0,0,504,506,3,102,51,0,505,504,1,0,0,0,506,509,1,0,0,0,
+		507,505,1,0,0,0,507,508,1,0,0,0,508,510,1,0,0,0,509,507,1,0,0,0,510,511,
+		5,42,0,0,511,101,1,0,0,0,512,513,5,18,0,0,513,514,5,52,0,0,514,515,5,45,
+		0,0,515,516,3,86,43,0,516,517,5,46,0,0,517,103,1,0,0,0,51,112,116,121,
+		125,129,141,145,154,157,163,166,171,176,182,192,200,204,213,221,231,245,
+		256,270,283,290,295,299,305,313,316,322,328,332,338,352,358,371,375,395,
+		400,406,421,425,439,445,453,469,477,488,499,507
 	};
 
 	public static readonly ATN _ATN =

@@ -13,7 +13,8 @@ public class TypeNode : IASTNode
         String,
         Bool,
         Circle,
-        Polygon
+        Polygon,
+        Unknown
     }
 
     public TypeKind Kind { get; set; } //The kind of type this node represents.

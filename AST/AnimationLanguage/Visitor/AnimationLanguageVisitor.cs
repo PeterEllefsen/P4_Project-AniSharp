@@ -32,8 +32,8 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             }
             else if (child is AnimationLanguageRulesParser.SequencesContext sequencesContext)
             {
-                SequenceNode sequenceNode = (SequenceNode)VisitSequences(sequencesContext); // If the child is a sequence, visit it and store the result as a sequence node.
-                sequenceNodes.Add(sequenceNode); // Add the sequence node to the list of sequence nodes.
+                List<SequenceNode> sequenceNodesFromContext = VisitAndGetSequences(sequencesContext); // If the child is a sequence, visit it and store the result as a list of sequence nodes.
+                sequenceNodes.AddRange(sequenceNodesFromContext); // Add the sequence nodes from the context to the list of sequence nodes.
             }
             else if (child is AnimationLanguageRulesParser.TimelineBlockContext timelineBlockContext)
             {
@@ -696,6 +696,135 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             throw new InvalidOperationException($"Unexpcted child in SeqBlockPartsContext: {context.GetText()}");
         }
     }
+
+    //This method is called when a sequence call is encountered in the code.
+    public override IASTNode VisitSequenceCall(AnimationLanguageRulesParser.SequenceCallContext context)
+    {
+        IdentifierNode identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER()); //Visit the identifier of the sequence call.
+        IList<IASTNode> arguments = new List<IASTNode>(); //Create a list to contain all of the arguments of the sequence call.
+
+        if (context.call_parameters() != null)
+        {
+            IList<IASTNode> visitedArguments = (IList<IASTNode>)Visit(context.call_parameters()); //Visit the arguments of the sequence call if it has any.
+            foreach (IASTNode argumentNode in visitedArguments)
+            {
+                arguments.Add(argumentNode); //Add each of the arguments to the list.
+            }
+        }
+
+        return new SequenceCallNode(identifierNode, arguments.Cast<ArgumentNode>(), GetSourceLocation(context.IDENTIFIER().Symbol));
+    }
+
+    
+    
+    //This method is called when an animation is encountered in the code.
+    public override IASTNode VisitAnimation(AnimationLanguageRulesParser.AnimationContext context)
+    {
+        var identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER()); //Visit the identifier of the animation.
+        CommandNode? commandNode = null; //Create a variable to contain the command of the animation. Its nullable, as an animation can both have a command, and not have a command.
+
+        if (context.command() != null)
+        {
+            commandNode = (CommandNode)VisitCommand(context.command()); //Visit the command of the animation if it has one.
+        }
+
+        var transitions = VisitAndGetTransitions(context.transitions());
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        return new AnimationNode(identifierNode, commandNode, transitions, sourceLocation);
+    }
+
+
+
+    public List<TransitionNode> VisitAndGetTransitions(AnimationLanguageRulesParser.TransitionsContext context)
+    {
+        var transitions = new List<TransitionNode>();
+
+        foreach (var child in context.children)
+        {
+            if (child is AnimationLanguageRulesParser.TransitionContext transitionContext)
+            {
+                transitions.Add((TransitionNode)VisitTransition(transitionContext));
+            }
+            else if (child is AnimationLanguageRulesParser.CommandContext commandContext)
+            {
+                transitions.Add((TransitionNode)VisitCommand(commandContext));
+            }
+        }
+
+        return transitions;
+    }
+
+
+    public override IASTNode VisitTransition(AnimationLanguageRulesParser.TransitionContext context)
+    {
+        var callParameters = context.call_parameters() != null ? (List<IASTNode>)VisitCall_parameters(context.call_parameters()) : new List<IASTNode>();
+
+
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        return new TransitionNode(callParameters, sourceLocation);
+    }
+    
+    
+    //This method is called when a command is encountered in the code.
+    public override IASTNode VisitCommand(AnimationLanguageRulesParser.CommandContext context)
+    {
+        // Get the identifier of the command
+        IdentifierNode identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER());
+        
+        IList<IASTNode> parameters = new List<IASTNode>(); // Create a list to contain the parameters of the command
+        if (context.call_parameters() != null)
+        {
+            IList<IASTNode> visitedParameters = (IList<IASTNode>)Visit(context.call_parameters()); // Visit the parameters of the command
+            foreach (IASTNode parameterNode in visitedParameters)
+            {
+                parameters.Add(parameterNode); // Add the visited parameters to the list
+            }
+        }
+        
+        CommandNode commandNode = new CommandNode(identifierNode, parameters, new SourceLocation(context.Start.Line, context.Start.Column));
+
+        return commandNode;
+    }
+
+
+    //This method is called when a TimelineBlock is encountered in the code. TODO: maybe rewrite this method
+    public override IASTNode VisitTimelineBlock(AnimationLanguageRulesParser.TimelineBlockContext context)
+    {
+        int startTime = 0; // Create a variable to contain the start time of the timeline block
+        int endTime = 0; // Create a variable to contain the end time of the timeline block
+        IList<AssignmentNode> assignments = new List<AssignmentNode>(); // Create a list to contain the assignments of the timeline block
+
+        foreach (var frameDefContext in context.frameDef())
+        {
+            AssignmentNode assignmentNode = (AssignmentNode)VisitFrameDef(frameDefContext); // Visit the frame definition
+            assignments.Add(assignmentNode); // Add the visited frame definition to the list of assignments
+
+            int frameTime = int.Parse(frameDefContext.INTEGER().GetText()); // Get the time of the frame definition
+            startTime = Math.Min(startTime, frameTime); // Update the start time of the timeline block
+            endTime = Math.Max(endTime, frameTime); // Update the end time of the timeline block
+        }
+
+        TimelineBlockNode timelineBlockNode = new TimelineBlockNode(startTime, endTime, assignments, new SourceLocation(context.Start.Line, context.Start.Column)); // Create a timeline block node
+
+        return timelineBlockNode;
+    }
+
+    //This method is called when a frame definition is encountered in the code.
+    public override IASTNode VisitFrameDef(AnimationLanguageRulesParser.FrameDefContext context)
+    {
+        int frameTime = int.Parse(context.INTEGER().GetText());// Get the time of the frame definition
+        SequenceCallNode sequenceCallNode = (SequenceCallNode)VisitSequenceCall(context.sequenceCall()); // Visit the sequence call of the frame definition
+
+        FrameDefNode frameDefNode = new FrameDefNode(frameTime, sequenceCallNode, GetSourceLocation(context.INTEGER().Symbol));
+
+        return frameDefNode;
+    }
+
+
+
+
 
 
 
