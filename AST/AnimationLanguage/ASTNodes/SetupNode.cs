@@ -17,4 +17,10 @@ public class SetupNode : IASTNode
 
         Children.Add(groupingElements);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

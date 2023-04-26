@@ -17,4 +17,10 @@ public class ParameterNode : IASTNode
         Name = name;
         SourceLocation = sourceLocation;
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

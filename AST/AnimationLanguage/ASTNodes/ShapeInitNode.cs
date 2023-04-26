@@ -17,5 +17,11 @@
             Arguments = arguments;
             SourceLocation = sourceLocation;
         }
+        
+        
+        public IEnumerable<IASTNode> GetChildren()
+        {
+            return Arguments.Values; //The arguments are the children of the ShapeInit node, so they are returned.
+        }
     }
 }

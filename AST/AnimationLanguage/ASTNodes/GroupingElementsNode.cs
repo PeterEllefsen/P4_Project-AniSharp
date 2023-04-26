@@ -34,4 +34,10 @@ public class GroupingElementsNode : IASTNode
 
         SourceLocation = sourceLocation;
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

@@ -1,5 +1,5 @@
 prototypes {
-    group function ColorBasedOnNumber(int number);
+    int function ColorBasedOnNumber(int number);
 }
 
 
@@ -13,26 +13,12 @@ setup [
 
 
 
-group function ColorBasedOnNumber(int number) {
+int function ColorBasedOnNumber(int number) {
     
       int red = 4 * ((number) * 4);
       int green = 0;    
       int blue = 0;
-      
-  
-    if (number <= to) {
-       blue = 255-69; 
-       
-    }
-      
-      for(int i = 0; i < 10; i++) {
-          green += ((number / 2) / i);
-        
-        if (green > 255) {
-            green = 100-69;
-        }
-    }
-    return [red, green, blue];
+    return 2;
 
 }
 
@@ -70,6 +56,7 @@ seq CarDrivingOnScreen() {
 seq CircleGoVroomInTriangle() {
     cirkel1->repeat()->(EndFrame: 50, x: 50, color: Rgb(ColorBasedOnNumber(frame)))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
 }
+
 
 
 timeline {

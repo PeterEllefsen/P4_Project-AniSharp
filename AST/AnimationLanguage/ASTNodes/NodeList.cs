@@ -1,5 +1,4 @@
 ﻿using AnimationLanguage.ASTCommon;
-using System.Collections.Generic;
 
 //This class works as a collection of nodes
 public class NodeList<T> : List<T>, IASTNode where T : IASTNode //It inherits from List<T> and implements IASTNode which means that it is a collection of nodes.
@@ -11,5 +10,11 @@ public class NodeList<T> : List<T>, IASTNode where T : IASTNode //It inherits fr
     {
         SourceLocation = sourceLocation;
         AddRange(nodes); //AddRange adds a collection of nodes to the list.
+    }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return this.OfType<IASTNode>(); //OfType<IASTNode> returns elements of a collection that are of type IASTNode. It returns itself since it is a collection of nodes.
     }
 }

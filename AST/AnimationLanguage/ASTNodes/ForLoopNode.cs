@@ -30,4 +30,10 @@ public class ForLoopNode : IASTNode
         Children.Add(update);
         Children.Add(body);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

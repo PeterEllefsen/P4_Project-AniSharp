@@ -13,4 +13,10 @@ public class SeqBlockPartNode : IASTNode
         Child = child;
         SourceLocation = sourceLocation;
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        yield return Child; //It yield returns, as there is only one child, and yield return functions as a return statement for an IEnumerable.
+    }
 }

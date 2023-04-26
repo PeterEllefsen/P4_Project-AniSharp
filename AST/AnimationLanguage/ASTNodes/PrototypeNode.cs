@@ -26,6 +26,12 @@ public class PrototypeNode : IASTNode
             Children.Add(parameterNode);
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }
 
 public enum DataType //This enum defines the different data types that can be used in the language.

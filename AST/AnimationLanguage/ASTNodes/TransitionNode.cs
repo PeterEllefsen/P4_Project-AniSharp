@@ -20,4 +20,10 @@ public class TransitionNode : IASTNode
             Children.Add(parameter);
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

@@ -21,4 +21,10 @@ public class IdentifierGroupingNode : IASTNode
         Children.Add(identifier);
         Children.Add(groupingElements);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

@@ -24,6 +24,12 @@ public class AssignmentNode : IASTNode
         Children.Add(identifier);
         Children.Add(expression);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }
 
 

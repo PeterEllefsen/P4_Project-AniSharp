@@ -21,4 +21,20 @@ public class AnimationNode : IASTNode
         Transitions = new List<TransitionNode>(transitions);
         SourceLocation = sourceLocation;
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        yield return Identifier; 
+
+        if (Command != null)
+        {
+            yield return Command;
+        }
+
+        foreach (var transition in Transitions)
+        {
+            yield return transition;
+        }
+    }
 }

@@ -22,4 +22,10 @@ public class WhileLoopNode : IASTNode
         Children.Add(condition);
         Children.Add(body);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

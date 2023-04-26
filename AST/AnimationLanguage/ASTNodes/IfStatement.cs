@@ -38,4 +38,10 @@ public class IfStatementNode : IASTNode
             Children.Add(elseBranch); // Add the else branch as a child if it exists.
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

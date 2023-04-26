@@ -19,4 +19,10 @@ public class ArgumentNode : IASTNode
 
         Children.Add(value);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

@@ -19,4 +19,10 @@ public class FrameDefNode : IASTNode
 
         Children.Add(sequenceCall);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

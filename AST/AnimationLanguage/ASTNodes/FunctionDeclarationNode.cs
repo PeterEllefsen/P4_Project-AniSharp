@@ -34,4 +34,10 @@ public class FunctionDeclarationNode : IASTNode
 
         Children.Add(block);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

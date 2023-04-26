@@ -20,6 +20,12 @@ public class PolygonNode : IASTNode
             Children.Add(arg.Value); //Add all arguments as children.
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }
 
 public class CircleNode : IASTNode
@@ -39,5 +45,11 @@ public class CircleNode : IASTNode
         {
             Children.Add(arg.Value); //Add all arguments as children.
         }
+    }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
     }
 }

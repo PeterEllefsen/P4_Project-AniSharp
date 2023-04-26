@@ -23,4 +23,10 @@ public class CommandNode : IASTNode
             Children.Add(parameter);
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

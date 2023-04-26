@@ -24,4 +24,10 @@ public class TimelineBlockNode : IASTNode
             Children.Add(assignmentNode);
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

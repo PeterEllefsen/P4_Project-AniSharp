@@ -26,4 +26,10 @@ public class ConditionNode : IASTNode
         Children.Add(leftExpression);
         Children.Add(rightExpression);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

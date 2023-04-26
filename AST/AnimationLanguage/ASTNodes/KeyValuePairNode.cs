@@ -19,4 +19,10 @@ public class KeyValuePairNode : IASTNode
         Children.Add(key);
         Children.Add(value);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

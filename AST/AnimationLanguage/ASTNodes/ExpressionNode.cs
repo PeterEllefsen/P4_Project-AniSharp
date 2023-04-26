@@ -38,6 +38,13 @@ public class ExpressionNode : IASTNode
             Children.Add(rightOperand); //If there is a right operand, add it to the children list.
         }
     }
+
+
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
+    
 }
 
 public enum ExpressionNodeType //This enum defines the different types of expression nodes.

@@ -17,4 +17,10 @@ public class ElseNode : IASTNode
 
         Children.Add(elseBlock);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

@@ -31,4 +31,10 @@ public class SequenceNode : IASTNode
 
         Children.Add(seqBlock);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

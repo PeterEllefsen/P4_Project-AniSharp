@@ -19,4 +19,10 @@ public class ElseIfNode : IASTNode
         Children.Add(condition);
         Children.Add(elseIfBlock);
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

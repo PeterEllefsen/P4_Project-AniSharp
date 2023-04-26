@@ -72,13 +72,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         {
             if (item is AnimationLanguageRulesParser.KeyValuePairContext keyValuePairContext) // If the visited item is a key value pair, visit it and add the result to the list of key value pairs.
             {
-                KeyValuePairNode keyValuePairNode = (KeyValuePairNode)VisitKeyValuePair(keyValuePairContext);
+                KeyValuePairNode keyValuePairNode = VisitKeyValuePair(keyValuePairContext);
                 keyValuePairs.Add(keyValuePairNode);
             }
             else if (item is AnimationLanguageRulesParser.ExpressionContext expressionContext) // If the visited item is an expression, visit it and add the result to the list of expressions.
             {
-                //ExpressionNode expressionNode = (ExpressionNode)VisitExpression(expressionContext);
-                //expressions.Add(expressionNode);
+                ExpressionNode expressionNode = (ExpressionNode)VisitExpression(expressionContext);
+                expressions.Add(expressionNode);
             }
             else if (item is ITerminalNode terminalNode && terminalNode.Symbol.Type == AnimationLanguageRulesParser.IDENTIFIER) // If the visited item is a terminal node, and it fits the properties of an IDENTIFIER, create an identifier node and add it to the list of identifiers.
             {
@@ -199,6 +199,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This is a custom method that visits an expression context and returns an ExpressionNode. Since it is not present in the parser, it does not need to be overridden.
     public IASTNode VisitExpression(AnimationLanguageRulesParser.ExpressionContext context)
     {
+        //Mby convert this code to a switch??
         if (context is AnimationLanguageRulesParser.IntegerExpressionContext)
         {
             return VisitIntegerExpression((AnimationLanguageRulesParser.IntegerExpressionContext)context); //Visit the IntegerExpressionContext and return the result.
@@ -358,7 +359,12 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method visits the individual prototype rule.
     public override IASTNode VisitPrototype(AnimationLanguageRulesParser.PrototypeContext context)
     {
-        DataType returnType = GetDataTypeFromTypeContext(context.type()); //Get the return type of the prototype.
+        if (context.type() == null)
+        {
+            Console.WriteLine("Prototype type context is null");
+        }
+    
+        DataType returnType = GetDataTypeFromTypeContext(context.type());
         string functionName = context.IDENTIFIER().GetText(); //Get the name of the function.
         List<ParameterNode> parameters = new List<ParameterNode>(); //Create a list of ParameterNodes to store the parameters of the prototype.
 
@@ -374,34 +380,39 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is used to return the DataType of a type context.
     private DataType GetDataTypeFromTypeContext(AnimationLanguageRulesParser.TypeContext context)
     {
-        if (context.INT() != null)
+        if (context == null)
         {
+            Console.WriteLine("CONTEXT IS NULL!!!!");
+        }
+        if (context?.INT() != null)
+        {
+            Console.WriteLine("TESTSTSTSTTSTSTSTSTST");
             return DataType.Int;
         }
-        else if (context.FLOAT_TYPE() != null)
+        if (context?.FLOAT_TYPE() != null)
         {
             return DataType.Float;
         }
-        else if (context.STRING_TYPE() != null)
+        if (context?.STRING_TYPE() != null)
         {
             return DataType.String;
         }
-        else if (context.BOOL() != null)
+        if (context?.BOOL() != null)
         {
             return DataType.Bool;
         }
-        else if (context.CIRCLE() != null)
+        if (context?.CIRCLE() != null)
         {
             return DataType.Circle;
         }
-        else if (context.POLYGON() != null)
+        if (context?.POLYGON() != null)
         {
             return DataType.Polygon;
         }
         else
         {
             // TODO: Maybe return EmptyNode.
-            throw new NotSupportedException($"Type '{context.GetText()}' is not supported.");
+            throw new NotSupportedException($"Type '{context?.GetText()}' is not supported.");
         }
     }
 
@@ -427,7 +438,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when the parameter rule is encountered in the code.
     public override IASTNode VisitParameter(AnimationLanguageRulesParser.ParameterContext context)
     {
-        DataType dataType = GetDataTypeFromTypeContext(context.type()); //Get the data type of the parameter.
+        if (context.type() == null)
+        {
+            Console.WriteLine("Parameter type context is null");
+        }
+    
+        DataType dataType = GetDataTypeFromTypeContext(context.type());
+        
         string parameterName = context.IDENTIFIER().GetText(); //Get the namew of the parameter.
         SourceLocation sourceLocation = GetSourceLocation(context.Start); 
 
@@ -524,15 +541,16 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     public override IASTNode VisitReturn(AnimationLanguageRulesParser.ReturnContext context)
     {
         ExpressionNode? returnExpression = null;
-    
+
         if (context.expression() != null)
         {
-            returnExpression = (ExpressionNode)Visit(context.expression());
+            returnExpression = Visit(context.expression()) as ExpressionNode;
         }
-    
+
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
         return new ReturnNode(returnExpression, sourceLocation);
     }
+
 
     
     //VisitLoop is a method used to handle the loop rule in the code.
@@ -822,19 +840,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         return frameDefNode;
     }
 
-
-
-
-
-
+    
 
     //---------------------------Helper methods---------------------------//
     private SourceLocation GetSourceLocation(IToken token)
     {
         return new SourceLocation(token.Line, token.Column);
     }
-
     
-    
-
+    //TODO: Add all of the remaning helper methods that do not override a method from the base class here
 }

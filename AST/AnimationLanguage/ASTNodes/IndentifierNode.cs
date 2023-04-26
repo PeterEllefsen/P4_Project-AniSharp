@@ -13,4 +13,10 @@ public class IdentifierNode : IASTNode
         Name = name;
         SourceLocation = sourceLocation;
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Enumerable.Empty<IASTNode>(); // Identifiers have no children, so it returns an empty list.
+    }
 }

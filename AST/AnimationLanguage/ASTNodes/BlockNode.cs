@@ -20,4 +20,10 @@ public class BlockNode : IASTNode
             Children.Add(statementNode); // Add all statements as children.
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

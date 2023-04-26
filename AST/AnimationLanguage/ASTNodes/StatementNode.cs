@@ -46,4 +46,10 @@ public class StatementNode : IASTNode
         if (whileStatement != null) Children.Add(whileStatement); // Add the statement as a child if it is a while statement.
         if (returnStatement != null) Children.Add(returnStatement); // Add the statement as a child if it is a return statement.
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

@@ -14,4 +14,10 @@ public class OperatorNode : IASTNode
         OperatorSymbol = operatorSymbol;
         SourceLocation = sourceLocation;
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return new List<IASTNode>();
+    }
 }

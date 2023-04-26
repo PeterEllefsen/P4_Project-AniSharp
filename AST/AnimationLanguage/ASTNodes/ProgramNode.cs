@@ -55,4 +55,10 @@ public class ProgramNode : IASTNode
             Children.Add(timeline); //Add the timeline as a child if it exists.
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

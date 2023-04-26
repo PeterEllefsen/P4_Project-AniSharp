@@ -13,6 +13,11 @@ public class IntegerLiteralNode : IASTNode
         Value = value;
         SourceLocation = sourceLocation;
     }
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Enumerable.Empty<IASTNode>(); // Integer literals have no children, so it returns an empty list.
+    }
 }
 
 public class FloatLiteralNode : IASTNode
@@ -25,6 +30,11 @@ public class FloatLiteralNode : IASTNode
     {
         Value = value;
         SourceLocation = sourceLocation;
+    }
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Enumerable.Empty<IASTNode>();
     }
 }
 
@@ -39,6 +49,12 @@ public class StringLiteralNode : IASTNode
         Value = value;
         SourceLocation = sourceLocation;
     }
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Enumerable.Empty<IASTNode>();
+    }
+
 }
 
 public class BooleanLiteralNode : IASTNode
@@ -52,4 +68,10 @@ public class BooleanLiteralNode : IASTNode
         Value = value;
         SourceLocation = sourceLocation;
     }
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Enumerable.Empty<IASTNode>();
+    }
+
 }

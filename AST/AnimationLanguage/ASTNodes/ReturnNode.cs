@@ -19,4 +19,10 @@ public class ReturnNode : IASTNode
             Children.Add(returnValue);
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

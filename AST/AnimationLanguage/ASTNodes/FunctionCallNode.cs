@@ -25,4 +25,10 @@ public class FunctionCallNode : IASTNode
             Children.Add(argument);
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }

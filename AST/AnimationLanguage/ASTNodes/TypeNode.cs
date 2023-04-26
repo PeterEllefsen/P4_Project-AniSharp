@@ -14,7 +14,7 @@ public class TypeNode : IASTNode
         Bool,
         Circle,
         Polygon,
-        Unknown
+        None,
     }
 
     public TypeKind Kind { get; set; } //The kind of type this node represents.
@@ -23,5 +23,11 @@ public class TypeNode : IASTNode
     {
         Kind = kind;
         SourceLocation = sourceLocation;
+    }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return new List<IASTNode>(); //The TypeNode has no children, so an empty list is returned.
     }
 }

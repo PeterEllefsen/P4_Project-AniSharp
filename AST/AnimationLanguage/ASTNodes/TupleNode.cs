@@ -13,4 +13,10 @@ public class TupleNode : IASTNode
         Arguments = arguments;
         SourceLocation = sourceLocation;
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Arguments.Values; //The arguments are the children of the Tuple node, so they are returned.
+    }
 }

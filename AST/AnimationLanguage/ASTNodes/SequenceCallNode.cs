@@ -25,4 +25,10 @@ public class SequenceCallNode : IASTNode
             Children.Add(arg);
         }
     }
+    
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
 }
