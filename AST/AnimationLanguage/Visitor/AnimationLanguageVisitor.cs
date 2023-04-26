@@ -23,8 +23,14 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             }
             else if (child is AnimationLanguageRulesParser.PrototypesContext prototypesContext)
             {
-                PrototypeNode prototypeNode = (PrototypeNode)VisitPrototypes(prototypesContext); // If the child is a prototype, visit it and store the result as a prototype node.
-                prototypeNodes.Add(prototypeNode); // Add the prototype node to the list of prototype nodes.
+                NodeList<IASTNode> prototypeNodeList = (NodeList<IASTNode>)VisitPrototypes(prototypesContext); // If the child is a prototype, visit it and store the result as a list of IASTNodes.
+                foreach (var node in prototypeNodeList)
+                {
+                    if (node is PrototypeNode prototypeNode)
+                    {
+                        prototypeNodes.Add(prototypeNode); // Add the prototype node to the list of prototype nodes if it is a prototype
+                    }
+                }
             }
             else if (child is AnimationLanguageRulesParser.FuncDeclContext funcDeclContext) 
             {
@@ -96,15 +102,22 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     public override KeyValuePairNode VisitKeyValuePair(AnimationLanguageRulesParser.KeyValuePairContext context)
     {
         // Retrieve the identifier and expression nodes from the context.
-        
+
         IdentifierNode identifier = (IdentifierNode)Visit(context.IDENTIFIER()); // Visit the IDENTIFIER context and get the IdentifierNode.
-        ExpressionNode expression = (ExpressionNode)Visit(context.expression()); // Visit the expression context and get the ExpressionNode.
+        IASTNode expressionNode = Visit(context.expression()); // Visit the expression context and get the IASTNode.
+    
+        if (!(expressionNode is ExpressionNode expression))
+        {
+            Console.WriteLine(context.GetText());
+            throw new InvalidOperationException($"Expected an ExpressionNode but got {expressionNode.GetType().Name}");
+        }
 
         // Create a new KeyValuePairNode with the retrieved identifier and expression data.
         KeyValuePairNode keyValuePairNode = new KeyValuePairNode(identifier, expression, GetSourceLocation(context.Start));
 
         return keyValuePairNode;
     }
+
     
     //VisitTerminal works to create an IdentifierNode when the parser visits an IDENTIFIER terminal node.
     public override IASTNode VisitTerminal(ITerminalNode node)
@@ -121,8 +134,9 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method visits an assignment context and returns an AssignmentNode.
     public override IASTNode VisitAssignment(AnimationLanguageRulesParser.AssignmentContext context)
     {
+        Console.WriteLine(context.GetText());
         AssignmentOperator assignmentOperator = VisitAssOps(context.assOps());
-        IdentifierNode identifierNode = (IdentifierNode)VisitTerminal((ITerminalNode)context.GetChild(0));
+        IdentifierNode identifierNode = (IdentifierNode)Visit(context.GetChild(0)); // Visit the first child of the context and get the IdentifierNode
         ExpressionNode expression = (ExpressionNode)VisitExpression(context.expression()); // Call the custom VisitExpression method
 
         AssignmentNode assignmentNode = new AssignmentNode(identifierNode, assignmentOperator, expression, GetSourceLocation(context.Start));
@@ -154,46 +168,46 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
 
     //This method visits a type context and returns a TypeNode based on what type the context is.
-    public override IASTNode VisitType(AnimationLanguageRulesParser.TypeContext context)
-    {
-        TypeNode.TypeKind typeKind; //The TypeKind enum is used to determine what types are allowed.
-
-        // Check the type of the context and set the corresponding TypeKind.
-        if (context.INT() != null)
-        {
-            typeKind = TypeNode.TypeKind.Int;
-        }
-        else if (context.FLOAT_TYPE() != null)
-        {
-            typeKind = TypeNode.TypeKind.Float;
-        }
-        else if (context.STRING_TYPE() != null)
-        {
-            typeKind = TypeNode.TypeKind.String;
-        }
-        else if (context.BOOL() != null)
-        {
-            typeKind = TypeNode.TypeKind.Bool;
-        }
-        else if (context.CIRCLE() != null)
-        {
-            typeKind = TypeNode.TypeKind.Circle;
-        }
-        else if (context.POLYGON() != null)
-        {
-            typeKind = TypeNode.TypeKind.Polygon;
-        }
-        else
-        {
-            // TODO: mby return EmptyNode instead.
-            throw new NotSupportedException($"Unsupported type encountered at line {context.Start.Line} column {context.Start.Column}");
-        }
-
-        // Create a new TypeNode with the determined TypeKind and SourceLocation.
-        TypeNode typeNode = new TypeNode(typeKind, GetSourceLocation(context.Start));
-
-        return typeNode;
-    }
+    // public override IASTNode VisitType(AnimationLanguageRulesParser.TypeContext context)
+    // {
+    //     TypeNode.TypeKind typeKind; //The TypeKind enum is used to determine what types are allowed.
+    //
+    //     // Check the type of the context and set the corresponding TypeKind.
+    //     if (context.INT() != null)
+    //     {
+    //         typeKind = TypeNode.TypeKind.Int;
+    //     }
+    //     else if (context.FLOAT_TYPE() != null)
+    //     {
+    //         typeKind = TypeNode.TypeKind.Float;
+    //     }
+    //     else if (context.STRING_TYPE() != null)
+    //     {
+    //         typeKind = TypeNode.TypeKind.String;
+    //     }
+    //     else if (context.BOOL() != null)
+    //     {
+    //         typeKind = TypeNode.TypeKind.Bool;
+    //     }
+    //     else if (context.CIRCLE() != null)
+    //     {
+    //         typeKind = TypeNode.TypeKind.Circle;
+    //     }
+    //     else if (context.POLYGON() != null)
+    //     {
+    //         typeKind = TypeNode.TypeKind.Polygon;
+    //     }
+    //     else
+    //     {
+    //         // TODO: mby return EmptyNode instead.
+    //         throw new NotSupportedException($"Unsupported type encountered at line {context.Start.Line} column {context.Start.Column}");
+    //     }
+    //
+    //     // Create a new TypeNode with the determined TypeKind and SourceLocation.
+    //     TypeNode typeNode = new TypeNode(typeKind, GetSourceLocation(context.Start));
+    //
+    //     return typeNode;
+    // }
 
 
     //This is a custom method that visits an expression context and returns an ExpressionNode. Since it is not present in the parser, it does not need to be overridden.
@@ -249,31 +263,28 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitIntegerExpression(AnimationLanguageRulesParser.IntegerExpressionContext context)
     {
-        int value = int.Parse(context.INTEGER().GetText()); //Store the value of the context in a variable.
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
-        return new IntegerLiteralNode(value, sourceLocation); //Create a new IntegerLiteralNode with the value and SourceLocation.
+        int value = int.Parse(context.INTEGER().GetText());
+        return new IntegerLiteralNode(value, GetSourceLocation(context.Start)); //The sourcelocation is retrieved from the context.
     }
+
 
     public override IASTNode VisitFloatExpression(AnimationLanguageRulesParser.FloatExpressionContext context)
     {
         float value = float.Parse(context.FLOAT().GetText());
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
-        return new FloatLiteralNode(value, sourceLocation);
+        return new FloatLiteralNode(value, GetSourceLocation(context.Start));
     }
 
     public override IASTNode VisitStringExpression(AnimationLanguageRulesParser.StringExpressionContext context)
     {
         string value = context.STRING().GetText();
         value = value.Substring(1, value.Length - 2); // Removes the quotes surrounding the string, suchh that it is only the relevant data we gather
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
-        return new StringLiteralNode(value, sourceLocation); 
+        return new StringLiteralNode(value, GetSourceLocation(context.Start)); 
     }
 
     public override IASTNode VisitBooleanExpression(AnimationLanguageRulesParser.BooleanExpressionContext context)
     {
         bool value = context.boolean().TRUE() != null;
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
-        return new BooleanLiteralNode(value, sourceLocation);
+        return new BooleanLiteralNode(value, GetSourceLocation(context.Start));
     }
 
     //This method is called when a function call is encountered in the code.
@@ -363,56 +374,50 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         {
             Console.WriteLine("Prototype type context is null");
         }
-    
-        DataType returnType = GetDataTypeFromTypeContext(context.type());
-        string functionName = context.IDENTIFIER().GetText(); //Get the name of the function.
-        List<ParameterNode> parameters = new List<ParameterNode>(); //Create a list of ParameterNodes to store the parameters of the prototype.
 
-        if (context.parameters() != null) //If the prototype has parameters, visit them and add them to the list.
+        DataType returnType = GetDataTypeFromTypeContext(context.type());
+        string functionName = context.IDENTIFIER().GetText(); // Get the name of the function.
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+        NodeList<ParameterNode> parameters = new NodeList<ParameterNode>(new List<ParameterNode>(), sourceLocation); // Create a NodeList of ParameterNodes with an empty list and source location.
+
+        if (context.parameters() != null) // If the prototype has parameters, visit them and add them to the list.
         {
-            parameters = ((NodeList<ParameterNode>)VisitParameters(context.parameters())).ToList();
+            List<ParameterNode> visitedParameters = (List<ParameterNode>)VisitParameters(context.parameters());
+            parameters = new NodeList<ParameterNode>(visitedParameters, sourceLocation);
         }
 
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
         return new PrototypeNode(returnType, functionName, parameters, sourceLocation);
     }
+
+
+
+
 
     //This method is used to return the DataType of a type context.
     private DataType GetDataTypeFromTypeContext(AnimationLanguageRulesParser.TypeContext context)
     {
         if (context == null)
         {
-            Console.WriteLine("CONTEXT IS NULL!!!!");
-        }
-        if (context?.INT() != null)
-        {
-            Console.WriteLine("TESTSTSTSTTSTSTSTSTST");
-            return DataType.Int;
-        }
-        if (context?.FLOAT_TYPE() != null)
-        {
-            return DataType.Float;
-        }
-        if (context?.STRING_TYPE() != null)
-        {
-            return DataType.String;
-        }
-        if (context?.BOOL() != null)
-        {
-            return DataType.Bool;
-        }
-        if (context?.CIRCLE() != null)
-        {
-            return DataType.Circle;
-        }
-        if (context?.POLYGON() != null)
-        {
-            return DataType.Polygon;
-        }
-        else
-        {
-            // TODO: Maybe return EmptyNode.
             throw new NotSupportedException($"Type '{context?.GetText()}' is not supported.");
+        }
+        switch (context.GetText())
+        {
+            case "int":
+                return DataType.Int;
+            case "float":
+                return DataType.Float;
+            case "string":
+                return DataType.String;
+            case "bool":
+                return DataType.Bool;
+            case "Circle":
+                return DataType.Circle;
+            case "Polygon":
+                return DataType.Polygon;
+            case "group": 
+                return DataType.Group;
+            default:
+                throw new NotSupportedException($"Type '{context.GetText()}' is not supported.");
         }
     }
 

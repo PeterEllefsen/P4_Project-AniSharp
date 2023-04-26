@@ -109,7 +109,7 @@ assOps: (EQUAL | PLUSEQUAL | MINUSEQUAL);
 
 term: LPAREN (expression | IDENTIFIER | term)  RPAREN;
 
-type: INT | FLOAT_TYPE | STRING_TYPE | BOOL | CIRCLE | POLYGON;
+type: INT | FLOAT_TYPE | STRING_TYPE | BOOL | CIRCLE | POLYGON | GROUP;
 
 expression: MINUS? INTEGER                          #integerExpression
           | MINUS? FLOAT                            #floatExpression

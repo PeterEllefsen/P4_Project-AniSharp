@@ -2,76 +2,69 @@
 
 using ASTCommon;
 
-public class IntegerLiteralNode : IASTNode
+public class IntegerLiteralNode : ExpressionNode
 {
-    public SourceLocation SourceLocation { get; set; }
-    public NodeType NodeType => NodeType.IntegerLiteral;
-    public int Value { get; set; } //This is the value of the integer literal.
+    public int Value { get; }
 
     public IntegerLiteralNode(int value, SourceLocation sourceLocation)
+        : base(
+            ExpressionNodeType.Literal,
+            null, // LeftOperand
+            null, // RightOperand
+            null, // OperatorNode
+            sourceLocation)
     {
         Value = value;
-        SourceLocation = sourceLocation;
-    }
-    
-    public IEnumerable<IASTNode> GetChildren()
-    {
-        return Enumerable.Empty<IASTNode>(); // Integer literals have no children, so it returns an empty list.
     }
 }
 
-public class FloatLiteralNode : IASTNode
+
+
+public class FloatLiteralNode : ExpressionNode
 {
-    public SourceLocation SourceLocation { get; set; }
-    public NodeType NodeType => NodeType.FloatLiteral;
-    public float Value { get; set; } //This is the value of the float literal.
+    public float Value { get; }
 
     public FloatLiteralNode(float value, SourceLocation sourceLocation)
+        : base(
+            ExpressionNodeType.Literal,
+            null, // LeftOperand
+            null, // RightOperand
+            null, // OperatorNode
+            sourceLocation)
     {
         Value = value;
-        SourceLocation = sourceLocation;
-    }
-    
-    public IEnumerable<IASTNode> GetChildren()
-    {
-        return Enumerable.Empty<IASTNode>();
     }
 }
 
-public class StringLiteralNode : IASTNode
+public class StringLiteralNode : ExpressionNode
 {
-    public SourceLocation SourceLocation { get; set; }
-    public NodeType NodeType => NodeType.StringLiteral;
-    public string Value { get; set; } //This is the value of the string literal.
+    public string Value { get; }
 
     public StringLiteralNode(string value, SourceLocation sourceLocation)
+        : base(
+            ExpressionNodeType.Literal,
+            null, // LeftOperand
+            null, // RightOperand
+            null, // OperatorNode
+            sourceLocation)
     {
         Value = value;
-        SourceLocation = sourceLocation;
     }
-    
-    public IEnumerable<IASTNode> GetChildren()
-    {
-        return Enumerable.Empty<IASTNode>();
-    }
-
 }
 
-public class BooleanLiteralNode : IASTNode
+public class BooleanLiteralNode : ExpressionNode
 {
-    public SourceLocation SourceLocation { get; set; }
-    public NodeType NodeType => NodeType.BooleanLiteral;
-    public bool Value { get; set; } //This is the value of the boolean literal.
+    public bool Value { get; }
 
     public BooleanLiteralNode(bool value, SourceLocation sourceLocation)
+        : base(
+            ExpressionNodeType.Literal,
+            null, // LeftOperand
+            null, // RightOperand
+            null, // OperatorNode
+            sourceLocation)
     {
         Value = value;
-        SourceLocation = sourceLocation;
     }
-    
-    public IEnumerable<IASTNode> GetChildren()
-    {
-        return Enumerable.Empty<IASTNode>();
-    }
-
 }
+

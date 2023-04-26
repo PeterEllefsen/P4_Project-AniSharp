@@ -13,7 +13,7 @@ setup [
 
 
 
-int function ColorBasedOnNumber(int number) {
+int function ColorBasedOnNumber(int x) {
     
       int red = 4 * ((number) * 4);
       int green = 0;    
@@ -54,7 +54,7 @@ seq CarDrivingOnScreen() {
 }
 
 seq CircleGoVroomInTriangle() {
-    cirkel1->repeat()->(EndFrame: 50, x: 50, color: Rgb(ColorBasedOnNumber(frame)))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
+    cirkel1->repeat()->(EndFrame: 50, x: 50, color: Rgb(ColorBasedOnNumber(5)))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
 }
 
 

@@ -682,7 +682,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 				State = 157;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 64512L) != 0)) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 65024L) != 0)) {
 					{
 					State = 156;
 					type();
@@ -982,6 +982,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BOOL() { return GetToken(AnimationLanguageRulesParser.BOOL, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CIRCLE() { return GetToken(AnimationLanguageRulesParser.CIRCLE, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode POLYGON() { return GetToken(AnimationLanguageRulesParser.POLYGON, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode GROUP() { return GetToken(AnimationLanguageRulesParser.GROUP, 0); }
 		public TypeContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -1015,7 +1016,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 			{
 			State = 196;
 			_la = TokenStream.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 64512L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 65024L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
 			}
 			else {
@@ -2169,26 +2170,19 @@ public partial class AnimationLanguageRulesParser : Parser {
 			{
 			State = 299;
 			ErrorHandler.Sync(this);
-			switch (TokenStream.LA(1)) {
-			case INT:
-			case FLOAT_TYPE:
-			case STRING_TYPE:
-			case BOOL:
-			case CIRCLE:
-			case POLYGON:
+			switch ( Interpreter.AdaptivePredict(TokenStream,26,Context) ) {
+			case 1:
 				{
 				State = 297;
 				type();
 				}
 				break;
-			case GROUP:
+			case 2:
 				{
 				State = 298;
 				Match(GROUP);
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
 			}
 			State = 301;
 			Match(FUNCTION);
@@ -2199,7 +2193,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 			State = 305;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 18014398509546496L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 18014398509547008L) != 0)) {
 				{
 				State = 304;
 				parameters();
@@ -2442,26 +2436,19 @@ public partial class AnimationLanguageRulesParser : Parser {
 			{
 			State = 332;
 			ErrorHandler.Sync(this);
-			switch (TokenStream.LA(1)) {
-			case INT:
-			case FLOAT_TYPE:
-			case STRING_TYPE:
-			case BOOL:
-			case CIRCLE:
-			case POLYGON:
+			switch ( Interpreter.AdaptivePredict(TokenStream,32,Context) ) {
+			case 1:
 				{
 				State = 330;
 				type();
 				}
 				break;
-			case GROUP:
+			case 2:
 				{
 				State = 331;
 				Match(GROUP);
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
 			}
 			State = 334;
 			Match(FUNCTION);
@@ -2472,7 +2459,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 			State = 338;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 18014398509546496L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 18014398509547008L) != 0)) {
 				{
 				State = 337;
 				parameters();
@@ -3618,7 +3605,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 			State = 445;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 18014398509546496L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 18014398509547008L) != 0)) {
 				{
 				State = 444;
 				parameters();
@@ -4326,7 +4313,7 @@ public partial class AnimationLanguageRulesParser : Parser {
 		50,10,50,12,50,509,9,50,1,50,1,50,1,51,1,51,1,51,1,51,1,51,1,51,1,51,0,
 		2,24,40,52,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,
 		44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,
-		92,94,96,98,100,102,0,8,1,0,37,38,1,0,32,34,1,0,10,15,1,0,16,17,1,0,21,
+		92,94,96,98,100,102,0,8,1,0,37,38,1,0,32,34,1,0,9,15,1,0,16,17,1,0,21,
 		25,1,0,14,15,1,0,35,36,1,0,26,31,534,0,104,1,0,0,0,2,112,1,0,0,0,4,131,
 		1,0,0,0,6,134,1,0,0,0,8,141,1,0,0,0,10,147,1,0,0,0,12,151,1,0,0,0,14,182,
 		1,0,0,0,16,184,1,0,0,0,18,186,1,0,0,0,20,188,1,0,0,0,22,196,1,0,0,0,24,
