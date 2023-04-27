@@ -25,4 +25,10 @@ public class ArgumentNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"ArgumentNode: {Name}";
+    }
 }

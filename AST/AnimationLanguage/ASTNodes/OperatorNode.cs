@@ -20,4 +20,10 @@ public class OperatorNode : IASTNode
     {
         return new List<IASTNode>();
     }
+    
+    
+    public override string ToString()
+    {
+        return $"OperatorNode: {OperatorSymbol}";
+    }
 }

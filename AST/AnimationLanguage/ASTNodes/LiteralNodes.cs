@@ -16,6 +16,11 @@ public class IntegerLiteralNode : ExpressionNode
     {
         Value = value;
     }
+    
+    public override string ToString()
+    {
+        return $"IntegerLiteralNode: {Value}";
+    }
 }
 
 
@@ -34,6 +39,11 @@ public class FloatLiteralNode : ExpressionNode
     {
         Value = value;
     }
+    
+    public override string ToString()
+    {
+        return $"FloatLiteralNode: {Value}";
+    }
 }
 
 public class StringLiteralNode : ExpressionNode
@@ -50,6 +60,11 @@ public class StringLiteralNode : ExpressionNode
     {
         Value = value;
     }
+    
+    public override string ToString()
+    {
+        return $"StringLiteralNode: {Value}";
+    }
 }
 
 public class BooleanLiteralNode : ExpressionNode
@@ -65,6 +80,11 @@ public class BooleanLiteralNode : ExpressionNode
             sourceLocation)
     {
         Value = value;
+    }
+    
+    public override string ToString()
+    {
+        return $"BooleanLiteralNode: {Value}";
     }
 }
 

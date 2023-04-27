@@ -25,4 +25,10 @@ public class KeyValuePairNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"KeyValuePairNode: ({Key}, {Value})";
+    }
 }

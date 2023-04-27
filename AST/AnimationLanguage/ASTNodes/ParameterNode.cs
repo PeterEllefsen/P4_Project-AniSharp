@@ -23,4 +23,10 @@ public class ParameterNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"ParameterNode: {DataType} {Name}";
+    }
 }

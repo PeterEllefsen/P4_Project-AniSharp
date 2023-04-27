@@ -11,7 +11,7 @@ using ASTCommon;
 public class StatementNode : IASTNode
 {
     public SourceLocation SourceLocation { get; set; }
-    public NodeType NodeType => NodeType.Statement;
+    public NodeType NodeType { get; protected set; } //The type of statement that this node represents. It's set in the subclasses of StatementNode.
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
 
     // Different types of statements that can be part of a StatementNode
@@ -22,6 +22,13 @@ public class StatementNode : IASTNode
     public WhileLoopNode? WhileStatement { get; set; } // Represents a while statement.
     public ReturnNode? ReturnStatement { get; set; } // Represents a return statement.
 
+    
+    protected StatementNode(SourceLocation sourceLocation) //The constructor used in AssignmentNode
+    {
+        SourceLocation = sourceLocation;
+    }
+    
+    
     public StatementNode(
         AssignmentNode? assignment,
         FunctionCallNode? functionCall,
@@ -51,5 +58,11 @@ public class StatementNode : IASTNode
     public IEnumerable<IASTNode> GetChildren()
     {
         return Children;
+    }
+    
+    
+    public override string ToString()
+    {
+        return $"StatementNode: {Assignment} {FunctionCall} {IfStatement} {ForStatement} {WhileStatement} {ReturnStatement}";
     }
 }

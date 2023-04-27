@@ -31,4 +31,10 @@ public class SequenceCallNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"SequenceCallNode: {Identifier}({string.Join(", ", Arguments)})";
+    }
 }

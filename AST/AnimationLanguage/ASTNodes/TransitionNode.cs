@@ -26,4 +26,10 @@ public class TransitionNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"TransitionNode: {string.Join(", ", Parameters)}";
+    }
 }

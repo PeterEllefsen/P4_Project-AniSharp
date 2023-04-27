@@ -25,4 +25,10 @@ public class FrameDefNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"FrameDefNode: {FrameTime}";
+    }
 }

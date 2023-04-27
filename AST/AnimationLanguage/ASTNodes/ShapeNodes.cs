@@ -52,4 +52,10 @@ public class CircleNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"CircleNode: {string.Join(", ", Args)}";
+    }
 }

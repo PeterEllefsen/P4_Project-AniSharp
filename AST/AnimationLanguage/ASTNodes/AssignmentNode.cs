@@ -2,34 +2,37 @@
 using ASTCommon;
 
 //This class represents an assignment statement in the animation language.
-public class AssignmentNode : IASTNode
+public class AssignmentNode : StatementNode
 {
-    public SourceLocation SourceLocation { get; set; } //This is the location of the node in the source code.
-    public NodeType NodeType => NodeType.Assignment; //This defines that the NodeType of this node is Assignment.
-    
-    //The children of this node are the identifier and expression nodes. The lower indexes are the leftmost children, while the higher indexes are the rightmost children.
-    public IList<IASTNode> Children { get; } = new List<IASTNode>();
-    
     public IdentifierNode Identifier { get; set; } //This is the identifier (variable) that is being assigned to.
     public AssignmentOperator AssignmentOperator { get; set; } // Add the AssignmentOperator property
     public ExpressionNode Expression { get; set; } //This is the expression that is being assigned to the identifier.
 
     //Constructor taking in the identifier, expression, and source location:
     public AssignmentNode(IdentifierNode identifier, AssignmentOperator assignmentOperator, ExpressionNode expression, SourceLocation sourceLocation)
+        : base(sourceLocation)
     {
         Identifier = identifier;
-        AssignmentOperator = assignmentOperator; // Assign the value of the assignmentOperator parameter
+        AssignmentOperator = assignmentOperator;
         Expression = expression;
-        SourceLocation = sourceLocation; //Assign the value of the sourceLocation parameter to the SourceLocation property.
-        Children.Add(identifier);
-        Children.Add(expression);
+        InitializeStatementNode();
     }
-    
-    
-    public IEnumerable<IASTNode> GetChildren()
+
+    private void InitializeStatementNode()
     {
-        return Children;
+        NodeType = NodeType.Assignment;
+        Assignment = this;
+        Children.Add(Identifier);
+        Children.Add(Expression);
     }
+    
+    
+    public override string ToString()
+    {
+        string assignmentOperatorStr = AssignmentOperator.ToString();
+        return $"AssignmentNode: {Identifier} {assignmentOperatorStr} {Expression}";
+    }
+
 }
 
 

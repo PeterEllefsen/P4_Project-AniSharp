@@ -17,4 +17,10 @@ public class NodeList<T> : List<T>, IASTNode where T : IASTNode //It inherits fr
     {
         return this.OfType<IASTNode>(); //OfType<IASTNode> returns elements of a collection that are of type IASTNode. It returns itself since it is a collection of nodes.
     }
+    
+    
+    public override string ToString()
+    {
+        return $"NodeList: {Count} elements";
+    }
 }

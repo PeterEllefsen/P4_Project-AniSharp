@@ -19,4 +19,10 @@ public class TupleNode : IASTNode
     {
         return Arguments.Values; //The arguments are the children of the Tuple node, so they are returned.
     }
+    
+    
+    public override string ToString()
+    {
+        return $"TupleNode: {Arguments}";
+    }
 }

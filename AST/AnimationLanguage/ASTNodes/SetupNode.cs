@@ -23,4 +23,10 @@ public class SetupNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"SetupNode: {GroupingElements}";
+    }
 }

@@ -40,4 +40,11 @@ public class FunctionDeclarationNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        string parametersStr = string.Join(", ", Parameters.Select(p => p.ToString()));
+        return $"FunctionDeclarationNode: {Identifier}({parametersStr})";
+    }
 }

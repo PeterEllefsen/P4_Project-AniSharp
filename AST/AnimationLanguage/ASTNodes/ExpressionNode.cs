@@ -45,6 +45,12 @@ public class ExpressionNode : IASTNode
         return Children;
     }
     
+    
+    public override string ToString()
+    {
+        return $"ExpressionNode: {LeftOperand} {OperatorNode} {RightOperand}";
+    }
+    
 }
 
 public enum ExpressionNodeType //This enum defines the different types of expression nodes.

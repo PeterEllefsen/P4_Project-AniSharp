@@ -40,4 +40,13 @@ public class GroupingElementsNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        string expressionsStr = string.Join(", ", Expressions.Select(e => e.ToString()));
+        string identifiersStr = string.Join(", ", Identifiers.Select(i => i.ToString()));
+        string keyValuePairsStr = string.Join(", ", KeyValuePairs.Select(k => k.ToString()));
+        return $"GroupingElementsNode: ({expressionsStr}, {identifiersStr}, {keyValuePairsStr})";
+    }
 }

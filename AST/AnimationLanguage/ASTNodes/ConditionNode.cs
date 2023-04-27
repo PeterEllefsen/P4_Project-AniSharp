@@ -32,4 +32,10 @@ public class ConditionNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"ConditionNode: {LeftExpression} {ComparisonOperator} {RightExpression}";
+    }
 }

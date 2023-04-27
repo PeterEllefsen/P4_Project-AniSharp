@@ -108,7 +108,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     
         if (!(expressionNode is ExpressionNode expression))
         {
-            Console.WriteLine(context.GetText());
             throw new InvalidOperationException($"Expected an ExpressionNode but got {expressionNode.GetType().Name}");
         }
 
@@ -134,11 +133,9 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method visits an assignment context and returns an AssignmentNode.
     public override IASTNode VisitAssignment(AnimationLanguageRulesParser.AssignmentContext context)
     {
-        Console.WriteLine(context.GetText());
         AssignmentOperator assignmentOperator = VisitAssOps(context.assOps());
         IdentifierNode identifierNode = (IdentifierNode)Visit(context.GetChild(0)); // Visit the first child of the context and get the IdentifierNode
         ExpressionNode expression = (ExpressionNode)VisitExpression(context.expression()); // Call the custom VisitExpression method
-
         AssignmentNode assignmentNode = new AssignmentNode(identifierNode, assignmentOperator, expression, GetSourceLocation(context.Start));
         return assignmentNode;
     }
@@ -290,23 +287,24 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a function call is encountered in the code.
     public override IASTNode VisitFuncCall(AnimationLanguageRulesParser.FuncCallContext context)
     {
-        IdentifierNode functionName = (IdentifierNode)VisitTerminal((ITerminalNode)context.IDENTIFIER()); //Visit the IDENTIFIER terminal and cast the result to an IdentifierNode.
-        List<ArgumentNode> arguments = new List<ArgumentNode>(); //Create a list of ArgumentNodes to store the arguments of the function call.
+        IdentifierNode functionName = (IdentifierNode)VisitTerminal((ITerminalNode)context.IDENTIFIER());
+        List<ExpressionNode> arguments = new List<ExpressionNode>();
 
-        if (context.call_parameters() != null) //If the function call has arguments, visit them and add them to the list.
-        { 
-            int numParameters = context.call_parameters().ChildCount; //ChildCountt represents the number of arguments in a function call
+        if (context.call_parameters() != null)
+        {
+            int numParameters = context.call_parameters().ChildCount;
             for (int i = 0; i < numParameters; i++)
             {
-                if (context.call_parameters().GetChild(i) is AnimationLanguageRulesParser.Call_parameterContext parameterContext) //If the child is a call_parameter context, visit it and add it to the list.
+                if (context.call_parameters().GetChild(i) is AnimationLanguageRulesParser.Call_parameterContext parameterContext)
                 {
-                    arguments.Add((ArgumentNode)Visit(parameterContext));
+                    arguments.Add((ExpressionNode)Visit(parameterContext));
                 }
             }
         }
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
         return new FunctionCallNode(functionName, arguments, sourceLocation);
     }
+
 
 
     //This represents a shape initialization.
@@ -704,21 +702,26 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     }
 
     //This method is called when a sequence block part is encountered in the code.
-    public IASTNode VisitSeqBlockPart(AnimationLanguageRulesParser.SeqBlockPartsContext context)
+    public SeqBlockPartNode VisitSeqBlockPart(AnimationLanguageRulesParser.SeqBlockPartsContext context)
     {
+        IASTNode child;
+
         if (context.statement() != null) //If the sequence block part is a statement, visit it.
         {
-            return VisitStatement(context.statement());
+            child = VisitStatement(context.statement());
         }
         else if (context.animation() != null) //If the sequence block part is an animation, visit it.
         {
-            return VisitAnimation(context.animation());
+            child = VisitAnimation(context.animation());
         }
         else
         {
-            throw new InvalidOperationException($"Unexpcted child in SeqBlockPartsContext: {context.GetText()}");
+            throw new InvalidOperationException($"Unexpected child in SeqBlockPartsContext: {context.GetText()}");
         }
+
+        return new SeqBlockPartNode(child, GetSourceLocation(context.Start));
     }
+
 
     //This method is called when a sequence call is encountered in the code.
     public override IASTNode VisitSequenceCall(AnimationLanguageRulesParser.SequenceCallContext context)
@@ -817,22 +820,23 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     {
         int startTime = 0; // Create a variable to contain the start time of the timeline block
         int endTime = 0; // Create a variable to contain the end time of the timeline block
-        IList<AssignmentNode> assignments = new List<AssignmentNode>(); // Create a list to contain the assignments of the timeline block
+        IList<FrameDefNode> frameDefinitions = new List<FrameDefNode>(); // Create a list to contain the frame definitions of the timeline block
 
         foreach (var frameDefContext in context.frameDef())
         {
-            AssignmentNode assignmentNode = (AssignmentNode)VisitFrameDef(frameDefContext); // Visit the frame definition
-            assignments.Add(assignmentNode); // Add the visited frame definition to the list of assignments
+            FrameDefNode frameDefNode = (FrameDefNode)VisitFrameDef(frameDefContext); // Visit the frame definition
+            frameDefinitions.Add(frameDefNode); // Add the visited frame definition to the list of frame definitions
 
             int frameTime = int.Parse(frameDefContext.INTEGER().GetText()); // Get the time of the frame definition
             startTime = Math.Min(startTime, frameTime); // Update the start time of the timeline block
             endTime = Math.Max(endTime, frameTime); // Update the end time of the timeline block
         }
 
-        TimelineBlockNode timelineBlockNode = new TimelineBlockNode(startTime, endTime, assignments, new SourceLocation(context.Start.Line, context.Start.Column)); // Create a timeline block node
+        TimelineBlockNode timelineBlockNode = new TimelineBlockNode(startTime, endTime, frameDefinitions, new SourceLocation(context.Start.Line, context.Start.Column)); // Create a timeline block node
 
         return timelineBlockNode;
     }
+
 
     //This method is called when a frame definition is encountered in the code.
     public override IASTNode VisitFrameDef(AnimationLanguageRulesParser.FrameDefContext context)

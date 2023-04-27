@@ -19,4 +19,10 @@ public class IdentifierNode : IASTNode
     {
         return Enumerable.Empty<IASTNode>(); // Identifiers have no children, so it returns an empty list.
     }
+    
+    
+    public override string ToString()
+    {
+        return $"IdentifierNode: {Name}";
+    }
 }

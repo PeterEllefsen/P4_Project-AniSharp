@@ -25,4 +25,10 @@ public class ElseIfNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"ElseIfNode: {Condition}";
+    }
 }

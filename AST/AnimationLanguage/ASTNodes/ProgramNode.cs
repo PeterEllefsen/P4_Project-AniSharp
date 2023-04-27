@@ -61,4 +61,10 @@ public class ProgramNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"ProgramNode: ({Prototypes.Count} prototypes, {FunctionDeclarations.Count} function declarations, {Sequences.Count} sequences)";
+    }
 }

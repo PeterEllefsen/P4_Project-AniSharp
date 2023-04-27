@@ -30,4 +30,10 @@ public class TypeNode : IASTNode
     {
         return new List<IASTNode>(); //The TypeNode has no children, so an empty list is returned.
     }
+    
+    
+    public override string ToString()
+    {
+        return $"TypeNode: {Kind}";
+    }
 }

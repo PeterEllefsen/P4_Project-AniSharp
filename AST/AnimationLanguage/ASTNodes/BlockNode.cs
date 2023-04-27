@@ -26,4 +26,12 @@ public class BlockNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        string statementsStr = string.Join(", ", Statements.Select(s => s.ToString()));
+        return $"BlockNode: {statementsStr}";
+    }
+
 }

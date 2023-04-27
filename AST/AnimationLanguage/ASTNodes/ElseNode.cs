@@ -23,4 +23,10 @@ public class ElseNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"ElseNode: {ElseBlock}";
+    }
 }

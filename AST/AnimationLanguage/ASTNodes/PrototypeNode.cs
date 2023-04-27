@@ -32,6 +32,12 @@ public class PrototypeNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"PrototypeNode: {ReturnType} {FunctionName}({string.Join(", ", Parameters)})";
+    }
 }
 
 public enum DataType //This enum defines the different data types that can be used in the language.

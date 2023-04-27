@@ -37,4 +37,11 @@ public class AnimationNode : IASTNode
             yield return transition;
         }
     }
+    
+    
+    public override string ToString()
+    {
+        return $"AnimationNode: {Identifier}";
+    }
+
 }

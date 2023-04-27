@@ -25,4 +25,10 @@ public class ReturnNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        return $"ReturnNode: {ReturnValue}";
+    }
 }

@@ -19,12 +19,11 @@ class Program
         CommonTokenStream tokens = new CommonTokenStream(lexer); //The lexer generates tokens, which are then stored in a token stream.
         AnimationLanguageRulesParser parser = new AnimationLanguageRulesParser(tokens); //The parser uses the token stream as input.
         
-        ParserRuleContext parseTreeRoot = parser.s(); //The start of the parse tree is defined here. It is the root node.
+        ParserRuleContext parseTreeRoot = parser.program(); //The start of the parse tree is defined here. It is the root node.
         
         AnimationLanguageVisitor visitor = new AnimationLanguageVisitor(); //The visitor is initialized as an object
         
-        IASTNode astRoot = (IASTNode)visitor.Visit(parseTreeRoot); //The visitor visits the parse tree and returns the root of the AST.
-        
+        IASTNode astRoot = visitor.Visit(parseTreeRoot); //The visitor visits the parse tree and returns the root of the AST.
         PrintAST(astRoot);
 
         //The returned object (astRoot) is now the root of your AST
@@ -41,12 +40,13 @@ class Program
         }
 
         string indent = new string(' ', indentation * 2);
-        Console.WriteLine($"{indent}{node.GetType().Name}");
+        Console.WriteLine($"{indent}{node.ToString()}");
 
         foreach (IASTNode child in node.GetChildren())
         {
             PrintAST(child, indentation + 1);
         }
     }
+
 
 }

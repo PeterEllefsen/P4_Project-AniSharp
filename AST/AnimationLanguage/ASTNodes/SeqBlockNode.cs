@@ -19,4 +19,10 @@ public class SeqBlockNode : IASTNode
     {
         return SeqBlockParts; //SeqBlockParts is the only child, so therefore it is returned
     }
+    
+    
+    public override string ToString()
+    {
+        return $"SeqBlockNode: {SeqBlockParts}";
+    }
 }

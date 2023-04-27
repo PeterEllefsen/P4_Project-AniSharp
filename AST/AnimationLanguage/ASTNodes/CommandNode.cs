@@ -29,4 +29,11 @@ public class CommandNode : IASTNode
     {
         return Children;
     }
+    
+    
+    public override string ToString()
+    {
+        string parametersStr = string.Join(", ", Parameters.Select(p => p.ToString()));
+        return $"CommandNode: {Identifier}({parametersStr})";
+    }
 }
