@@ -91,8 +91,7 @@ setupBlock: grouping SEMICOLON;
 
 grouping: LBRACKET groupingElements RBRACKET;
 
-groupingElements: (keyValuePair | expression | IDENTIFIER) (COMMA groupingElements)?;
-
+groupingElements: (keyValuePair | expression | IDENTIFIER) (COMMA (keyValuePair | expression | IDENTIFIER))*;
 
 keyValuePair: IDENTIFIER EQUAL expression;
 
@@ -127,7 +126,9 @@ boolean: TRUE | FALSE;
 
 operator: PLUS | MINUS | MULTIPLY | DIVIDE | MODULO;
 
-funcCall: IDENTIFIER LPAREN call_parameters? RPAREN;
+funcCall: IDENTIFIER LPAREN funcArgs? RPAREN;
+
+funcArgs: expression (COMMA expression)*;
 
 shapeinit: (POLYGON | CIRCLE) LPAREN argName arg (COMMA argName arg)* RPAREN; 
 

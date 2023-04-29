@@ -79,16 +79,19 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             {
                 KeyValuePairNode keyValuePairNode = VisitKeyValuePair(keyValuePairContext);
                 keyValuePairs.Add(keyValuePairNode);
+                Console.WriteLine("This is a key-value pair: " + keyValuePairNode);
             }
             else if (item is AnimationLanguageRulesParser.ExpressionContext expressionContext) // If the visited item is an expression, visit it and add the result to the list of expressions.
             {
                 ExpressionNode expressionNode = (ExpressionNode)VisitExpression(expressionContext);
                 expressions.Add(expressionNode);
+                Console.WriteLine("This is an expression: " + expressionNode);
             }
             else if (item is ITerminalNode terminalNode && terminalNode.Symbol.Type == AnimationLanguageRulesParser.IDENTIFIER) // If the visited item is a terminal node, and it fits the properties of an IDENTIFIER, create an identifier node and add it to the list of identifiers.
             {
                 IdentifierNode identifierNode = new IdentifierNode(terminalNode.GetText(), GetSourceLocation(terminalNode.Symbol));
                 identifiers.Add(identifierNode);
+                Console.WriteLine("This is an identifier: " + identifierNode);
             }
         }
 
@@ -104,17 +107,19 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
         IdentifierNode identifier = (IdentifierNode)Visit(context.IDENTIFIER()); // Visit the IDENTIFIER context and get the IdentifierNode.
         IASTNode expressionNode = Visit(context.expression()); // Visit the expression context and get the IASTNode.
-    
-        if (!(expressionNode is ExpressionNode expression))
+
+        // Check if the expressionNode is an instance of ExpressionNode or FunctionCallNode.
+        if (!(expressionNode is ExpressionNode) && !(expressionNode is FunctionCallNode))
         {
-            throw new InvalidOperationException($"Expected an ExpressionNode but got {expressionNode.GetType().Name}");
+            throw new InvalidOperationException($"Expected an ExpressionNode or FunctionCallNode but got {expressionNode.GetType().Name}");
         }
 
         // Create a new KeyValuePairNode with the retrieved identifier and expression data.
-        KeyValuePairNode keyValuePairNode = new KeyValuePairNode(identifier, expression, GetSourceLocation(context.Start));
+        KeyValuePairNode keyValuePairNode = new KeyValuePairNode(identifier, (dynamic)expressionNode, GetSourceLocation(context.Start)); //"dynamic" is used to allow the compiler to choose the correct type at runtime.
 
         return keyValuePairNode;
     }
+
 
     
     //VisitTerminal works to create an IdentifierNode when the parser visits an IDENTIFIER terminal node.
@@ -286,23 +291,25 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a function call is encountered in the code.
     public override IASTNode VisitFuncCall(AnimationLanguageRulesParser.FuncCallContext context)
     {
-        IdentifierNode functionName = (IdentifierNode)VisitTerminal((ITerminalNode)context.IDENTIFIER());
-        List<ExpressionNode> arguments = new List<ExpressionNode>();
+        IdentifierNode identifier = new IdentifierNode(context.IDENTIFIER().GetText(), GetSourceLocation(context.IDENTIFIER().Symbol)); //Create a new IdentifierNode with the name of the function and the SourceLocation of the IDENTIFIER terminal.
 
-        if (context.call_parameters() != null)
+        List<ExpressionNode> arguments = new List<ExpressionNode>(); //Create a new list of ExpressionNodes to store the arguments of the function call.
+        if (context.funcArgs() != null)
         {
-            int numParameters = context.call_parameters().ChildCount;
-            for (int i = 0; i < numParameters; i++)
+            foreach (var arg in context.funcArgs().expression()) //For each expression in the funcArgs context, visit the expression and add it to the list of arguments.
             {
-                if (context.call_parameters().GetChild(i) is AnimationLanguageRulesParser.Call_parameterContext parameterContext)
-                {
-                    arguments.Add((ExpressionNode)Visit(parameterContext));
-                }
+                ExpressionNode argNode = (ExpressionNode)VisitExpression(arg);
+                arguments.Add(argNode);
             }
         }
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
-        return new FunctionCallNode(functionName, arguments, sourceLocation);
+
+        FunctionCallNode functionCall = new FunctionCallNode(identifier, arguments, GetSourceLocation(context.Start));
+        return functionCall;
     }
+
+
+
+
 
 
 
@@ -347,7 +354,8 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
         return new TupleNode(arguments, sourceLocation);
     }
-
+    
+    
 
     //This method is called when the prototype rule is encountered in the code.
     public override IASTNode VisitPrototypes(AnimationLanguageRulesParser.PrototypesContext context)

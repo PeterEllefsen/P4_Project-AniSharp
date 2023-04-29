@@ -289,6 +289,16 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFuncCall([NotNull] AnimationLanguageRulesParser.FuncCallContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.funcArgs"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFuncArgs([NotNull] AnimationLanguageRulesParser.FuncArgsContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.funcArgs"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFuncArgs([NotNull] AnimationLanguageRulesParser.FuncArgsContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.shapeinit"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

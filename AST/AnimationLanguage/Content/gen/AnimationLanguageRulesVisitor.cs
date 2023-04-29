@@ -185,6 +185,12 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitFuncCall([NotNull] AnimationLanguageRulesParser.FuncCallContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.funcArgs"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFuncArgs([NotNull] AnimationLanguageRulesParser.FuncArgsContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.shapeinit"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

@@ -39,5 +39,11 @@ public class SequenceNode : IASTNode
     }
     
     
+    public override string ToString()
+    {
+        string parametersString = Parameters != null ? string.Join(", ", Parameters.Select(p => p.ToString())) : "None"; //If the sequence has parameters, add them to the string. Otherwise, add "None".
+        return $"SequenceNode: Identifier: {Identifier}, Parameters: {parametersString}, SeqBlockNode: {SeqBlock}"; 
+    }
+
 
 }

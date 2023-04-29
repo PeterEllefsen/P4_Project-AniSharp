@@ -27,6 +27,6 @@ public class SetupNode : IASTNode
     
     public override string ToString()
     {
-        return $"SetupNode: {GroupingElements}";
+        return $"SetupNode:";
     }
 }

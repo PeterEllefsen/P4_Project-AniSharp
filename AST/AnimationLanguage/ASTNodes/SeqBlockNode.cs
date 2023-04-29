@@ -23,6 +23,7 @@ public class SeqBlockNode : IASTNode
     
     public override string ToString()
     {
-        return $"SeqBlockNode: {SeqBlockParts}";
+        return $"SeqBlockNode: [{string.Join(", ", SeqBlockParts)}]";
     }
+
 }

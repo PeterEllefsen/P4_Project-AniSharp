@@ -25,6 +25,7 @@ public class TimelineBlockNode : IASTNode
     
     public override string ToString()
     {
-        return $"TimelineBlockNode: {FrameDefinitions}";
+        return $"TimelineBlockNode: StartTime: {StartTime}, EndTime: {EndTime}, FrameDefinitions: [{string.Join(", ", FrameDefinitions)}]";
     }
+
 }
