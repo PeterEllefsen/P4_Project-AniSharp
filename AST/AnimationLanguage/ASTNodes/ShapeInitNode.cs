@@ -27,7 +27,7 @@ public class ShapeInitNode : ExpressionNode
     public override string ToString()
     {
         var argumentsString = string.Join(", ", Arguments.Select(arg => $"{arg.Key}: {arg.Value}"));
-        return $"ShapeInitNode: Type: {ShapeType}, Arguments: {{{argumentsString}}}";
+        return $"ShapeInitNode: {ShapeType}, {{{argumentsString}}}";
     }
 
 

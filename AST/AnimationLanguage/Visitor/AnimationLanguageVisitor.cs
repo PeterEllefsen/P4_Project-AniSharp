@@ -61,7 +61,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
         // Create a SetupNode with the GroupingElementsNode and set its SourceLocation.
         SetupNode setupNode = new SetupNode(groupingElements, new SourceLocation(context.Start.Line, context.Start.Column));
-        Console.WriteLine($"***{context.GetText()}***");
         return setupNode;
     }
 
@@ -79,19 +78,16 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             {
                 KeyValuePairNode keyValuePairNode = VisitKeyValuePair(keyValuePairContext);
                 keyValuePairs.Add(keyValuePairNode);
-                Console.WriteLine("This is a key-value pair: " + keyValuePairNode);
             }
             else if (item is AnimationLanguageRulesParser.ExpressionContext expressionContext) // If the visited item is an expression, visit it and add the result to the list of expressions.
             {
                 ExpressionNode expressionNode = (ExpressionNode)VisitExpression(expressionContext);
                 expressions.Add(expressionNode);
-                Console.WriteLine("This is an expression: " + expressionNode);
             }
             else if (item is ITerminalNode terminalNode && terminalNode.Symbol.Type == AnimationLanguageRulesParser.IDENTIFIER) // If the visited item is a terminal node, and it fits the properties of an IDENTIFIER, create an identifier node and add it to the list of identifiers.
             {
                 IdentifierNode identifierNode = new IdentifierNode(terminalNode.GetText(), GetSourceLocation(terminalNode.Symbol));
                 identifiers.Add(identifierNode);
-                Console.WriteLine("This is an identifier: " + identifierNode);
             }
         }
 
@@ -669,11 +665,12 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     {
         var sequences = new List<SequenceNode>(); //Create a list to contain all of the individual sequences.
 
-        foreach (var child in context.children) //For each child of thesequences rule, visit it.
+        foreach (var child in context.children) //For each child of the sequences rule, visit it.
         {
-            if (child is AnimationLanguageRulesParser.SequenceContext sequenceContext) 
+            IASTNode node = Visit(child);
+            if (node is SequenceNode sequenceNode) 
             {
-                sequences.Add((SequenceNode)Visit(sequenceContext)); //If the child is a sequence, visit it and add it to the list.
+                sequences.Add(sequenceNode); //If the child is a sequence, visit it and add it to the list.
             }
         }
         return sequences;
@@ -761,7 +758,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             commandNode = (CommandNode)VisitCommand(context.command()); //Visit the command of the animation if it has one.
         }
 
-        var transitions = VisitAndGetTransitions(context.transitions());
+        var (transitions, commands) = VisitAndGetTransitions(context.transitions());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
         return new AnimationNode(identifierNode, commandNode, transitions, sourceLocation);
@@ -769,9 +766,10 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
 
 
-    public List<TransitionNode> VisitAndGetTransitions(AnimationLanguageRulesParser.TransitionsContext context)
+    public (List<TransitionNode>, List<CommandNode>) VisitAndGetTransitions(AnimationLanguageRulesParser.TransitionsContext context)
     {
         var transitions = new List<TransitionNode>();
+        var commands = new List<CommandNode>();
 
         foreach (var child in context.children)
         {
@@ -781,12 +779,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             }
             else if (child is AnimationLanguageRulesParser.CommandContext commandContext)
             {
-                transitions.Add((TransitionNode)VisitCommand(commandContext));
+                commands.Add((CommandNode)VisitCommand(commandContext));
             }
         }
 
-        return transitions;
+        return (transitions, commands);
     }
+
 
 
     public override IASTNode VisitTransition(AnimationLanguageRulesParser.TransitionContext context)
@@ -866,3 +865,8 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     
     //TODO: Add all of the remaning helper methods that do not override a method from the base class here
 }
+
+
+
+
+

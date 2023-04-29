@@ -1,25 +1,5 @@
-prototypes {
-    group function ColorBasedOnNumber();
-}
 
 
-setup [
-    sceneWidth = 500,
-    sceneHeight = 300,
-    framerate = 60,
-    backgroundColor = rgb(255, 255, 255)
-
-];
-
-
-
-
-
-
-int function hejsa(){
-    int hej = 5;
-    return 2;
-}
 
 seq CarDrivingOnScreen() {
 
