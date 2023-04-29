@@ -1,5 +1,5 @@
 prototypes {
-    int function ColorBasedOnNumber(int number);
+    group function ColorBasedOnNumber();
 }
 
 
@@ -13,15 +13,13 @@ setup [
 
 
 
-int function ColorBasedOnNumber(int x) {
-    
-      int red = 4 * ((number) * 4);
-      int green = 0;    
-      int blue = 0;
+
+
+
+int function hejsa(){
+    int hej = 5;
     return 2;
-
 }
-
 
 seq CarDrivingOnScreen() {
 

@@ -57,17 +57,16 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     public override IASTNode VisitSetupBlock(AnimationLanguageRulesParser.SetupBlockContext context)
     {
         // Visit the grouping context and get the GroupingElementsNode.
-        GroupingElementsNode groupingElements = (GroupingElementsNode)VisitGrouping(context.grouping());
+        GroupingElementsNode groupingElements = (GroupingElementsNode)VisitGroupingElements(context.grouping().groupingElements());
 
         // Create a SetupNode with the GroupingElementsNode and set its SourceLocation.
         SetupNode setupNode = new SetupNode(groupingElements, new SourceLocation(context.Start.Line, context.Start.Column));
-
+        Console.WriteLine($"***{context.GetText()}***");
         return setupNode;
     }
 
 
-    
-    
+
     public override IASTNode VisitGroupingElements(AnimationLanguageRulesParser.GroupingElementsContext context)
     {
         IList<ExpressionNode> expressions = new List<ExpressionNode>(); // Create a list of expression nodes.

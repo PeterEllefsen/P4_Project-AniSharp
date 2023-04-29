@@ -43,5 +43,4 @@ public class AnimationNode : IASTNode
     {
         return $"AnimationNode: {Identifier}";
     }
-
 }
