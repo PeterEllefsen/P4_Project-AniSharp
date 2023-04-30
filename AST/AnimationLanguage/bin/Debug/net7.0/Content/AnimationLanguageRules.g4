@@ -147,12 +147,9 @@ prototypes: prototype (COMMA prototypes)?;
 
 prototype: (type | GROUP) FUNCTION IDENTIFIER LPAREN parameters? RPAREN SEMICOLON;
 
-parameters: parameter (COMMA parameters)?
-           | parameter
-           ;
+parameters: parameter (COMMA parameter)*;
 
-parameter: type IDENTIFIER (COMMA parameters)?
-         | type IDENTIFIER
+parameter: type IDENTIFIER
          | funcCall
          ;
 
@@ -162,7 +159,6 @@ block: LBRACE statements return RBRACE;
 
 statements: statement*
           ;
-
 
 statement: assignment
           | identifierGrouping
