@@ -134,11 +134,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     public override IASTNode VisitAssignment(AnimationLanguageRulesParser.AssignmentContext context)
     {
         AssignmentOperator assignmentOperator = VisitAssOps(context.assOps());
-        IdentifierNode identifierNode = (IdentifierNode)Visit(context.GetChild(0)); // Visit the first child of the context and get the IdentifierNode
-        ExpressionNode expression = (ExpressionNode)VisitExpression(context.expression()); // Call the custom VisitExpression method
+        int identifierChildIndex = context.type() != null ? 1 : 0; //Checks if the first element in the assignment is a type. If it is, the identifier is the second element, otherwise it is the first element.
+        IdentifierNode identifierNode = (IdentifierNode)Visit(context.GetChild(identifierChildIndex)); //Visit the identifier context and get the IdentifierNode.
+        ExpressionNode expression = (ExpressionNode)VisitExpression(context.expression()); 
         AssignmentNode assignmentNode = new AssignmentNode(identifierNode, assignmentOperator, expression, GetSourceLocation(context.Start));
         return assignmentNode;
     }
+
 
 
     //This method visits the assignment operator context and returns the current AssignmentOperator.
