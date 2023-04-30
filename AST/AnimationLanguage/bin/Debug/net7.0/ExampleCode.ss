@@ -1,7 +1,7 @@
 
 
 
-int function newFunc(){
+int function newFunc(int one, int two){
   int i = 1;
   i = 5;
   int j = 10;

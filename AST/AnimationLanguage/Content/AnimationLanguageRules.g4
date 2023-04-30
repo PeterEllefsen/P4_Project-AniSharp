@@ -160,8 +160,7 @@ funcDecl: (type | GROUP) FUNCTION IDENTIFIER LPAREN (parameters)? RPAREN block;
 
 block: LBRACE statements return RBRACE;
 
-statements: statement  statements
-          | statement 
+statements: statement*
           ;
 
 statement: assignment
