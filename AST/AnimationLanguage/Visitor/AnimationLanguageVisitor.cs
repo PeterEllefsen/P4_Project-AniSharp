@@ -482,13 +482,20 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     // this method is being called when a block is being declared in the code.
     public override IASTNode VisitBlock(AnimationLanguageRulesParser.BlockContext context)
     {
+        Console.WriteLine(context.GetText());
         IList<StatementNode> statementNodes = new List<StatementNode>(); //Create a list of StatementNodes to store the statements of the block.
+        ReturnNode returnNode = new ReturnNode(null, GetSourceLocation(context.Start)); //Create a return node with a null value and the source location of the block.
         if (context.statements() != null) 
         {
             statementNodes = VisitStatements(context.statements()); //Visit the statements of the block and add them to the list.
         }
 
-        BlockNode blockNode = new BlockNode(statementNodes, GetSourceLocation(context.Start)); //Create a block node with the list of statements and the source location of the block
+        if (context.@return() != null)
+        {
+            returnNode = (ReturnNode)VisitReturn(context.@return()); //Visit the return statement of the block and store it in a variable.
+        }
+
+        BlockNode blockNode = new BlockNode(statementNodes, returnNode, GetSourceLocation(context.Start)); //Create a block node with the list of statements and the source location of the block
         return blockNode;
     }
 
@@ -548,6 +555,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     // This method is called when a return statement is encountered in the code.
     public override IASTNode VisitReturn(AnimationLanguageRulesParser.ReturnContext context)
     {
+        Console.WriteLine(context.GetText());
         ExpressionNode? returnExpression = null;
 
         if (context.expression() != null)

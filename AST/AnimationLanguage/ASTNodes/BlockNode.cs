@@ -10,28 +10,36 @@ public class BlockNode : IASTNode
 
     public IList<StatementNode> Statements { get; } = new List<StatementNode>(); // Represents all of the statements within the block.
 
-    public BlockNode(IEnumerable<StatementNode> statements, SourceLocation sourceLocation)
+    public ReturnNode? ReturnNode { get; set; } // Represents the return statement in the block, if present.
+
+    public BlockNode(IEnumerable<StatementNode> statements, ReturnNode? returnNode, SourceLocation sourceLocation)
     {
         SourceLocation = sourceLocation;
+        ReturnNode = returnNode;
 
         foreach (StatementNode statementNode in statements)
         {
             Statements.Add(statementNode);
             Children.Add(statementNode); // Add all statements as children.
         }
+
+        if (returnNode != null)
+        {
+            Children.Add(returnNode); // Add the return statement as a child, if present.
+        }
     }
-    
-    
+
+
     public IEnumerable<IASTNode> GetChildren()
     {
         return Children;
     }
-    
-    
+
+
     public override string ToString()
     {
         string statementsStr = string.Join(", ", Statements.Select(s => s.ToString()));
-        return $"BlockNode: {statementsStr}";
+        string returnStr = ReturnNode != null ? $", {ReturnNode}" : "";
+        return $"BlockNode: {statementsStr}{returnStr}";
     }
-
 }
