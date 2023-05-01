@@ -1,10 +1,14 @@
 
 int function newFunc(int one, int two){
   int i = 1;
-  i = 5;
-  int j = 10;
+  int j = 2;
+  int k = 3;
 
-  return i;
+  if(i == 1){
+    i = 2;
+  }
+
+  return [i, j, k];
 }
 
 

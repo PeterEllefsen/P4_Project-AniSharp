@@ -489,7 +489,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     // this method is being called when a block is being declared in the code.
     public override IASTNode VisitBlock(AnimationLanguageRulesParser.BlockContext context)
     {
-        Console.WriteLine(context.GetText());
         IList<StatementNode> statementNodes = new List<StatementNode>(); //Create a list of StatementNodes to store the statements of the block.
         ReturnNode returnNode = new ReturnNode(null, GetSourceLocation(context.Start)); //Create a return node with a null value and the source location of the block.
         if (context.statements() != null) 
@@ -563,7 +562,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     public override IASTNode VisitReturn(AnimationLanguageRulesParser.ReturnContext context)
     {
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
-        Console.WriteLine(context.GetText());
         ExpressionNode? returnExpression = null;
 
         if (context.expression() != null)
@@ -627,8 +625,9 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     
     //he VisitCondition method is used when a condition is met in the code. 
-    public IASTNode VisitCondition(AnimationLanguageRulesParser.ConditionContext context)
+    public override IASTNode VisitCondition(AnimationLanguageRulesParser.ConditionContext context)
     {
+        Console.WriteLine(context.GetText());
         IASTNode leftExpression = Visit(context.expression(0));
         IASTNode rightExpression = Visit(context.expression(1));
         OperatorNode? comparisonOperator = context.comparator().Length > 0 ? (OperatorNode)Visit(context.comparator(0)) : null; //Visit the comparator of the condition if it exists. (0)) : null means that if there is no comparator, it will be null.
@@ -643,25 +642,26 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a conditional is encountered in the code.
     public override IASTNode VisitConditional(AnimationLanguageRulesParser.ConditionalContext context)
     {
-        ExpressionNode condition = (ExpressionNode)Visit(context.condition()); //Visit the condition of the conditional.
-        BlockNode ifBlock = (BlockNode)VisitBlock(context.block()); //Visit the block of the conditional.
+        ConditionNode condition = (ConditionNode)Visit(context.condition()); // Change the type here
+        BlockNode ifBlock = (BlockNode)VisitBlock(context.block());
 
-        IList<ElseIfNode> elseIfBranches = new List<ElseIfNode>(); //Create a list to contain all of the else if branches related to the conditional.
+        IList<ElseIfNode> elseIfBranches = new List<ElseIfNode>();
         for (int i = 0; i < context.elseif().Length; i++)
         {
-            elseIfBranches.Add((ElseIfNode)VisitElseif(context.elseif(i))); //Visit each of the else if branches.
+            elseIfBranches.Add((ElseIfNode)VisitElseif(context.elseif(i)));
         }
 
-        ElseNode? elseBranch = null; //Creates a variable to contain the else branch of the conditional. Its set to null, as an if-statement can both have an else, and not have an else.
+        ElseNode? elseBranch = null;
         if (context.@else() != null) 
         {
-            elseBranch = (ElseNode)VisitElse(context.@else()); //Visit the else branch if it exists.
+            elseBranch = (ElseNode)VisitElse(context.@else());
         }
 
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
         return new IfStatementNode(condition, ifBlock, elseIfBranches, elseBranch, sourceLocation);
     }
+
 
 
     //This method is called when an else if branch is encountered in the code.

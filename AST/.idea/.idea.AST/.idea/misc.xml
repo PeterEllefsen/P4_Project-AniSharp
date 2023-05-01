@@ -6,7 +6,7 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/AnimationLanguage/Content/AnimationLanguageRules.g4" />
           <option name="autoGen" value="true" />
-          <option name="outputDir" value="C:\Users\p-l-g\Documents\GitHub\P4-Project\AST\AnimationLanguage\Content\gen" />
+          <option name="outputDir" value="C:\Users\pelle\OneDrive\Skrivebord\Kode\GitHub\P4-Project\P4-Project\AST\AnimationLanguage\Content\gen" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="" />
