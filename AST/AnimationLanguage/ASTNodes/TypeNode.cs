@@ -14,6 +14,7 @@ public class TypeNode : IASTNode
         Bool,
         Circle,
         Polygon,
+        Group,
         None,
     }
 

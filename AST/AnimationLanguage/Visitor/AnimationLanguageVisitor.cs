@@ -463,20 +463,27 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     // This method is called when a function is being declared in the code
     public override IASTNode VisitFuncDecl(AnimationLanguageRulesParser.FuncDeclContext context)
     {
-        string functionName = context.IDENTIFIER().GetText(); //Get the name of the function.
-        IdentifierNode identifierNode = new IdentifierNode(functionName, GetSourceLocation(context.IDENTIFIER().Symbol)); //Create an identifier node for the function name.
+        string functionName = context.IDENTIFIER().GetText();
+        IdentifierNode identifierNode = new IdentifierNode(functionName, GetSourceLocation(context.IDENTIFIER().Symbol));
 
-        IList<ParameterNode> parameters = new List<ParameterNode>(); //Create a list of ParameterNodes to store the parameters of the function.
-        if (context.parameters() != null) //If the function has any parameters, visit them and add them to the list.
+        IList<ParameterNode> parameters = new List<ParameterNode>();
+        if (context.parameters() != null)
         {
             parameters = VisitParameters(context.parameters());
         }
 
-        BlockNode blockNode = (BlockNode)VisitBlock(context.block()); //Visit the block of the function and store it in a variable.
-        SourceLocation sourceLocation = GetSourceLocation(context.Start); 
+        TypeNode.TypeKind returnTypeKind = GetTypeFromString(context.GetChild(0).GetText());
+        SourceLocation returnTypeLocation = GetSourceLocation(context.Start);
+        TypeNode returnTypeNode = new TypeNode(returnTypeKind, returnTypeLocation);
 
-        return new FunctionDeclarationNode(identifierNode, parameters, blockNode, sourceLocation);
+        BlockNode blockNode = (BlockNode)VisitBlock(context.block());
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        return new FunctionDeclarationNode(returnTypeNode, identifierNode, parameters, blockNode, sourceLocation);
     }
+
+
+
 
     
     // this method is being called when a block is being declared in the code.
@@ -874,6 +881,23 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     }
     
     //TODO: Add all of the remaning helper methods that do not override a method from the base class here
+    
+    
+    private TypeNode.TypeKind GetTypeFromString(string typeString)
+    {
+        return typeString.ToLower() switch
+        {
+            "int" => TypeNode.TypeKind.Int,
+            "float" => TypeNode.TypeKind.Float,
+            "string" => TypeNode.TypeKind.String,
+            "bool" => TypeNode.TypeKind.Bool,
+            "circle" => TypeNode.TypeKind.Circle,
+            "polygon" => TypeNode.TypeKind.Polygon,
+            "group" => TypeNode.TypeKind.Group,
+            _ => throw new InvalidOperationException($"Invalid type string: {typeString}")
+        };
+    }
+
 }
 
 
