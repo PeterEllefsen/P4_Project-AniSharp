@@ -555,6 +555,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     // This method is called when a return statement is encountered in the code.
     public override IASTNode VisitReturn(AnimationLanguageRulesParser.ReturnContext context)
     {
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
         Console.WriteLine(context.GetText());
         ExpressionNode? returnExpression = null;
 
@@ -563,7 +564,14 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             returnExpression = Visit(context.expression()) as ExpressionNode;
         }
 
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+        if (context.grouping() != null)
+        {
+            // Visit the grouping context and get the GroupingElementsNode.
+            GroupingElementsNode groupingElements = (GroupingElementsNode)VisitGroupingElements(context.grouping().groupingElements());
+            return new ReturnNode(groupingElements, sourceLocation);
+        }
+
+        
         return new ReturnNode(returnExpression, sourceLocation);
     }
 

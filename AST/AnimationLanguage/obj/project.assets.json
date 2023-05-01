@@ -40,23 +40,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pelle\\.nuget\\packages\\": {},
+    "C:\\Users\\p-l-g\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pelle\\OneDrive\\Skrivebord\\Kode\\GitHub\\P4-Project\\P4-Project\\AST\\AnimationLanguage\\AnimationLanguage.csproj",
+      "projectUniqueName": "C:\\Users\\p-l-g\\Documents\\GitHub\\P4-Project\\AST\\AnimationLanguage\\AnimationLanguage.csproj",
       "projectName": "AnimationLanguage",
-      "projectPath": "C:\\Users\\pelle\\OneDrive\\Skrivebord\\Kode\\GitHub\\P4-Project\\P4-Project\\AST\\AnimationLanguage\\AnimationLanguage.csproj",
-      "packagesPath": "C:\\Users\\pelle\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pelle\\OneDrive\\Skrivebord\\Kode\\GitHub\\P4-Project\\P4-Project\\AST\\AnimationLanguage\\obj\\",
+      "projectPath": "C:\\Users\\p-l-g\\Documents\\GitHub\\P4-Project\\AST\\AnimationLanguage\\AnimationLanguage.csproj",
+      "packagesPath": "C:\\Users\\p-l-g\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\p-l-g\\Documents\\GitHub\\P4-Project\\AST\\AnimationLanguage\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\pelle\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\p-l-g\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -65,7 +65,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -100,7 +99,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

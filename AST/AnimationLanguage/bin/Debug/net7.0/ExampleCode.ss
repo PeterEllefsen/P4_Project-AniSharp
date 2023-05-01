@@ -19,7 +19,7 @@ group function ColorBasedOnNumber(int number) {
       int green = 0;    
       int blue = 0;
       
-    return [5,2,3];
+    return i;
 
 }
 
