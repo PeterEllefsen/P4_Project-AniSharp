@@ -1,5 +1,6 @@
 ﻿namespace AnimationLanguage.ASTNodes;
 using ASTCommon;
+using System.Text; //used to build the strings.
 
 public class IfStatementNode : StatementNode
 {
@@ -26,6 +27,25 @@ public class IfStatementNode : StatementNode
     
     public override string ToString()
     {
-        return $"IfStatementNode: {Condition}";
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"IfStatementNode: {Condition}");
+
+        sb.AppendLine();
+        sb.Append($"IfBlock: {IfBlock}");
+
+        foreach (var elseIfBranch in ElseIfBranches)
+        {
+            sb.AppendLine();
+            sb.Append($"ElseIfBranch: {elseIfBranch}");
+        }
+
+        if (ElseBranch != null)
+        {
+            sb.AppendLine();
+            sb.Append($"ElseBranch: {ElseBranch}");
+        }
+
+        return sb.ToString();
     }
+
 }

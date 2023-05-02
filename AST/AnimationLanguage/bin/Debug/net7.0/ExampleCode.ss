@@ -5,7 +5,13 @@ int function newFunc(int one, int two){
   int k = 3;
 
   if(i and 1){
+    i = 1;
+  }
+  else if(i or 1){
     i = 2;
+  }
+  else{
+    i = 3;
   }
 
   return [i, j, k];

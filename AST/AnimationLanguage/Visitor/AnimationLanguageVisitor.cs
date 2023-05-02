@@ -627,24 +627,20 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //he VisitCondition method is used when a condition is met in the code. 
     public override IASTNode VisitCondition(AnimationLanguageRulesParser.ConditionContext context)
     {
-        Console.WriteLine("If statement: " + context.GetText());
-        Console.WriteLine(context.GetText());
         IASTNode leftExpression = Visit(context.expression(0));
         IASTNode rightExpression = Visit(context.expression(1));
         OperatorNode? comparisonOperator = context.comparator().Length > 0 ? (OperatorNode)Visit(context.comparator(0)) : null; //Visit the comparator of the condition if it exists. (0)) : null means that if there is no comparator, it will be null.
         OperatorNode? logicalOperator = context.logicOpp().Length > 0 ? (OperatorNode)Visit(context.logicOpp(0)) : null; //Visit the logical operator of the condition if it exists. (0)) : null means that if there is no logical operator, it will be null.
 
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
-
-        Console.WriteLine("here is the comparison: " + comparisonOperator);
-        Console.WriteLine("here is the logical: " + logicalOperator);
+        
         return new ConditionNode(leftExpression, rightExpression, comparisonOperator, logicalOperator, sourceLocation);
     }
 
     
+    //Visits the comparator operator of a condition eg: '==', '<='.
     public override IASTNode VisitComparator(AnimationLanguageRulesParser.ComparatorContext context)
     {
-        Console.WriteLine("COMPARATOR" + context.GetText());
         string operatorSymbol = context.GetText();
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
     
@@ -654,9 +650,9 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     }
 
     
+    //Visits the logical operator of a condition eg: 'and', 'or'
     public override IASTNode VisitLogicOpp(AnimationLanguageRulesParser.LogicOppContext context)
     {
-        Console.WriteLine("LOGICOPP" + context.GetText());
         string operatorSymbol = context.GetText();
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
     
@@ -694,7 +690,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when an else if branch is encountered in the code.
     public override IASTNode VisitElseif(AnimationLanguageRulesParser.ElseifContext context)
     {
-        ExpressionNode condition = (ExpressionNode)Visit(context.condition()); //Visit the condition of the else if branch.
+        ConditionNode condition = (ConditionNode)Visit(context.condition()); //Visit the condition of the else if branch.
         BlockNode block = (BlockNode)VisitBlock(context.block()); //Visit the block of the else if branch.
         SourceLocation sourceLocation = GetSourceLocation(context.Start); 
 
