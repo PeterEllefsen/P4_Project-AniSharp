@@ -36,6 +36,6 @@ public class ConditionNode : IASTNode
     
     public override string ToString()
     {
-        return $"ConditionNode: {LeftExpression} {ComparisonOperator} {RightExpression}";
+        return $"ConditionNode: {LeftExpression} {ComparisonOperator} {LogicalOperator} {RightExpression}";
     }
 }

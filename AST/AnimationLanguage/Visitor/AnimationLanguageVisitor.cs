@@ -627,6 +627,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //he VisitCondition method is used when a condition is met in the code. 
     public override IASTNode VisitCondition(AnimationLanguageRulesParser.ConditionContext context)
     {
+        Console.WriteLine("If statement: " + context.GetText());
         Console.WriteLine(context.GetText());
         IASTNode leftExpression = Visit(context.expression(0));
         IASTNode rightExpression = Visit(context.expression(1));
@@ -635,9 +636,35 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
+        Console.WriteLine("here is the comparison: " + comparisonOperator);
+        Console.WriteLine("here is the logical: " + logicalOperator);
         return new ConditionNode(leftExpression, rightExpression, comparisonOperator, logicalOperator, sourceLocation);
     }
 
+    
+    public override IASTNode VisitComparator(AnimationLanguageRulesParser.ComparatorContext context)
+    {
+        Console.WriteLine("COMPARATOR" + context.GetText());
+        string operatorSymbol = context.GetText();
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+    
+        OperatorNode operatorNode = new OperatorNode(operatorSymbol, sourceLocation);
+    
+        return operatorNode;
+    }
+
+    
+    public override IASTNode VisitLogicOpp(AnimationLanguageRulesParser.LogicOppContext context)
+    {
+        Console.WriteLine("LOGICOPP" + context.GetText());
+        string operatorSymbol = context.GetText();
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+    
+        OperatorNode operatorNode = new OperatorNode(operatorSymbol, sourceLocation);
+    
+        return operatorNode;
+    }
+    
 
     //This method is called when a conditional is encountered in the code.
     public override IASTNode VisitConditional(AnimationLanguageRulesParser.ConditionalContext context)

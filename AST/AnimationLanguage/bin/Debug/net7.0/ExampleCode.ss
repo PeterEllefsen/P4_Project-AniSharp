@@ -4,7 +4,7 @@ int function newFunc(int one, int two){
   int j = 2;
   int k = 3;
 
-  if(i == 1){
+  if(i and 1){
     i = 2;
   }
 
