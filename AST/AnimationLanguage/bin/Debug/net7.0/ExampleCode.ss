@@ -4,17 +4,9 @@ int function newFunc(int one, int two){
   int j = 2;
   int k = 3;
 
-  if(i and 1){
-    i = 1;
+  for(int i = 1; i <= 10; i += 1){
+    int j = 4;
   }
-  else if(i or 1){
-    i = 2;
-  }
-  else{
-    i = 3;
-  }
-
-  return [i, j, k];
 }
 
 

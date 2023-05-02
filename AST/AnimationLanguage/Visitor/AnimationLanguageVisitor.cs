@@ -602,6 +602,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a for loop is encountered in the code.
     public override IASTNode VisitFor_loop(AnimationLanguageRulesParser.For_loopContext context)
     {
+        Console.WriteLine("For loop: " + context.GetText());
         AssignmentNode startExpression = (AssignmentNode)VisitAssignment(context.assignment(0)); //Visit the start expression of the for loop.
         ConditionNode condition = (ConditionNode)VisitCondition(context.condition()); //Visit the condition of the for loop.
         AssignmentNode endExpression = (AssignmentNode)VisitAssignment(context.assignment(1)); //Visit the end expression of the for loop.

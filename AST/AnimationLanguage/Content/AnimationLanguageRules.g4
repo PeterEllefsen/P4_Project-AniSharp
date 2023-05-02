@@ -174,7 +174,7 @@ return: RETURN expression SEMICOLON
 
 loop: for_loop | while_loop;
 
-for_loop: FOR LPAREN assignment condition SEMICOLON assignment RPAREN block;
+for_loop: FOR LPAREN assignment SEMICOLON condition SEMICOLON assignment RPAREN block;
 
 while_loop: WHILE LPAREN condition RPAREN block;
 

@@ -23,6 +23,10 @@ public class ForLoopNode : StatementNode
         NodeType = NodeType.ForLoop;
     }
     
-    
+    public override string ToString()
+    {
+        return $"ForLoopNode(Initialization: {Initialization}, Condition: {Condition}, Update: {Update}, Body: {Body})";
+    }
+
     
 }
