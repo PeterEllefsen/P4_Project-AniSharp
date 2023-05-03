@@ -133,7 +133,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method visits an assignment context and returns an AssignmentNode.
     public override IASTNode VisitAssignment(AnimationLanguageRulesParser.AssignmentContext context)
     {
-        Console.WriteLine("Assignment: " + context.GetText());
         AssignmentOperator assignmentOperator = VisitAssOps(context.assOps());
         int identifierChildIndex = context.type() != null ? 1 : 0; //Checks if the first element in the assignment is a type. If it is, the identifier is the second element, otherwise it is the first element.
         IdentifierNode identifierNode = (IdentifierNode)Visit(context.GetChild(identifierChildIndex)); //Visit the identifier context and get the IdentifierNode.
@@ -149,10 +148,8 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     {
         if (context == null)
         {
-            Console.WriteLine("THE CONTEXT IS NULL! ");
             throw new ArgumentNullException(nameof(context), "Context cannot be null");
         }
-        Console.WriteLine("assops: " + context.GetText());
         if (context.EQUAL() != null)
         {
             return AssignmentOperator.Assign;
@@ -303,14 +300,19 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         if (context.funcArgs() != null)
         {
             AnimationLanguageRulesParser.FuncArgsContext funcArgsContext = context.funcArgs();
-            int callParameterCount = funcArgsContext.ChildCount;
-        
-            for (int i = 0; i < callParameterCount; i++)
+
+            foreach (var child in funcArgsContext.children)
             {
-                if (funcArgsContext.GetChild(i) is AnimationLanguageRulesParser.Call_parameterContext callParameterContext)
+                Console.WriteLine("This context contains the rgb values correctly : " + child.GetText() + child.GetType());
+                if (child.GetType() == typeof(AnimationLanguageRulesParser.IntegerExpressionContext))
                 {
-                    IASTNode argNode = VisitCall_parameter(callParameterContext);
-                    arguments.Add(argNode);
+                    Console.WriteLine("This context is an INTEGER value! " + child.GetText());
+                    arguments.Add(VisitIntegerExpression((AnimationLanguageRulesParser.IntegerExpressionContext)child));
+                }
+                else if(child.GetType() == typeof(AnimationLanguageRulesParser.FunctionCallExpressionContext))
+                {
+                    Console.WriteLine("This context is a function call! " + child.GetText());
+                    arguments.Add(VisitFunctionCallExpression((AnimationLanguageRulesParser.FunctionCallExpressionContext)child));
                 }
             }
         }
@@ -611,7 +613,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a for loop is encountered in the code.
     public override IASTNode VisitFor_loop(AnimationLanguageRulesParser.For_loopContext context)
     {
-        Console.WriteLine("For loop: " + context.GetText());
         AssignmentNode startExpression = (AssignmentNode)VisitAssignment(context.assignment(0)); //Visit the start expression of the for loop.
         ConditionNode condition = (ConditionNode)VisitCondition(context.condition()); //Visit the condition of the for loop.
         AssignmentNode endExpression = (AssignmentNode)VisitAssignment(context.assignment(1)); //Visit the end expression of the for loop.
@@ -737,7 +738,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     
     public List<SequenceNode> VisitAndGetSequences(AnimationLanguageRulesParser.SequencesContext context)
     {
-        Console.WriteLine("HEELLOOOOOOOOOOOO!");
         var sequences = new List<SequenceNode>(); // Create a list to contain all of the individual sequences.
 
         foreach (var child in context.children) // For each child of the sequences rule, visit it.
@@ -756,7 +756,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //this method in run when a sequence is met in the code.
     public override IASTNode VisitSequence(AnimationLanguageRulesParser.SequenceContext context)
     {
-        Console.WriteLine("HEEEYYY " + context.GetText());
         IdentifierNode name = new IdentifierNode(context.IDENTIFIER().GetText(), GetSourceLocation(context.IDENTIFIER().Symbol));
 
         List<ParameterNode> parameters = new List<ParameterNode>();
@@ -764,7 +763,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         {
             foreach (var param in context.parameters().parameter())
             {
-                Console.WriteLine("I am a parameter " + param.GetText());
                 ParameterNode paramNode = (ParameterNode)VisitParameter(param);
                 parameters.Add(paramNode);
             }
@@ -780,7 +778,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a sequence block is encountered in the code.
     public override IASTNode VisitSeqBlock(AnimationLanguageRulesParser.SeqBlockContext context)
     {
-        Console.WriteLine("I am a sequence block" + context.GetText());
         List<StatementNode> statements = new List<StatementNode>();
         List<AnimationNode> animations = new List<AnimationNode>();
 
@@ -788,17 +785,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     
         foreach (var seqBlockElement in seqBlockElements)
         {
-            Console.WriteLine("I AM A CHIIILD: " + seqBlockElement.GetText());
             if (seqBlockElement.statement() != null)
             {
-                Console.WriteLine("YEEHAW! STATEMENT INCOMING!");
                 StatementNode statementNode = (StatementNode)VisitStatement(seqBlockElement.statement());
-                Console.WriteLine("I am a statement " + statementNode);
                 statements.Add(statementNode);
             }
             else if (seqBlockElement.animation() != null)
             {
-                Console.WriteLine("WOOHOO! ANIMATION INCOMING!");
                 animations.Add((AnimationNode)VisitAnimation(seqBlockElement.animation()));
             }
         }
@@ -872,8 +865,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     
     public override IASTNode VisitArg(AnimationLanguageRulesParser.ArgContext context)
     {
-        Console.WriteLine("HERE IS THE ARG! " + context.GetText());
-    
         if (context.argName() != null)
         {
             string argName = context.argName().IDENTIFIER().GetText();
@@ -915,7 +906,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when an animation is encountered in the code.
     public override IASTNode VisitAnimation(AnimationLanguageRulesParser.AnimationContext context)
     {
-        Console.WriteLine("THIS IS AN ANIMAAATION! " + context.GetText());;
         var identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER()); // Visit the identifier of the animation.
         CommandNode? commandNode = null; // Create a variable to contain the command of the animation. It's nullable, as an animation can both have a command, and not have a command.
 
@@ -1008,7 +998,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a command is encountered in the code.
     public override IASTNode VisitCommand(AnimationLanguageRulesParser.CommandContext context)
     {
-        Console.WriteLine("THIS IS A COMMAND! " + context.GetText());
         // Get the identifier of the command
         IdentifierNode identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER());
 
