@@ -303,15 +303,12 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
             foreach (var child in funcArgsContext.children)
             {
-                Console.WriteLine("This context contains the rgb values correctly : " + child.GetText() + child.GetType());
                 if (child.GetType() == typeof(AnimationLanguageRulesParser.IntegerExpressionContext))
                 {
-                    Console.WriteLine("This context is an INTEGER value! " + child.GetText());
                     arguments.Add(VisitIntegerExpression((AnimationLanguageRulesParser.IntegerExpressionContext)child));
                 }
                 else if(child.GetType() == typeof(AnimationLanguageRulesParser.FunctionCallExpressionContext))
                 {
-                    Console.WriteLine("This context is a function call! " + child.GetText());
                     arguments.Add(VisitFunctionCallExpression((AnimationLanguageRulesParser.FunctionCallExpressionContext)child));
                 }
             }
@@ -897,7 +894,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
                 return VisitTuple(context.tuple());
             }
         }
-    
+        
         throw new InvalidOperationException($"Unrecognized argument at {GetSourceLocation(context.Start)}");
     }
 
@@ -906,6 +903,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when an animation is encountered in the code.
     public override IASTNode VisitAnimation(AnimationLanguageRulesParser.AnimationContext context)
     {
+        Console.WriteLine("Animation found: " + context.GetText() + "\n");
         var identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER()); // Visit the identifier of the animation.
         CommandNode? commandNode = null; // Create a variable to contain the command of the animation. It's nullable, as an animation can both have a command, and not have a command.
 
@@ -987,6 +985,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitTransition(AnimationLanguageRulesParser.TransitionContext context)
     {
+        Console.WriteLine("Transition found: " + context.GetText() + "\n");
         var callParameters = context.call_parameters() != null ? ((CallParameterNode)VisitCall_parameters(context.call_parameters())).Children : new List<IASTNode>();
         
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
@@ -998,9 +997,10 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a command is encountered in the code.
     public override IASTNode VisitCommand(AnimationLanguageRulesParser.CommandContext context)
     {
+        Console.WriteLine("Command found: " + context.GetText() + "\n");
         // Get the identifier of the command
         IdentifierNode identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER());
-
+        
         IList<IASTNode> parameters = new List<IASTNode>(); // Create a list to contain the parameters of the command
         if (context.call_parameters() != null)
         {
@@ -1011,7 +1011,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
                 parameters.Add(parameterNode); // Add the visited parameters to the list
             }
         }
-
+        
         CommandNode commandNode = new CommandNode(identifierNode, parameters, new SourceLocation(context.Start.Line, context.Start.Column));
 
         return commandNode;

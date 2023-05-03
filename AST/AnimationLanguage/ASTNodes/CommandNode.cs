@@ -9,18 +9,21 @@ public class CommandNode : IASTNode
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
 
     public IdentifierNode Identifier { get; set; } // The identifier of the command node.
-    public IList<IASTNode> Parameters { get; } = new List<IASTNode>(); // The parameters of the command node.
+    public IList<IASTNode>? Parameters { get; } = new List<IASTNode>(); // The parameters of the command node.
 
-    public CommandNode(IdentifierNode identifier, IEnumerable<IASTNode> parameters, SourceLocation sourceLocation)
+    public CommandNode(IdentifierNode identifier, IEnumerable<IASTNode>? parameters, SourceLocation sourceLocation)
     {
         Identifier = identifier;
         SourceLocation = sourceLocation;
         Children.Add(identifier);
 
-        foreach (IASTNode parameter in parameters)
+        if (parameters != null)
         {
-            Parameters.Add(parameter);
-            Children.Add(parameter);
+            foreach (IASTNode parameter in parameters)
+            {
+                Parameters.Add(parameter);
+                Children.Add(parameter);
+            }
         }
     }
     
@@ -33,7 +36,14 @@ public class CommandNode : IASTNode
     
     public override string ToString()
     {
-        string parametersStr = string.Join(", ", Parameters.Select(p => p.ToString()));
-        return $"CommandNode: {Identifier}({parametersStr})";
+        if (Parameters != null)
+        {
+            string parametersStr = string.Join(", ", Parameters.Select(p => p.ToString()));
+            return $"CommandNode: {Identifier}({parametersStr})";
+        }
+        else
+        {
+            return $"CommandNode: {Identifier}()";    
+        }
     }
 }
