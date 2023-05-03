@@ -946,12 +946,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
                 Console.WriteLine("Call parameter node: " + callParameterNode + "\n");
                 arguments.Add(callParameterNode);
             }
-            else if (child is AnimationLanguageRulesParser.Call_parametersContext callParametersContext)
-            {
-                IASTNode callParametersNode = VisitCall_parameters(callParametersContext);
-                Console.WriteLine("Call parameters node: " + callParametersNode + "\n");
-                arguments.Add(callParametersNode);
-            }
         }
         
         return new CallParameterNode(arguments, GetSourceLocation(context.Start));
@@ -1002,13 +996,19 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitTransition(AnimationLanguageRulesParser.TransitionContext context)
     {
-        Console.WriteLine("Transition found: " + context.GetText());
-        IList<IASTNode> callParameters = context.call_parameters() != null ? new List<IASTNode>(((CallParameterNode)VisitCall_parameters(context.call_parameters())).Children) : new List<IASTNode>();
+        List<IASTNode> arguments = new List<IASTNode>();
 
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+        var callParameterContexts = context.GetRuleContexts<AnimationLanguageRulesParser.Call_parameterContext>();
 
-        return new TransitionNode(callParameters, sourceLocation);
+        foreach (var callParameterContext in callParameterContexts)
+        {
+            IASTNode callParameterNode = VisitCall_parameter(callParameterContext);
+            arguments.Add(callParameterNode);
+        }
+
+        return new TransitionNode(arguments, GetSourceLocation(context.Start));
     }
+
     
     
     //This method is called when a command is encountered in the code.

@@ -208,7 +208,7 @@ animationPart: command
              | transition
              ;
            
-transition: ARROW LPAREN call_parameters RPAREN;
+transition: ARROW LPAREN call_parameter (COMMA call_parameter)* RPAREN;
 
 command: ARROW IDENTIFIER LPAREN call_parameters? RPAREN;
 
