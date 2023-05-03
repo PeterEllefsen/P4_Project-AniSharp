@@ -4,44 +4,43 @@ using ASTCommon;
 // This class represents a sequence node in the AST. A sequence consists of an identifier, a collection of parameters, and a codeblock.
 public class SequenceNode : IASTNode
 {
-    public SourceLocation SourceLocation { get; set; } 
+    public SourceLocation SourceLocation { get; set; }
     public NodeType NodeType => NodeType.Sequence;
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
 
-    public IdentifierNode Identifier { get; set; } // Represents the identifier(name) of the sequence.
-    public IList<ParameterNode>? Parameters { get; set; } // Represents the parameters of the sequence.
-    public SeqBlockNode SeqBlock { get; set; } // Represents the block of code that is executed in the sequence. This block contains a collection of statements.
+    public IdentifierNode Name { get; set; }
+    public IList<ParameterNode> Parameters { get; } = new List<ParameterNode>();
+    public SeqBlockNode Block { get; set; }
 
-    public SequenceNode(IdentifierNode identifier, IList<ParameterNode>? parameters, SeqBlockNode seqBlock, SourceLocation sourceLocation)
+    public SequenceNode(
+        IdentifierNode name,
+        IEnumerable<ParameterNode> parameters,
+        SeqBlockNode block,
+        SourceLocation sourceLocation)
     {
-        Identifier = identifier;
-        Parameters = parameters;
-        SeqBlock = seqBlock;
+        Name = name;
+        Block = block;
         SourceLocation = sourceLocation;
 
-        Children.Add(identifier);
+        Children.Add(name);
 
-        if (parameters != null) //If the sequence has parameters, add them as children.
+        foreach (ParameterNode parameterNode in parameters)
         {
-            foreach (var parameter in parameters) 
-            {
-                Children.Add(parameter);
-            }
+            Parameters.Add(parameterNode);
+            Children.Add(parameterNode);
         }
 
-        Children.Add(seqBlock);
+        Children.Add(block);
     }
-    
-    
+
     public IEnumerable<IASTNode> GetChildren()
     {
         return Children;
     }
-    
-    
+
     public override string ToString()
     {
-        string parametersString = Parameters != null ? string.Join(", ", Parameters.Select(p => p.ToString())) : "None"; //If the sequence has parameters, add them to the string. Otherwise, add "None".
-        return $"SequenceNode: {Identifier}, {parametersString}, {SeqBlock}"; 
+        string parametersStr = string.Join(", ", Parameters.Select(p => p.ToString()));
+        return $"SequenceNode: seq {Name}({parametersStr})";
     }
 }

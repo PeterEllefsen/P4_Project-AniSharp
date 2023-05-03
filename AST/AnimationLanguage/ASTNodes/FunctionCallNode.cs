@@ -9,17 +9,17 @@ public class FunctionCallNode : IASTNode
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
 
     public IdentifierNode FunctionIdentifier { get; set; } // Represents the identifier(name) of the function that is being called.
-    public IList<ExpressionNode> Arguments { get; } = new List<ExpressionNode>(); // Represents the arguments that are being provided when calling the function.
+    public IList<IASTNode> Arguments { get; } = new List<IASTNode>(); // Represents the arguments that are being provided when calling the function.
 
     public FunctionCallNode(
         IdentifierNode functionIdentifier,
-        IEnumerable<ExpressionNode> arguments,
+        IEnumerable<IASTNode> arguments,
         SourceLocation sourceLocation)
     {
         FunctionIdentifier = functionIdentifier;
         SourceLocation = sourceLocation;
         
-        foreach (ExpressionNode argument in arguments)
+        foreach (IASTNode argument in arguments)
         {
             Arguments.Add(argument);
             Children.Add(argument);

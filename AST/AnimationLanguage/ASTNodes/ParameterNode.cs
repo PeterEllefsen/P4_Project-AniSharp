@@ -30,3 +30,27 @@ public class ParameterNode : IASTNode
         return $"ParameterNode: {DataType} {Name}";
     }
 }
+
+
+public class CallParameterNode : IASTNode
+{
+    public SourceLocation SourceLocation { get; set; }
+    public NodeType NodeType => NodeType.CallParameter;
+    public IList<IASTNode> Children { get; } = new List<IASTNode>();
+
+    public CallParameterNode(IList<IASTNode> arguments, SourceLocation sourceLocation)
+    {
+        Children = arguments;
+        SourceLocation = sourceLocation;
+    }
+    
+    public IEnumerable<IASTNode> GetChildren()
+    {
+        return Children;
+    }
+    
+    public override string ToString()
+    {
+        return $"CallParameterNode";
+    }
+}

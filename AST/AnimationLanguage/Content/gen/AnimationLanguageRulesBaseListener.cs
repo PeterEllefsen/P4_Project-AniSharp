@@ -702,17 +702,17 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitSeqBlock([NotNull] AnimationLanguageRulesParser.SeqBlockContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockParts"/>.
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockPart"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSeqBlockParts([NotNull] AnimationLanguageRulesParser.SeqBlockPartsContext context) { }
+	public virtual void EnterSeqBlockPart([NotNull] AnimationLanguageRulesParser.SeqBlockPartContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockParts"/>.
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockPart"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSeqBlockParts([NotNull] AnimationLanguageRulesParser.SeqBlockPartsContext context) { }
+	public virtual void ExitSeqBlockPart([NotNull] AnimationLanguageRulesParser.SeqBlockPartContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.animation"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -726,17 +726,17 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAnimation([NotNull] AnimationLanguageRulesParser.AnimationContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.transitions"/>.
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.animationPart"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTransitions([NotNull] AnimationLanguageRulesParser.TransitionsContext context) { }
+	public virtual void EnterAnimationPart([NotNull] AnimationLanguageRulesParser.AnimationPartContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.transitions"/>.
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.animationPart"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTransitions([NotNull] AnimationLanguageRulesParser.TransitionsContext context) { }
+	public virtual void ExitAnimationPart([NotNull] AnimationLanguageRulesParser.AnimationPartContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.transition"/>.
 	/// <para>The default implementation does nothing.</para>

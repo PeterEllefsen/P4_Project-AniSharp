@@ -44,5 +44,6 @@ public enum NodeType //This enum is used to determine what type of node is being
     SeqBlock,
     SeqBlockPart,
     FrameDef,
-    SequenceCall
+    SequenceCall,
+    CallParameter,
 }

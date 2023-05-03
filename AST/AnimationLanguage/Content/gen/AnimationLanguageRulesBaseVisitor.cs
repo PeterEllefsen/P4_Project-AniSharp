@@ -584,7 +584,7 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// <return>The visitor result.</return>
 	public virtual Result VisitSeqBlock([NotNull] AnimationLanguageRulesParser.SeqBlockContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockParts"/>.
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockPart"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -592,7 +592,7 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSeqBlockParts([NotNull] AnimationLanguageRulesParser.SeqBlockPartsContext context) { return VisitChildren(context); }
+	public virtual Result VisitSeqBlockPart([NotNull] AnimationLanguageRulesParser.SeqBlockPartContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.animation"/>.
 	/// <para>
@@ -604,7 +604,7 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// <return>The visitor result.</return>
 	public virtual Result VisitAnimation([NotNull] AnimationLanguageRulesParser.AnimationContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.transitions"/>.
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.animationPart"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -612,7 +612,7 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTransitions([NotNull] AnimationLanguageRulesParser.TransitionsContext context) { return VisitChildren(context); }
+	public virtual Result VisitAnimationPart([NotNull] AnimationLanguageRulesParser.AnimationPartContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.transition"/>.
 	/// <para>

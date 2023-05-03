@@ -589,15 +589,15 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitSeqBlock([NotNull] AnimationLanguageRulesParser.SeqBlockContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockParts"/>.
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockPart"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterSeqBlockParts([NotNull] AnimationLanguageRulesParser.SeqBlockPartsContext context);
+	void EnterSeqBlockPart([NotNull] AnimationLanguageRulesParser.SeqBlockPartContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockParts"/>.
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockPart"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitSeqBlockParts([NotNull] AnimationLanguageRulesParser.SeqBlockPartsContext context);
+	void ExitSeqBlockPart([NotNull] AnimationLanguageRulesParser.SeqBlockPartContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.animation"/>.
 	/// </summary>
@@ -609,15 +609,15 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAnimation([NotNull] AnimationLanguageRulesParser.AnimationContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.transitions"/>.
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.animationPart"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterTransitions([NotNull] AnimationLanguageRulesParser.TransitionsContext context);
+	void EnterAnimationPart([NotNull] AnimationLanguageRulesParser.AnimationPartContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.transitions"/>.
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.animationPart"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitTransitions([NotNull] AnimationLanguageRulesParser.TransitionsContext context);
+	void ExitAnimationPart([NotNull] AnimationLanguageRulesParser.AnimationPartContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.transition"/>.
 	/// </summary>

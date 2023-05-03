@@ -134,7 +134,7 @@ shapeinit: (POLYGON | CIRCLE) LPAREN argName arg (COMMA argName arg)* RPAREN;
 
 argName: IDENTIFIER COLON;
 
-arg: (tuple | expression | IDENTIFIER);
+arg: (argName)? (tuple | expression | IDENTIFIER);
 
 tuple: LPAREN argName arg COMMA argName arg (COMMA argName arg)* RPAREN;
 
@@ -196,22 +196,17 @@ sequence: SEQ IDENTIFIER LPAREN parameters? RPAREN seqBlock;
 
 sequenceCall: IDENTIFIER LPAREN call_parameters? RPAREN;
 
-seqBlock: LBRACE seqBlockParts RBRACE;
+seqBlock: LBRACE seqBlockPart* RBRACE;
 
-seqBlockParts: statement seqBlockParts
-               | statement
-               | animation seqBlockParts
-               | animation
-               ;
+seqBlockPart: statement
+             | animation
+             ;
 
-animation: IDENTIFIER transitions 
-         | IDENTIFIER command transitions
-         ;
+animation: IDENTIFIER animationPart+ SEMICOLON; 
 
-transitions: transition transitions
-           | transition SEMICOLON
-           | command transitions
-           ;
+animationPart: command
+             | transition
+             ;
            
 transition: ARROW LPAREN call_parameters RPAREN;
 

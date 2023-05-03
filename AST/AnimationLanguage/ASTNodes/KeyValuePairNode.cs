@@ -10,16 +10,15 @@ public class KeyValuePairNode : IASTNode
     public IdentifierNode Key { get; set; } //The key of the key-value pair.
     public IASTNode Value { get; set; } //The value of the key-value pair.
 
-    public KeyValuePairNode(IdentifierNode key, IASTNode value, SourceLocation sourceLocation)
+    public KeyValuePairNode(string key, IASTNode value, SourceLocation sourceLocation)
     {
-        Key = key;
+        Key = new IdentifierNode(key, sourceLocation);
         Value = value;
         SourceLocation = sourceLocation;
 
-        Children.Add(key);
+        Children.Add(Key);
         Children.Add(value);
     }
-    
     
     public IEnumerable<IASTNode> GetChildren()
     {

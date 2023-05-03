@@ -365,11 +365,11 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitSeqBlock([NotNull] AnimationLanguageRulesParser.SeqBlockContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockParts"/>.
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.seqBlockPart"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSeqBlockParts([NotNull] AnimationLanguageRulesParser.SeqBlockPartsContext context);
+	Result VisitSeqBlockPart([NotNull] AnimationLanguageRulesParser.SeqBlockPartContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.animation"/>.
 	/// </summary>
@@ -377,11 +377,11 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitAnimation([NotNull] AnimationLanguageRulesParser.AnimationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.transitions"/>.
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.animationPart"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTransitions([NotNull] AnimationLanguageRulesParser.TransitionsContext context);
+	Result VisitAnimationPart([NotNull] AnimationLanguageRulesParser.AnimationPartContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.transition"/>.
 	/// </summary>

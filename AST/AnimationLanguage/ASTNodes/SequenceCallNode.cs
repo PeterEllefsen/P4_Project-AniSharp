@@ -6,35 +6,38 @@ using System.Collections.Generic;
 
 public class SequenceCallNode : IASTNode
 {
-    public SourceLocation SourceLocation { get; set; } 
+    public SourceLocation SourceLocation { get; set; }
     public NodeType NodeType => NodeType.SequenceCall;
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
 
-    public IdentifierNode Identifier { get; set; } //The identifier of the sequence call.
-    public IList<ArgumentNode> Arguments { get; set; } //The arguments of the sequence call.
+    public IdentifierNode Name { get; set; }
+    public IList<ExpressionNode> Arguments { get; } = new List<ExpressionNode>();
 
-    public SequenceCallNode(IdentifierNode identifier, IEnumerable<ArgumentNode> arguments, SourceLocation sourceLocation)
+    public SequenceCallNode(
+        IdentifierNode name,
+        IEnumerable<ExpressionNode> arguments,
+        SourceLocation sourceLocation)
     {
-        Identifier = identifier;
-        Arguments = new List<ArgumentNode>(arguments);
+        Name = name;
         SourceLocation = sourceLocation;
 
-        Children.Add(identifier);
-        foreach (var arg in Arguments)
+        Children.Add(name);
+
+        foreach (ExpressionNode argumentNode in arguments)
         {
-            Children.Add(arg);
+            Arguments.Add(argumentNode);
+            Children.Add(argumentNode);
         }
     }
-    
-    
+
     public IEnumerable<IASTNode> GetChildren()
     {
         return Children;
     }
-    
-    
+
     public override string ToString()
     {
-        return $"SequenceCallNode: {Identifier}({string.Join(", ", Arguments)})";
+        string argumentsStr = string.Join(", ", Arguments.Select(a => a.ToString()));
+        return $"SequenceCallNode: {Name}({argumentsStr})";
     }
 }
