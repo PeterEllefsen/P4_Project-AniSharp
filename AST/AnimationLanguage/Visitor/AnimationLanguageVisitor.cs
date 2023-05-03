@@ -267,6 +267,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitIntegerExpression(AnimationLanguageRulesParser.IntegerExpressionContext context)
     {
+        Console.WriteLine("VisitIntExpression: " + context.GetText());
         int value = int.Parse(context.INTEGER().GetText());
         return new IntegerLiteralNode(value, GetSourceLocation(context.Start)); //The sourcelocation is retrieved from the context.
     }
@@ -280,6 +281,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitStringExpression(AnimationLanguageRulesParser.StringExpressionContext context)
     {
+        Console.WriteLine("VisitStringExpression: " + context.GetText());
         string value = context.STRING().GetText();
         value = value.Substring(1, value.Length - 2); // Removes the quotes surrounding the string, suchh that it is only the relevant data we gather
         return new StringLiteralNode(value, GetSourceLocation(context.Start)); 
@@ -294,6 +296,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a function call is encountered in the code.
     public override IASTNode VisitFuncCall(AnimationLanguageRulesParser.FuncCallContext context)
     {
+        Console.WriteLine("VisitFuncCallExpression: " + context.GetText());
         IdentifierNode identifier = new IdentifierNode(context.IDENTIFIER().GetText(), GetSourceLocation(context.IDENTIFIER().Symbol)); //Create a new IdentifierNode with the name of the function and the SourceLocation of the IDENTIFIER terminal.
 
         List<IASTNode> arguments = new List<IASTNode>(); //Create a new list of IASTNodes to store the arguments of the function call.
@@ -930,12 +933,36 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
 
 
+    public override IASTNode VisitCall_parameters(AnimationLanguageRulesParser.Call_parametersContext context)
+    {
+        Console.WriteLine("Transition parameters should be here: " + context.GetText() + "\n");
+        List<IASTNode> arguments = new List<IASTNode>();
+        
+        foreach(var child in context.children)
+        {
+            if (child is AnimationLanguageRulesParser.Call_parameterContext callParameterContext)
+            {
+                IASTNode callParameterNode = VisitCall_parameter(callParameterContext);
+                Console.WriteLine("Call parameter node: " + callParameterNode + "\n");
+                arguments.Add(callParameterNode);
+            }
+            else if (child is AnimationLanguageRulesParser.Call_parametersContext callParametersContext)
+            {
+                IASTNode callParametersNode = VisitCall_parameters(callParametersContext);
+                Console.WriteLine("Call parameters node: " + callParametersNode + "\n");
+                arguments.Add(callParametersNode);
+            }
+        }
+        
+        return new CallParameterNode(arguments, GetSourceLocation(context.Start));
+    }
 
     
     public override IASTNode VisitCall_parameter(AnimationLanguageRulesParser.Call_parameterContext context)
     {
         if (context.argName() != null && context.arg() != null)
         {
+            Console.WriteLine("ArgName: " + context.argName().GetText() + " Arg: " + context.arg().GetText() + "\n");
             // Handle named arguments if needed.
             string argName = context.argName().GetText();
             IASTNode argValue = VisitArg(context.arg());
@@ -943,20 +970,10 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         }
         else
         {
-            return VisitArg(context.arg());
+            IASTNode argValue = VisitArg(context.arg());
+            Console.WriteLine("ArgValue: " + argValue + "\n");
+            return argValue;
         }
-    }
-
-    public override IASTNode VisitCall_parameters(AnimationLanguageRulesParser.Call_parametersContext context)
-    {
-        List<IASTNode> arguments = new List<IASTNode>();
-        var callParameterContexts = context.GetRuleContexts<AnimationLanguageRulesParser.Call_parameterContext>();
-        foreach (var callParameterContext in callParameterContexts)
-        {
-            IASTNode callParameterNode = VisitCall_parameter(callParameterContext);
-            arguments.Add(callParameterNode);
-        }
-        return new CallParameterNode(arguments, GetSourceLocation(context.Start));
     }
 
 
@@ -985,9 +1002,9 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitTransition(AnimationLanguageRulesParser.TransitionContext context)
     {
-        Console.WriteLine("Transition found: " + context.GetText() + "\n");
-        var callParameters = context.call_parameters() != null ? ((CallParameterNode)VisitCall_parameters(context.call_parameters())).Children : new List<IASTNode>();
-        
+        Console.WriteLine("Transition found: " + context.GetText());
+        IList<IASTNode> callParameters = context.call_parameters() != null ? new List<IASTNode>(((CallParameterNode)VisitCall_parameters(context.call_parameters())).Children) : new List<IASTNode>();
+
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
         return new TransitionNode(callParameters, sourceLocation);
@@ -998,22 +1015,16 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     public override IASTNode VisitCommand(AnimationLanguageRulesParser.CommandContext context)
     {
         Console.WriteLine("Command found: " + context.GetText() + "\n");
-        // Get the identifier of the command
         IdentifierNode identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER());
-        
-        IList<IASTNode> parameters = new List<IASTNode>(); // Create a list to contain the parameters of the command
+
+        IList<IASTNode> parameters = new List<IASTNode>();
         if (context.call_parameters() != null)
         {
-            CallParameterNode visitedParametersNode = (CallParameterNode)Visit(context.call_parameters()); // Visit the parameters of the command
-            IList<IASTNode> visitedParameters = visitedParametersNode.Children; // Access the Arguments property of the CallParameterNode
-            foreach (IASTNode parameterNode in visitedParameters)
-            {
-                parameters.Add(parameterNode); // Add the visited parameters to the list
-            }
+            CallParameterNode visitedParametersNode = (CallParameterNode)Visit(context.call_parameters());
+            parameters = new List<IASTNode>(visitedParametersNode.Children);
         }
-        
-        CommandNode commandNode = new CommandNode(identifierNode, parameters, new SourceLocation(context.Start.Line, context.Start.Column));
 
+        CommandNode commandNode = new CommandNode(identifierNode, parameters, new SourceLocation(context.Start.Line, context.Start.Column));
         return commandNode;
     }
 

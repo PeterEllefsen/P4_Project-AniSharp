@@ -51,6 +51,6 @@ public class CallParameterNode : IASTNode
     
     public override string ToString()
     {
-        return $"CallParameterNode";
+        return $"CallParameterNode: {string.Join(", ", Children.Select(c => c.ToString()))}";
     }
 }
