@@ -267,8 +267,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitIntegerExpression(AnimationLanguageRulesParser.IntegerExpressionContext context)
     {
-        Console.WriteLine("VisitIntExpression: " + context.GetText());
         int value = int.Parse(context.INTEGER().GetText());
+
+        if (context.MINUS() != null)
+        {
+            value = -value;
+        }
+        
         return new IntegerLiteralNode(value, GetSourceLocation(context.Start)); //The sourcelocation is retrieved from the context.
     }
 
@@ -276,6 +281,12 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     public override IASTNode VisitFloatExpression(AnimationLanguageRulesParser.FloatExpressionContext context)
     {
         float value = float.Parse(context.FLOAT().GetText());
+        
+        if (context.MINUS() != null)
+        {
+            value = -value;
+        }
+        
         return new FloatLiteralNode(value, GetSourceLocation(context.Start));
     }
 
