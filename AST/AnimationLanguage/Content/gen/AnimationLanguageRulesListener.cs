@@ -121,6 +121,16 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitUnary([NotNull] AnimationLanguageRulesParser.UnaryContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.unaryOperation"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterUnaryOperation([NotNull] AnimationLanguageRulesParser.UnaryOperationContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.unaryOperation"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitUnaryOperation([NotNull] AnimationLanguageRulesParser.UnaryOperationContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.assOps"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

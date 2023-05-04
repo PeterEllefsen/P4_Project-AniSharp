@@ -98,11 +98,14 @@ keyValuePair: IDENTIFIER EQUAL expression;
 assignments: assignment (SEMICOLON assignments)?;
 
 assignment: type? IDENTIFIER assOps (expression | IDENTIFIER) SEMICOLON?
-            | IDENTIFIER unary SEMICOLON?
-            | unary IDENTIFIER SEMICOLON?
+            | unaryOperation SEMICOLON
             ;
             
 unary: DEC | INC;
+
+unaryOperation: IDENTIFIER unary
+              | unary IDENTIFIER
+              ;
 
 assOps: (EQUAL | PLUSEQUAL | MINUSEQUAL);
 
@@ -174,7 +177,7 @@ return: RETURN expression SEMICOLON
 
 loop: for_loop | while_loop;
 
-for_loop: FOR LPAREN assignment SEMICOLON condition SEMICOLON assignment RPAREN block;
+for_loop: FOR LPAREN assignment SEMICOLON condition SEMICOLON (assignment | unaryOperation) RPAREN block;
 
 while_loop: WHILE LPAREN condition RPAREN block;
 

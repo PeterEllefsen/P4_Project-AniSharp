@@ -86,6 +86,12 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitUnary([NotNull] AnimationLanguageRulesParser.UnaryContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.unaryOperation"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitUnaryOperation([NotNull] AnimationLanguageRulesParser.UnaryOperationContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.assOps"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

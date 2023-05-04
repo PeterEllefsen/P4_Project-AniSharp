@@ -622,15 +622,43 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a for loop is encountered in the code.
     public override IASTNode VisitFor_loop(AnimationLanguageRulesParser.For_loopContext context)
     {
-        AssignmentNode startExpression = (AssignmentNode)VisitAssignment(context.assignment(0)); //Visit the start expression of the for loop.
-        ConditionNode condition = (ConditionNode)VisitCondition(context.condition()); //Visit the condition of the for loop.
-        AssignmentNode endExpression = (AssignmentNode)VisitAssignment(context.assignment(1)); //Visit the end expression of the for loop.
-        BlockNode block = (BlockNode)VisitBlock(context.block()); //Visit the block of the for loop.
+        AssignmentNode startExpression = (AssignmentNode)VisitAssignment(context.assignment(0));
+        ConditionNode condition = (ConditionNode)VisitCondition(context.condition());
+        IASTNode endExpression;
+
+        if (context.assignment().Length == 2)
+        {
+            endExpression = (AssignmentNode)VisitAssignment(context.assignment(1));
+        }
+        else
+        {
+            endExpression = (UnaryOperationNode)Visit(context.unaryOperation());
+        }
+
+
+        BlockNode block = (BlockNode)VisitBlock(context.block());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
         return new ForLoopNode(startExpression, condition, endExpression, block, sourceLocation);
     }
 
+    
+    public override IASTNode VisitUnaryOperation(AnimationLanguageRulesParser.UnaryOperationContext context)
+    {
+        UnaryOperator unaryOperator = GetUnaryOperator(context.unary());
+        int identifierChildIndex = context.unary().Start.Text == context.GetText() ? 1 : 0;
+        IdentifierNode identifierNode = (IdentifierNode)Visit(context.GetChild(identifierChildIndex));
+        UnaryOperationNode unaryOperationNode = new UnaryOperationNode(identifierNode, unaryOperator, GetSourceLocation(context.Start));
+        return unaryOperationNode;
+    }
+    
+    
+    public override IASTNode VisitUnary(AnimationLanguageRulesParser.UnaryContext context)
+    {
+        return VisitChildren(context);
+    }
+    
+    
     
     //This method in run when a while loop is met in the code.
     public override IASTNode VisitWhile_loop(AnimationLanguageRulesParser.While_loopContext context)
@@ -1091,6 +1119,23 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             "group" => TypeNode.TypeKind.Group,
             _ => throw new InvalidOperationException($"Invalid type string: {typeString}")
         };
+    }
+    
+    
+    private UnaryOperator GetUnaryOperator(AnimationLanguageRulesParser.UnaryContext context)
+    {
+        if (context.INC() != null)
+        {
+            return UnaryOperator.Increment;
+        }
+        else if (context.DEC() != null)
+        {
+            return UnaryOperator.Decrement;
+        }
+        else
+        {
+            throw new NotSupportedException($"Unsupported unary operator: {context.GetText()}");
+        }
     }
     
     

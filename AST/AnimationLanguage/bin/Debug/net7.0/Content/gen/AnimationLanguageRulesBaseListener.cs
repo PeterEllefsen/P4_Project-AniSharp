@@ -144,6 +144,18 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitUnary([NotNull] AnimationLanguageRulesParser.UnaryContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.unaryOperation"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterUnaryOperation([NotNull] AnimationLanguageRulesParser.UnaryOperationContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.unaryOperation"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitUnaryOperation([NotNull] AnimationLanguageRulesParser.UnaryOperationContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.assOps"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

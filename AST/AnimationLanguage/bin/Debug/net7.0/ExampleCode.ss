@@ -15,6 +15,9 @@ setup [
 
 int function hejsa(){
     int hej = 5;
+    for(int i = 1; i < 3; i--){
+        i = 5;
+    }
     return 2;
 }
 
