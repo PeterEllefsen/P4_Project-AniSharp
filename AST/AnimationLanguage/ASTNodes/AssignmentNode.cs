@@ -41,4 +41,5 @@ public enum AssignmentOperator //The different types of assignment operators.
     Assign,
     PlusEqual,
     MinusEqual,
+    Null,
 }

@@ -100,8 +100,8 @@ assignments: assignment (SEMICOLON assignments)?;
 assignment: type? IDENTIFIER assOps (expression | IDENTIFIER) SEMICOLON?
             | IDENTIFIER unary SEMICOLON?
             | unary IDENTIFIER SEMICOLON?
-            | IDENTIFIER grouping SEMICOLON
             ;
+            
 unary: DEC | INC;
 
 assOps: (EQUAL | PLUSEQUAL | MINUSEQUAL);
@@ -166,7 +166,7 @@ statement: assignment
           | conditional
           ;
           
-identifierGrouping: IDENTIFIER groupingElements;
+identifierGrouping: IDENTIFIER LBRACKET groupingElements RBRACKET SEMICOLON;
 
 return: RETURN expression SEMICOLON
         | RETURN grouping SEMICOLON

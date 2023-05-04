@@ -292,7 +292,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitStringExpression(AnimationLanguageRulesParser.StringExpressionContext context)
     {
-        Console.WriteLine("VisitStringExpression: " + context.GetText());
         string value = context.STRING().GetText();
         value = value.Substring(1, value.Length - 2); // Removes the quotes surrounding the string, suchh that it is only the relevant data we gather
         return new StringLiteralNode(value, GetSourceLocation(context.Start)); 
@@ -307,7 +306,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a function call is encountered in the code.
     public override IASTNode VisitFuncCall(AnimationLanguageRulesParser.FuncCallContext context)
     {
-        Console.WriteLine("VisitFuncCallExpression: " + context.GetText());
         IdentifierNode identifier = new IdentifierNode(context.IDENTIFIER().GetText(), GetSourceLocation(context.IDENTIFIER().Symbol)); //Create a new IdentifierNode with the name of the function and the SourceLocation of the IDENTIFIER terminal.
 
         List<IASTNode> arguments = new List<IASTNode>(); //Create a new list of IASTNodes to store the arguments of the function call.
@@ -917,7 +915,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when an animation is encountered in the code.
     public override IASTNode VisitAnimation(AnimationLanguageRulesParser.AnimationContext context)
     {
-        Console.WriteLine("Animation found: " + context.GetText() + "\n");
         var identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER()); // Visit the identifier of the animation.
         CommandNode? commandNode = null; // Create a variable to contain the command of the animation. It's nullable, as an animation can both have a command, and not have a command.
 
@@ -946,7 +943,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitCall_parameters(AnimationLanguageRulesParser.Call_parametersContext context)
     {
-        Console.WriteLine("Transition parameters should be here: " + context.GetText() + "\n");
         List<IASTNode> arguments = new List<IASTNode>();
         
         foreach(var child in context.children)
@@ -954,7 +950,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             if (child is AnimationLanguageRulesParser.Call_parameterContext callParameterContext)
             {
                 IASTNode callParameterNode = VisitCall_parameter(callParameterContext);
-                Console.WriteLine("Call parameter node: " + callParameterNode + "\n");
                 arguments.Add(callParameterNode);
             }
         }
@@ -967,7 +962,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     {
         if (context.argName() != null && context.arg() != null)
         {
-            Console.WriteLine("ArgName: " + context.argName().GetText() + " Arg: " + context.arg().GetText() + "\n");
             // Handle named arguments if needed.
             string argName = context.argName().GetText();
             IASTNode argValue = VisitArg(context.arg());
@@ -976,7 +970,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         else
         {
             IASTNode argValue = VisitArg(context.arg());
-            Console.WriteLine("ArgValue: " + argValue + "\n");
             return argValue;
         }
     }
@@ -1025,7 +1018,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a command is encountered in the code.
     public override IASTNode VisitCommand(AnimationLanguageRulesParser.CommandContext context)
     {
-        Console.WriteLine("Command found: " + context.GetText() + "\n");
         IdentifierNode identifierNode = (IdentifierNode)VisitTerminal(context.IDENTIFIER());
 
         IList<IASTNode> parameters = new List<IASTNode>();
