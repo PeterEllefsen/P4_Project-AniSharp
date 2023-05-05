@@ -46,4 +46,10 @@ public class CommandNode : IASTNode
             return $"CommandNode: {Identifier}()";    
         }
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

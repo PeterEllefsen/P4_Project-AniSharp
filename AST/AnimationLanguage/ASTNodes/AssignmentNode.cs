@@ -32,7 +32,12 @@ public class AssignmentNode : StatementNode
         string assignmentOperatorStr = AssignmentOperator.ToString();
         return $"AssignmentNode: {Identifier} {assignmentOperatorStr} {Expression}";
     }
-
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }
 
 

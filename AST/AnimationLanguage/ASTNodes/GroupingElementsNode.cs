@@ -49,4 +49,10 @@ public class GroupingElementsNode : IASTNode
         string keyValuePairsStr = string.Join(", ", KeyValuePairs.Select(k => k.ToString()));
         return $"GroupingElementsNode: ({expressionsStr}, {identifiersStr}, {keyValuePairsStr})";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

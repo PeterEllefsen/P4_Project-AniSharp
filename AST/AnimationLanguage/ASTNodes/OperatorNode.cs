@@ -26,4 +26,10 @@ public class OperatorNode : IASTNode
     {
         return $"OperatorNode: {OperatorSymbol}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

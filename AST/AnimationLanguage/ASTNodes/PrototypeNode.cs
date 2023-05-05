@@ -38,6 +38,12 @@ public class PrototypeNode : IASTNode
     {
         return $"PrototypeNode: {ReturnType} {FunctionName}({string.Join(", ", Parameters)})";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }
 
 public enum DataType //This enum defines the different data types that can be used in the language.

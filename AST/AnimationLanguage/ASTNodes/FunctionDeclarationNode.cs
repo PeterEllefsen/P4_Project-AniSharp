@@ -46,4 +46,10 @@ public class FunctionDeclarationNode : IASTNode
         string parametersStr = string.Join(", ", Parameters.Select(p => p.ToString()));
         return $"FunctionDeclarationNode: {ReturnType} {Identifier}({parametersStr})";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

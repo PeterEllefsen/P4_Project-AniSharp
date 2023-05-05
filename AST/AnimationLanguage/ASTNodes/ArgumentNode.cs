@@ -31,4 +31,10 @@ public class ArgumentNode : IASTNode
     {
         return $"ArgumentNode: {Name}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

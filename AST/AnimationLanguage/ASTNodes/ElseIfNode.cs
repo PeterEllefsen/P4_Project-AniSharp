@@ -31,4 +31,10 @@ public class ElseIfNode : IASTNode
     {
         return $"ElseIfNode: {Condition}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

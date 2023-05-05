@@ -25,5 +25,11 @@ public class TupleNode : IASTNode
     {
         return $"TupleNode: {string.Join(", ", Arguments.Select(keyvaluepair => $"{keyvaluepair.Key}: {keyvaluepair.Value}"))}"; //the arrow function is used to create a string for each keyvaluepair in the Arguments dictionary.
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 
 }

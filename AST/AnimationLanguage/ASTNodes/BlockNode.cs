@@ -42,4 +42,10 @@ public class BlockNode : IASTNode
         string returnStr = ReturnNode != null ? $", {ReturnNode}" : "";
         return $"BlockNode: {statementsStr}{returnStr}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

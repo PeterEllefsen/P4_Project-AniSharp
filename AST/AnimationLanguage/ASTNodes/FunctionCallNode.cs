@@ -38,4 +38,10 @@ public class FunctionCallNode : IASTNode
         string argumentsStr = string.Join(", ", Arguments.Select(a => a.ToString()));
         return $"FunctionCallNode: {FunctionIdentifier}({argumentsStr})";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

@@ -65,4 +65,10 @@ public class StatementNode : IASTNode
     {
         return $"StatementNode: {Assignment} {FunctionCall} {IfStatement} {ForStatement} {WhileStatement} {ReturnStatement}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

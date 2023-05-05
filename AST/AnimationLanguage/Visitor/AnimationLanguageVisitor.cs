@@ -1,5 +1,6 @@
-﻿using AnimationLanguage.ASTCommon;
-using AnimationLanguage.ASTNodes;
+﻿namespace AnimationLanguage.Visitor;
+using ASTCommon;
+using ASTNodes;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 

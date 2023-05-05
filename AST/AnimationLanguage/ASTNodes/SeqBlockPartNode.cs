@@ -25,4 +25,10 @@ public class SeqBlockPartNode : IASTNode
     {
         return $"SeqBlockPartNode: {Child}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

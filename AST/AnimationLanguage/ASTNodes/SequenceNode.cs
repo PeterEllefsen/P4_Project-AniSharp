@@ -43,4 +43,10 @@ public class SequenceNode : IASTNode
         string parametersStr = string.Join(", ", Parameters.Select(p => p.ToString()));
         return $"SequenceNode: seq {Name}({parametersStr})";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

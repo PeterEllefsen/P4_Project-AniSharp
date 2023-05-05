@@ -38,4 +38,10 @@ public class ConditionNode : IASTNode
     {
         return $"ConditionNode: {LeftExpression} {ComparisonOperator} {LogicalOperator} {RightExpression}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

@@ -27,5 +27,10 @@ public class TimelineBlockNode : IASTNode
     {
         return $"TimelineBlockNode: StartTime: {StartTime}, EndTime: {EndTime}, FrameDefinitions: [{string.Join(", ", FrameDefinitions)}]";
     }
-
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

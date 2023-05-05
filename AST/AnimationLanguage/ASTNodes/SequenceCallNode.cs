@@ -40,4 +40,10 @@ public class SequenceCallNode : IASTNode
         string argumentsStr = string.Join(", ", Arguments.Select(a => a.ToString()));
         return $"SequenceCallNode: {Name}({argumentsStr})";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

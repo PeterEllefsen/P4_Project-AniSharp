@@ -37,4 +37,10 @@ public class TypeNode : IASTNode
     {
         return $"TypeNode: {Kind}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

@@ -20,4 +20,11 @@ public class IdentifierNode : ExpressionNode
     {
         return $"IdentifierNode: {Name}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
+
 }

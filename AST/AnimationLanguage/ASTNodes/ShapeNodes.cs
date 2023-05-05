@@ -26,6 +26,11 @@ public class PolygonNode : IASTNode
     {
         return Children;
     }
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }
 
 public class CircleNode : IASTNode
@@ -57,5 +62,11 @@ public class CircleNode : IASTNode
     public override string ToString()
     {
         return $"CircleNode: {string.Join(", ", Args)}";
+    }
+
+
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
     }
 }

@@ -32,4 +32,10 @@ public class TransitionNode : IASTNode
     {
         return $"TransitionNode: {string.Join(", ", Parameters)}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

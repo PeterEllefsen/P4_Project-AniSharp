@@ -31,4 +31,10 @@ public class FrameDefNode : IASTNode
     {
         return $"FrameDefNode: {FrameTime}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

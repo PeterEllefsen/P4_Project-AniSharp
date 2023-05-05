@@ -43,4 +43,10 @@ public class AnimationNode : IASTNode
     {
         return $"AnimationNode: {Identifier}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

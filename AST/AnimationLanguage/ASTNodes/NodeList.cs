@@ -23,4 +23,10 @@ public class NodeList<T> : List<T>, IASTNode where T : IASTNode //It inherits fr
     {
         return $"NodeList: {Count} elements";
     }
+    
+    
+    // public T Accept<T>(ASTVisitor<T> visitor)
+    // {
+    //     return visitor.Visit(this);
+    // }
 }

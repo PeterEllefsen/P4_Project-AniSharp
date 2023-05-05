@@ -51,6 +51,12 @@ public class ExpressionNode : IASTNode
         return $"ExpressionNode: {LeftOperand} {OperatorNode} {RightOperand}";
     }
     
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
+    
 }
 
 public enum ExpressionNodeType //This enum defines the different types of expression nodes.

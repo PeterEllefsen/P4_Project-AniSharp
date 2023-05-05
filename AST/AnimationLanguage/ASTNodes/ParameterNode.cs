@@ -29,6 +29,12 @@ public class ParameterNode : IASTNode
     {
         return $"ParameterNode: {DataType} {Name}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }
 
 
@@ -52,5 +58,11 @@ public class CallParameterNode : IASTNode
     public override string ToString()
     {
         return $"CallParameterNode: {string.Join(", ", Children.Select(c => c.ToString()))}";
+    }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
     }
 }

@@ -21,6 +21,12 @@ public class IntegerLiteralNode : ExpressionNode
     {
         return $"IntegerLiteralNode: {Value}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }
 
 
@@ -44,6 +50,12 @@ public class FloatLiteralNode : ExpressionNode
     {
         return $"FloatLiteralNode: {Value}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }
 
 public class StringLiteralNode : ExpressionNode
@@ -65,6 +77,12 @@ public class StringLiteralNode : ExpressionNode
     {
         return $"StringLiteralNode: {Value}";
     }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }
 
 public class BooleanLiteralNode : ExpressionNode
@@ -85,6 +103,12 @@ public class BooleanLiteralNode : ExpressionNode
     public override string ToString()
     {
         return $"BooleanLiteralNode: {Value}";
+    }
+    
+    
+    public T Accept<T>(ASTVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
     }
 }
 
