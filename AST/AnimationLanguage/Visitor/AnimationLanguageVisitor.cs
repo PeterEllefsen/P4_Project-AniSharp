@@ -22,16 +22,9 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             {
                 setupNode = (SetupNode)VisitSetupBlock(setupBlockContext); // If the child is a setup block, visit it and store the result as the setup node.
             }
-            else if (child is AnimationLanguageRulesParser.PrototypesContext prototypesContext)
+            else if (child is AnimationLanguageRulesParser.PrototypeContext prototypeContext)
             {
-                NodeList<IASTNode> prototypeNodeList = (NodeList<IASTNode>)VisitPrototypes(prototypesContext); // If the child is a prototype, visit it and store the result as a list of IASTNodes.
-                foreach (var node in prototypeNodeList)
-                {
-                    if (node is PrototypeNode prototypeNode)
-                    {
-                        prototypeNodes.Add(prototypeNode); // Add the prototype node to the list of prototype nodes if it is a prototype
-                    }
-                }
+                prototypeNodes.Add((PrototypeNode)VisitPrototype(prototypeContext));
             }
             else if (child is AnimationLanguageRulesParser.FuncDeclContext funcDeclContext) 
             {
@@ -375,22 +368,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     }
     
     
-
-    //This method is called when the prototype rule is encountered in the code.
-    public override IASTNode VisitPrototypes(AnimationLanguageRulesParser.PrototypesContext context)
-    {
-        List<IASTNode> prototypes = new List<IASTNode>(); //Create a list of IASTNodes to store the prototypes.
-
-        foreach (var prototypeContext in context.GetRuleContexts<AnimationLanguageRulesParser.PrototypeContext>())
-        {
-            prototypes.Add(VisitPrototype(prototypeContext)); //Visit each prototype and add it to the list.
-        }
-
-        return new NodeList<IASTNode>(prototypes, GetSourceLocation(context.Start)); //Return a NodeList containing the prototypes.
-    }
-
-
-
     //This method visits the individual prototype rule.
     public override IASTNode VisitPrototype(AnimationLanguageRulesParser.PrototypeContext context)
     {

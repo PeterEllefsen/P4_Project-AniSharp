@@ -438,18 +438,6 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitCall_parameter([NotNull] AnimationLanguageRulesParser.Call_parameterContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.prototypes"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPrototypes([NotNull] AnimationLanguageRulesParser.PrototypesContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.prototypes"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPrototypes([NotNull] AnimationLanguageRulesParser.PrototypesContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.prototype"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

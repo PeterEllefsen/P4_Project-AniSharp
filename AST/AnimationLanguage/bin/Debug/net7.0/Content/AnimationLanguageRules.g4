@@ -84,7 +84,7 @@ COMMENT: '//' ~[\r\n]* -> skip;
 // Rules
 s: program EOF;
 
-program: (PROTOTYPE LBRACE prototypes RBRACE)? (SETUP setupBlock)? funcDecl* sequences? TIMELINE timelineBlock?;
+program: (PROTOTYPE LBRACE prototype prototype* RBRACE)? (SETUP setupBlock)? funcDecl* sequences? TIMELINE timelineBlock?;
 
 
 setupBlock: grouping SEMICOLON;
@@ -145,8 +145,6 @@ call_parameters: call_parameters COMMA call_parameter
                | call_parameter;
                
 call_parameter: (argName arg | arg);
-
-prototypes: prototype (COMMA prototypes)?;
 
 prototype: (type | GROUP) FUNCTION IDENTIFIER LPAREN parameters? RPAREN SEMICOLON;
 
