@@ -23,7 +23,7 @@ public class IntegerLiteralNode : ExpressionNode
     }
     
     
-    public T Accept<T>(ASTVisitor<T> visitor)
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }
@@ -52,7 +52,7 @@ public class FloatLiteralNode : ExpressionNode
     }
     
     
-    public T Accept<T>(ASTVisitor<T> visitor)
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }
@@ -79,7 +79,7 @@ public class StringLiteralNode : ExpressionNode
     }
     
     
-    public T Accept<T>(ASTVisitor<T> visitor)
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }
@@ -106,7 +106,7 @@ public class BooleanLiteralNode : ExpressionNode
     }
     
     
-    public T Accept<T>(ASTVisitor<T> visitor)
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }

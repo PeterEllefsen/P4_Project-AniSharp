@@ -25,8 +25,20 @@ public class NodeList<T> : List<T>, IASTNode where T : IASTNode //It inherits fr
     }
     
     
-    // public T Accept<T>(ASTVisitor<T> visitor)
-    // {
-    //     return visitor.Visit(this);
-    // }
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
+    {
+        T? result = default(T);
+
+        foreach (IASTNode node in this)
+        {
+            T? tempResult = node.Accept(visitor);
+            if (tempResult != null)
+            {
+                result = tempResult;
+            }
+        }
+
+        return result;
+    }
+
 }

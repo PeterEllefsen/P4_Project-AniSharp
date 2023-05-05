@@ -27,7 +27,7 @@ public class PolygonNode : IASTNode
         return Children;
     }
     
-    public T Accept<T>(ASTVisitor<T> visitor)
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }
@@ -65,7 +65,7 @@ public class CircleNode : IASTNode
     }
 
 
-    public T Accept<T>(ASTVisitor<T> visitor)
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }

@@ -8,5 +8,5 @@ public interface IASTNode
     
     IEnumerable<IASTNode> GetChildren(); //Method used to return the children of the nodes, to print the AST.
     
-    T Accept<T>(ASTVisitor<T> visitor); //Method used to accept a visitor, to traverse the AST.
+    T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode; //Method used to accept a visitor, to traverse the AST.
 }

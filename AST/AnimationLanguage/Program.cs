@@ -1,4 +1,5 @@
 ﻿using AnimationLanguage.ASTCommon;
+using AnimationLanguage.ASTNodes;
 using AnimationLanguage.Visitor;
 using Antlr4.Runtime;
 
@@ -29,7 +30,8 @@ namespace AnimationLanguage
 
             // Instantiate the TypeCheckingVisitor using the empty symbol table and traverse the AST.
             TypeCheckingVisitor typeCheckingVisitor = new TypeCheckingVisitor(symbolTable);
-            IASTNode? decoratedAstRoot = typeCheckingVisitor.Visit(astRoot);
+            IASTNode? decoratedAstRoot = typeCheckingVisitor.Visit((ProgramNode)astRoot);
+
 
             PrintAST(decoratedAstRoot);
         }

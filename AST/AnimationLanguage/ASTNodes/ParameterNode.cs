@@ -31,7 +31,7 @@ public class ParameterNode : IASTNode
     }
     
     
-    public T Accept<T>(ASTVisitor<T> visitor)
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }
@@ -61,7 +61,7 @@ public class CallParameterNode : IASTNode
     }
     
     
-    public T Accept<T>(ASTVisitor<T> visitor)
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }

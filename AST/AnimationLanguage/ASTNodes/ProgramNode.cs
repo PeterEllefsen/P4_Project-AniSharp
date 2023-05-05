@@ -69,7 +69,7 @@ public class ProgramNode : IASTNode
     }
     
     
-    public T Accept<T>(ASTVisitor<T> visitor)
+    public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }
