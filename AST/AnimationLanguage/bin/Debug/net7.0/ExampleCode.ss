@@ -1,5 +1,6 @@
 prototypes {
-    group function ColorBasedOnNumber();
+    group function hejsa();
+    int function hej();
 }
 
 
@@ -15,7 +16,7 @@ setup [
 
 int function hejsa(){
     int hej = 5;
-    for(int i = 1; i < 3; i--){
+    for(int i = 1; i < 3; i-= 1){
         i = 5;
     }
     return 2;

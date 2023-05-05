@@ -47,9 +47,49 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(AssignmentNode node)
     {
-        Console.WriteLine("Type checking assignment node");
+        Console.WriteLine("Type checking assignment node:");
+        Console.WriteLine("test");
+        IdentifierNode identifierNode = node.Identifier;
+        ExpressionNode expression = node.Expression;
+        string variableName = identifierNode.Name;
+    
+        // Retrieve type information from the expression node.
+        string expressionType = expression.NodeType.ToString(); // Assuming you've added a 'Type' property to the ExpressionNode class.
+        Console.WriteLine("Identifier: " + variableName + " Expression type: " + expressionType);
+        // If the assignment node has a type, verify that it matches the expression type.
+        if (node.NodeType != null)
+        {
+            if (node.NodeType.ToString() != expressionType)
+            {
+                throw new InvalidOperationException($"Type mismatch: Cannot assign {expressionType} to {node.NodeType.ToString()} for variable '{variableName}'.");
+            }
+        }
+        else
+        {
+            throw new ArgumentNullException($"Type of variable '{variableName}' is null.");
+        }
+
+        // Check if the variable is already in the symbol table.
+        Symbol? existingSymbol = _symbolTable.Lookup(variableName);
+
+        if (existingSymbol != null)
+        {
+            if (existingSymbol.Type != node.NodeType.ToString())
+            {
+                throw new InvalidOperationException($"Type mismatch: Cannot assign {node.NodeType.ToString()} to existing variable '{variableName}' of type {existingSymbol.Type}.");
+            }
+        }
+        else
+        {
+            // If the variable is not in the symbol table, add it.
+            _symbolTable.AddVariable(variableName, node.NodeType.ToString());
+        }
+
+        Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{node.NodeType.ToString()}', ExpressionType='{expressionType}'");
+
         return VisitChildren(node);
     }
+
     
     public override IASTNode? Visit(OperatorNode node)
     {
@@ -96,8 +136,34 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     public override IASTNode? Visit(PrototypeNode node)
     {
         Console.WriteLine("Type checking prototype node");
+        string functionName = node.FunctionName;
+        DataType returnType = node.ReturnType;
+        IList<ParameterNode> parameters = node.Parameters;
+
+        // Check if the function is already in the symbol table.
+        Symbol? existingSymbol = _symbolTable.Lookup(functionName);
+
+        if (existingSymbol != null)
+        {
+            throw new InvalidOperationException($"Function '{functionName}' already exists.");
+        }
+        else
+        {
+            // If the function is not in the symbol table, add it.
+            _symbolTable.AddFunction(functionName, returnType.ToString());
+        }
+
+        // Visit the parameters in the prototype.
+        foreach (ParameterNode parameter in parameters)
+        {
+            Visit(parameter);
+        }
+
+        Console.WriteLine($"Type checked prototype node: FunctionName='{functionName}', ReturnType='{returnType}', ParametersCount='{parameters.Count}'");
+
         return VisitChildren(node);
     }
+
     
     public override IASTNode? Visit(StatementNode node)
     {
