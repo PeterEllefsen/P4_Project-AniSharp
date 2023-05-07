@@ -10,6 +10,7 @@ public class FunctionCallNode : IASTNode
 
     public IdentifierNode FunctionIdentifier { get; set; } // Represents the identifier(name) of the function that is being called.
     public IList<IASTNode> Arguments { get; } = new List<IASTNode>(); // Represents the arguments that are being provided when calling the function.
+    public TypeNode? Type { get; set;} // The type of the function call node. This is set by the type checker.
 
     public FunctionCallNode(
         IdentifierNode functionIdentifier,

@@ -289,9 +289,37 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     
     public override IASTNode? Visit(FunctionCallNode node)
     {
-        Console.WriteLine("Type checking function call node");
-        return VisitChildren(node);
+        List<IASTNode> decoratedArguments = new List<IASTNode>();
+
+        foreach (IASTNode argument in node.Arguments)
+        {
+            if (argument is ArgumentNode argumentNode) // Change this to integernode and floatnode and so on
+            {
+                IASTNode? decoratedArgument = Visit(argumentNode);
+                if (decoratedArgument == null)
+                {
+                    throw new InvalidOperationException($"Failed to create a decorated argument node for argument: {argument}");
+                }
+                decoratedArguments.Add(decoratedArgument);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid argument type: {argument.GetType().Name}. Expected: ArgumentNode");
+            }
+        }
+
+        // Use the GetFunctionReturnType method to get the return type of the function call.
+        TypeNode.TypeKind returnType = GetFunctionReturnType(node.FunctionIdentifier);
+
+        TypeNode typeNode = new TypeNode(returnType, node.SourceLocation);
+        FunctionCallNode decoratedFunctionCallNode = new FunctionCallNode(node.FunctionIdentifier, decoratedArguments, node.SourceLocation);
+        decoratedFunctionCallNode.Type = typeNode;
+
+        return decoratedFunctionCallNode;
     }
+
+
+
     
     public override IASTNode Visit(ParameterNode node)
     {
@@ -778,6 +806,56 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
                 throw new InvalidOperationException($"Unsupported expression type: {expressionType}");
         }
     }
+    
+    
+    private TypeNode.TypeKind GetFunctionReturnType(IdentifierNode functionIdentifier)
+    {
+        Symbol? symbol = _symbolTable.Lookup(functionIdentifier.Name);
+        if (symbol == null)
+        {
+            throw new InvalidOperationException($"Function '{functionIdentifier.Name}' is not defined.");
+        }
+
+        return ConvertStringTypeToTypeKind(symbol.Type);
+    }
+    
+    
+    private TypeNode.TypeKind ConvertStringTypeToTypeKind(string type)
+    {
+        type = type.ToLower();
+        TypeNode.TypeKind typeKind;
+
+        switch (type)
+        {
+            case "int":
+                typeKind = TypeNode.TypeKind.Int;
+                break;
+            case "float":
+                typeKind = TypeNode.TypeKind.Float;
+                break;
+            case "string":
+                typeKind = TypeNode.TypeKind.String;
+                break;
+            case "bool":
+                typeKind = TypeNode.TypeKind.Bool;
+                break;
+            case "circle":
+                typeKind = TypeNode.TypeKind.Circle;
+                break;
+            case "polygon":
+                typeKind = TypeNode.TypeKind.Polygon;
+                break;
+            case "group":
+                typeKind = TypeNode.TypeKind.Group;
+                break;
+            default:
+                typeKind = TypeNode.TypeKind.None;
+                break;
+        }
+
+        return typeKind;
+    }
+
 
 }
 
