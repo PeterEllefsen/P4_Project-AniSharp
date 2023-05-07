@@ -8,30 +8,104 @@ using ASTCommon;
 
 public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 {
-    private readonly SymbolTable _symbolTable;
+    private readonly ScopedSymbolTable _symbolTable;
 
-    public TypeCheckingVisitor(SymbolTable symbolTable)
+    public TypeCheckingVisitor(ScopedSymbolTable symbolTable)
     {
-        _symbolTable = symbolTable;
+        _symbolTable = symbolTable; //The symbol table defined in the Program.cs file will be stoed in this property
     }
 
-    public override IASTNode? Visit(ProgramNode node)
+    public override IASTNode Visit(ProgramNode node)
+{
+    Console.WriteLine("Type checking program node");
+
+    IList<PrototypeNode> decoratedPrototypes = new List<PrototypeNode>();
+    SetupNode? decoratedSetup = null;
+    IList<FunctionDeclarationNode> decoratedFunctionDeclarations = new List<FunctionDeclarationNode>();
+    IList<SequenceNode> decoratedSequences = new List<SequenceNode>();
+    TimelineBlockNode? decoratedTimeline = null;
+
+    // No need to enter a new scope for prototypes as they are in the global scope
+    foreach (IASTNode child in node.Children)
     {
-        Console.WriteLine("Type checking program node: ");
-        return VisitChildren(node);
+        if (child is PrototypeNode prototypeNode)
+        {
+            decoratedPrototypes.Add((PrototypeNode)Visit(prototypeNode) ?? throw new InvalidOperationException("Failed to create a decorated prototype node."));
+        }
+        else if (child is SetupNode setupNode)
+        {
+            decoratedSetup = (SetupNode)Visit(setupNode) ?? throw new InvalidOperationException("Failed to create a decorated setup node.");
+        }
+        else if (child is FunctionDeclarationNode functionDefinitionNode)
+        {
+            decoratedFunctionDeclarations.Add((FunctionDeclarationNode)Visit(functionDefinitionNode) ?? throw new InvalidOperationException("Failed to create a decorated function declaration node."));
+        }
+        else if (child is SequenceNode sequenceNode)
+        {
+            decoratedSequences.Add((SequenceNode)Visit(sequenceNode) ?? throw new InvalidOperationException("Failed to create a decorated sequence node."));
+        }
+        else if (child is TimelineBlockNode timelineBlockNode)
+        {
+            decoratedTimeline = (TimelineBlockNode)(Visit(timelineBlockNode) ?? throw new InvalidOperationException("Failed to create a decorated timeline block node."));
+        }
     }
+
+    Console.WriteLine("Type checked program node");
+    return new ProgramNode(decoratedPrototypes, decoratedSetup, decoratedFunctionDeclarations, decoratedSequences, decoratedTimeline, node.SourceLocation);
+}
+
+
+
     
-    public override IASTNode? Visit(SetupNode node)
+    public override SetupNode Visit(SetupNode node)
     {
-        Console.WriteLine("Type checking setup node: ");
-        return VisitChildren(node);
+        Console.WriteLine("Type checking setup node");
+
+        // Visit the grouping elements node and get the decorated GroupingElementsNode.
+        GroupingElementsNode decoratedGroupingElements = (GroupingElementsNode)Visit(node.GroupingElements) ?? throw new InvalidOperationException("Failed to create a decorated grouping elements node.");
+
+        // Create a decorated SetupNode with the decorated GroupingElementsNode and set its SourceLocation.
+        SetupNode decoratedSetupNode = new SetupNode(decoratedGroupingElements, node.SourceLocation);
+
+        Console.WriteLine("Type checked setup node");
+        return decoratedSetupNode;
     }
-    
-    public override IASTNode? Visit(GroupingElementsNode node)
+
+
+    public override GroupingElementsNode Visit(GroupingElementsNode node)
     {
-        Console.WriteLine("Type checking groupingelements node");
-        return VisitChildren(node);
+        Console.WriteLine("Type checking grouping elements node");
+
+        // Create lists to hold decorated children.
+        List<ExpressionNode> decoratedExpressions = new List<ExpressionNode>();
+        List<IdentifierNode> decoratedIdentifiers = new List<IdentifierNode>();
+        List<KeyValuePairNode> decoratedKeyValuePairs = new List<KeyValuePairNode>();
+
+        // Visit child nodes (expressions, identifiers, and key-value pairs) and add them to the decoratedChildren list.
+        foreach (IASTNode child in node.Children)
+        {
+            if (child is ExpressionNode expressionNode)
+            {
+                decoratedExpressions.Add((ExpressionNode)Visit(expressionNode) ?? throw new InvalidOperationException("Failed to create a decorated expression node."));
+            }
+            else if (child is IdentifierNode identifierNode)
+            {
+                decoratedIdentifiers.Add((IdentifierNode)Visit(identifierNode) ?? throw new InvalidOperationException("Failed to create a decorated identifier node."));
+            }
+            else if (child is KeyValuePairNode keyValuePairNode)
+            {
+                decoratedKeyValuePairs.Add((KeyValuePairNode)Visit(keyValuePairNode) ?? throw new InvalidOperationException("Failed to create a decorated key-value pair node."));
+            }
+        }
+
+        // Create a new decorated GroupingElementsNode with the decorated children and set its SourceLocation.
+        GroupingElementsNode decoratedGroupingElementsNode = new GroupingElementsNode(decoratedExpressions, decoratedIdentifiers, decoratedKeyValuePairs, node.SourceLocation);
+
+        Console.WriteLine("Type checked grouping elements node");
+        return decoratedGroupingElementsNode;
     }
+
+
     
     public override IASTNode? Visit(KeyValuePairNode node)
     {
@@ -109,11 +183,37 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         return VisitChildren(node);
     }
     
-    public override IASTNode? Visit(FunctionDeclarationNode node)
+    public override IASTNode Visit(FunctionDeclarationNode node)
     {
         Console.WriteLine("Type checking function declaration node");
-        return VisitChildren(node);
+
+        // Visit ReturnType and Identifier nodes.
+        TypeNode decoratedReturnType = (TypeNode)Visit(node.ReturnType) ?? throw new InvalidOperationException("Failed to create a decorated return type node.");
+        IdentifierNode decoratedIdentifier = (IdentifierNode)Visit(node.Identifier) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
+
+        // Visit Parameter nodes and create a list of decorated parameters.
+        List<ParameterNode> decoratedParameters = new List<ParameterNode>();
+        foreach (ParameterNode parameterNode in node.Parameters)
+        {
+            decoratedParameters.Add((ParameterNode)Visit(parameterNode) ?? throw new InvalidOperationException("Failed to create a decorated parameter node."));
+        }
+
+        // Enter the scope for the function declaration.
+        _symbolTable.EnterScope();
+
+        // Visit the Block node.
+        BlockNode decoratedBlock = (BlockNode)Visit(node.Block) ?? throw new InvalidOperationException("Failed to create a decorated block node.");
+
+        // Exit the scope for the function declaration.
+        _symbolTable.ExitScope();
+
+        // Create a new decorated FunctionDeclarationNode with the decorated nodes and set its SourceLocation.
+        FunctionDeclarationNode decoratedFunctionDeclarationNode = new FunctionDeclarationNode(decoratedReturnType, decoratedIdentifier, decoratedParameters, decoratedBlock, node.SourceLocation);
+
+        Console.WriteLine("Type checked function declaration node");
+        return decoratedFunctionDeclarationNode;
     }
+
     
     public override IASTNode? Visit(FunctionCallNode node)
     {
@@ -121,11 +221,17 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         return VisitChildren(node);
     }
     
-    public override IASTNode? Visit(ParameterNode node)
+    public override IASTNode Visit(ParameterNode node)
     {
-        Console.WriteLine("Type checking parameter node");
-        return VisitChildren(node);
+        Console.WriteLine($"Type checking parameter node: Name='{node.Name}', DataType='{node.DataType}'");
+        
+        ParameterNode decoratedNode = new ParameterNode(node.DataType, node.Name, node.SourceLocation);
+
+        Console.WriteLine($"Type checked parameter node: Name='{decoratedNode.Name}', DataType='{decoratedNode.DataType}'");
+
+        return decoratedNode;
     }
+
     
     public override IASTNode? Visit(CallParameterNode node)
     {
@@ -133,7 +239,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         return VisitChildren(node);
     }
     
-    public override IASTNode? Visit(PrototypeNode node)
+    public override IASTNode Visit(PrototypeNode node)
     {
         Console.WriteLine("Type checking prototype node");
         string functionName = node.FunctionName;
@@ -141,30 +247,39 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         IList<ParameterNode> parameters = node.Parameters;
 
         // Check if the function is already in the symbol table.
-        Symbol? existingSymbol = _symbolTable.Lookup(functionName);
+        Symbol? existingSymbol = _symbolTable.Lookup(functionName); //Check if the prototype has already been defined
 
         if (existingSymbol != null)
         {
-            throw new InvalidOperationException($"Function '{functionName}' already exists.");
+            throw new InvalidOperationException($"Prototype of function '{functionName}' already exists.");
         }
-        else
+        else //If not, then add it to the symbol table
         {
-            // If the function is not in the symbol table, add it.
             _symbolTable.AddFunction(functionName, returnType.ToString());
         }
 
-        // Visit the parameters in the prototype.
+        // Visit all of the parameters in the prototype and create a list of decorated parameters.
+        List<ParameterNode> decoratedParameters = new List<ParameterNode>();
         foreach (ParameterNode parameter in parameters)
         {
-            Visit(parameter);
+            Console.WriteLine($"Visiting parameter '{parameter.Name}'");
+            IASTNode? visitedParameter = Visit(parameter);
+            if (visitedParameter != null)
+            {
+                decoratedParameters.Add((ParameterNode)visitedParameter);
+            }
         }
 
-        Console.WriteLine($"Type checked prototype node: FunctionName='{functionName}', ReturnType='{returnType}', ParametersCount='{parameters.Count}'");
+        // Create a decorated PrototypeNode
+        PrototypeNode decoratedNode = new PrototypeNode(returnType, functionName, decoratedParameters, node.SourceLocation);
 
-        return VisitChildren(node);
+        Console.WriteLine($"Type checked prototype node: FunctionName='{functionName}', ReturnType='{returnType}', ParametersCount='{decoratedParameters.Count}'");
+
+        return decoratedNode;
     }
-
     
+
+
     public override IASTNode? Visit(StatementNode node)
     {
         Console.WriteLine("Type checking statement node");
@@ -239,10 +354,18 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     
     public override IASTNode? Visit(FrameDefNode node)
     {
-        Console.WriteLine("Type checking framedef node");
-        return VisitChildren(node);
+        Console.WriteLine("Type checking frame definition node");
+
+        // Visit and type check the sequence call in the frame definition node
+        SequenceCallNode decoratedSequenceCallNode = (SequenceCallNode)Visit(node.SequenceCall) ?? throw new InvalidOperationException("Failed to create a decorated sequence call node.");
+
+        // Create a new decorated FrameDefNode with the type checked sequence call
+        FrameDefNode decoratedFrameDefNode = new FrameDefNode(node.FrameTime, decoratedSequenceCallNode, node.SourceLocation);
+
+        Console.WriteLine("Type checked frame definition node");
+        return decoratedFrameDefNode;
     }
-    
+
     public override IASTNode? Visit(IntegerLiteralNode node)
     {
         Console.WriteLine("Type checking integer literal node");
@@ -285,11 +408,36 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         return VisitChildren(node);
     }
     
-    public override IASTNode? Visit(SequenceNode node)
+    public override IASTNode Visit(SequenceNode node)
     {
         Console.WriteLine("Type checking sequence node");
-        return VisitChildren(node);
+
+        // Visit Identifier node.
+        IdentifierNode decoratedName = (IdentifierNode)Visit(node.Name) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
+
+        // Visit Parameter nodes and create a list of decorated parameters.
+        List<ParameterNode> decoratedParameters = new List<ParameterNode>();
+        foreach (ParameterNode parameterNode in node.Parameters)
+        {
+            decoratedParameters.Add((ParameterNode)Visit(parameterNode) ?? throw new InvalidOperationException("Failed to create a decorated parameter node."));
+        }
+
+        // Enter the scope for the sequence.
+        _symbolTable.EnterScope();
+
+        // Visit the SeqBlockNode.
+        SeqBlockNode decoratedBlock = (SeqBlockNode)Visit(node.Block) ?? throw new InvalidOperationException("Failed to create a decorated sequence block node.");
+
+        // Exit the scope for the sequence.
+        _symbolTable.ExitScope();
+
+        // Create a new decorated SequenceNode with the decorated nodes and set its SourceLocation.
+        SequenceNode decoratedSequenceNode = new SequenceNode(decoratedName, decoratedParameters, decoratedBlock, node.SourceLocation);
+
+        Console.WriteLine("Type checked sequence node");
+        return decoratedSequenceNode;
     }
+
     
     public override IASTNode? Visit(PolygonNode node)
     {
@@ -305,10 +453,24 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     
     public override IASTNode? Visit(TimelineBlockNode node)
     {
-        Console.WriteLine("Type checking TimelineBlock node");
-        return VisitChildren(node);
+        Console.WriteLine("Type checking timeline block node");
+
+        // Visit and type check each frame definition in the timeline block node
+        List<FrameDefNode> decoratedFrameDefinitions = new List<FrameDefNode>();
+
+        foreach (var frameDefNode in node.FrameDefinitions)
+        {
+            FrameDefNode decoratedFrameDefNode = (FrameDefNode)Visit(frameDefNode) ?? throw new InvalidOperationException("Failed to create a decorated frame definition node.");
+            decoratedFrameDefinitions.Add(decoratedFrameDefNode);
+        }
+
+        // Create a new decorated TimelineBlockNode with the type checked frame definitions
+        TimelineBlockNode decoratedTimelineBlockNode = new TimelineBlockNode(node.StartTime, node.EndTime, decoratedFrameDefinitions, node.SourceLocation);
+
+        Console.WriteLine("Type checked timeline block node");
+        return decoratedTimelineBlockNode;
     }
-    
+
     public override IASTNode? Visit(TransitionNode node)
     {
         Console.WriteLine("Type checking Transition node");

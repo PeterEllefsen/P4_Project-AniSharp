@@ -66,3 +66,59 @@ public class SymbolTable
         return symbol;
     }
 }
+
+
+// instances of this class will be created when entering different scopes in the language 
+public class ScopedSymbolTable
+{
+    //It is a stack, as the scopes will be entered and exited in a last-in first-out order
+    private readonly Stack<SymbolTable> _scopeStack = new Stack<SymbolTable>();
+
+    public ScopedSymbolTable()
+    {
+        _scopeStack.Push(new SymbolTable()); // Initialize the stack with the global scope.
+    }
+
+    public void EnterScope() // This method is called whenever a new scope is enteered.
+    {
+        _scopeStack.Push(new SymbolTable());
+    }
+
+    public void ExitScope() // This method is called whenever a scope is exited.
+    {
+        _scopeStack.Pop();
+    }
+
+    public void AddVariable(string name, string type) // This method adds a variable to the scope in the top of the stack
+    {
+        _scopeStack.Peek().AddVariable(name, type);
+    }
+
+    public void AddFunction(string name, string returnType) // This method adds a function to the scope in the top of the stack.
+    {
+        _scopeStack.Peek().AddFunction(name, returnType);
+    }
+
+    public void AddPrototype(string name, string type) // This method adds a prototype to the scope in the top of the stack
+    {
+        _scopeStack.Peek().AddPrototype(name, type);
+    }
+
+    public void AddSequence(string name) // This method adds a sequence to the scope in the top of the stack.
+    {
+        _scopeStack.Peek().AddSequence(name);
+    }
+
+    public Symbol? Lookup(string name) // This method looks up a symbol in the scope stack. It will be used in the type checker to check if a variable or function exists.
+    {
+        foreach (SymbolTable table in _scopeStack) 
+        {
+            Symbol? symbol = table.Lookup(name); // Try to get the symbol from the symbol table if it exists.
+            if (symbol != null)
+            {
+                return symbol; // return the symbol if it exists.
+            }
+        }
+        return null;
+    }
+}

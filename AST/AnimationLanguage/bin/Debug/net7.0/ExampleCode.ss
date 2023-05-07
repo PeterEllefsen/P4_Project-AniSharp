@@ -1,7 +1,8 @@
 prototypes {
-    group function hejsa();
+    group function hejsa(int i, int j);
     int function hej();
-}
+    int function hejsa();
+    }
 
 
 setup [

@@ -25,11 +25,11 @@ namespace AnimationLanguage
             AnimationLanguageVisitor visitor = new AnimationLanguageVisitor();
             IASTNode? astRoot = visitor.Visit(parseTreeRoot);
 
-            // Instantiate the SymbolTable.
-            SymbolTable symbolTable = new SymbolTable();
+            // Instantiate the ScopedSymbolTable.
+            ScopedSymbolTable scopedSymbolTable = new ScopedSymbolTable();
 
-            // Instantiate the TypeCheckingVisitor using the empty symbol table and traverse the AST.
-            TypeCheckingVisitor typeCheckingVisitor = new TypeCheckingVisitor(symbolTable);
+            // Instantiate the TypeCheckingVisitor to perform type checking on the AST.
+            TypeCheckingVisitor typeCheckingVisitor = new TypeCheckingVisitor(scopedSymbolTable);
             IASTNode? decoratedAstRoot = typeCheckingVisitor.Visit((ProgramNode)astRoot);
 
 
