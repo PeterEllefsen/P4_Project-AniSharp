@@ -11,7 +11,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     private readonly ScopedSymbolTable _symbolTable;
     
     //This is a set of keywords that are predefined in the language. These are not allowed to be used as variable names.
-    private static readonly HashSet<string> PredefinedKeywords = new HashSet<string> { "sceneWidth", "sceneHeight" }; // Add more predefined keywords as needed
+    private static readonly HashSet<string> PredefinedKeywords = new HashSet<string> { "sceneWidth", "sceneHeight", "framerate", "backgroundColor"}; // Add more predefined keywords as needed
 
     public TypeCheckingVisitor(ScopedSymbolTable symbolTable)
     {
@@ -507,8 +507,38 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     public override IASTNode? Visit(ExpressionNode node)
     {
         Console.WriteLine("Type checking expression node");
-        return VisitChildren(node);
+
+        IASTNode? decoratedLeftOperand = null;
+        IASTNode? decoratedRightOperand = null;
+        OperatorNode? decoratedOperatorNode = null;
+
+        if (node.LeftOperand != null)
+        {
+            decoratedLeftOperand = VisitNodeBasedOnExpressionType(node.ExpressionType, node.LeftOperand) ?? throw new InvalidOperationException("Failed to create a decorated left operand node.");
+        }
+
+        if (node.RightOperand != null)
+        {
+            decoratedRightOperand = VisitNodeBasedOnExpressionType(node.ExpressionType, node.RightOperand) ?? throw new InvalidOperationException("Failed to create a decorated right operand node.");
+        }
+
+        if (node.OperatorNode != null)
+        {
+            decoratedOperatorNode = (OperatorNode?)Visit(node.OperatorNode) ?? throw new InvalidOperationException("Failed to create a decorated operator node.");
+        }
+
+        ExpressionNode decoratedExpressionNode = new ExpressionNode(
+            node.ExpressionType,
+            decoratedLeftOperand,
+            decoratedRightOperand,
+            decoratedOperatorNode,
+            node.SourceLocation
+        );
+
+        Console.WriteLine("Type checked expression node");
+        return decoratedExpressionNode;
     }
+
     
     public override IASTNode? Visit(FrameDefNode node)
     {
@@ -706,5 +736,48 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         Console.WriteLine("Type checking VariableDeclaration node");
         return VisitChildren(node);
     }
+    
+    
+    //-----------------Help methods-----------------//
+    private IASTNode? VisitNodeBasedOnExpressionType(ExpressionNodeType expressionType, IASTNode node)
+    {
+        switch (expressionType)
+        {
+            case ExpressionNodeType.Binary:
+            case ExpressionNodeType.Unary:
+            case ExpressionNodeType.Term:
+                return Visit((ExpressionNode)node);
+            case ExpressionNodeType.Literal:
+                if (node is IntegerLiteralNode)
+                {
+                    return Visit((IntegerLiteralNode)node);
+                }
+                else if (node is FloatLiteralNode)
+                {
+                    return Visit((FloatLiteralNode)node);
+                }
+                else if (node is StringLiteralNode)
+                {
+                    return Visit((StringLiteralNode)node);
+                }
+                else if (node is BooleanLiteralNode)
+                {
+                    return Visit((BooleanLiteralNode)node);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Unsupported literal type: {node.GetType().Name}");
+                }
+            case ExpressionNodeType.Identifier:
+                return Visit((IdentifierNode)node);
+            case ExpressionNodeType.FunctionCall:
+                return Visit((FunctionCallNode)node);
+            case ExpressionNodeType.ShapeInit:
+                return Visit((ShapeInitNode)node);
+            default:
+                throw new InvalidOperationException($"Unsupported expression type: {expressionType}");
+        }
+    }
+
 }
 
