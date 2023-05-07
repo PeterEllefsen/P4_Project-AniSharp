@@ -1,7 +1,7 @@
 prototypes {
     group function hejsa(int i, int j);
     int function hej();
-    int function hejsa();
+    int function hejsa2();
     }
 
 

@@ -121,4 +121,18 @@ public class ScopedSymbolTable
         }
         return null;
     }
+    
+    
+    public bool IsDefined(string name) // Does the same as the lookup method, but returns a boolean value
+    {
+        foreach (SymbolTable table in _scopeStack) 
+        {
+            if (table.Lookup(name) != null)
+            {
+                return true; // Return true if the symbol is found in any scope.
+            }
+        }
+        return false;
+    }
+
 }
