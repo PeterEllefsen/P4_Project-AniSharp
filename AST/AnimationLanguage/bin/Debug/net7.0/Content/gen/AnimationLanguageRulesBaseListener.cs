@@ -582,18 +582,6 @@ public partial class AnimationLanguageRulesBaseListener : IAnimationLanguageRule
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitWhile_loop([NotNull] AnimationLanguageRulesParser.While_loopContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.condition"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterCondition([NotNull] AnimationLanguageRulesParser.ConditionContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.condition"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitCondition([NotNull] AnimationLanguageRulesParser.ConditionContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.logicOpp"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

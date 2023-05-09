@@ -8,6 +8,8 @@ public class ExpressionNode : IASTNode
     public SourceLocation SourceLocation { get; set; }
     public NodeType NodeType => NodeType.Expression;
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
+    
+    public TypeNode? Type { get; set; }
 
     public ExpressionNodeType ExpressionType { get; set; } //The type of expression this node represents.
     public IASTNode? LeftOperand { get; set; } //The left operand of the expression. This is an IASTNode because it can be any type of node.

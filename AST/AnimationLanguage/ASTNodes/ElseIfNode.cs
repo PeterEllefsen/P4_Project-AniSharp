@@ -7,10 +7,10 @@ public class ElseIfNode : IASTNode
     public NodeType NodeType => NodeType.ElseIf;
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
 
-    public ConditionNode Condition { get; set; } // Represents the condition that must be met for the else if block to be executed.
+    public ExpressionNode Condition { get; set; } // Represents the condition that must be met for the else if block to be executed.
     public BlockNode ElseIfBlock { get; set; } // Represents the block of code that is executed if the condition is met. This block contains a collection of statements.
 
-    public ElseIfNode(ConditionNode condition, BlockNode elseIfBlock, SourceLocation sourceLocation)
+    public ElseIfNode(ExpressionNode condition, BlockNode elseIfBlock, SourceLocation sourceLocation)
     {
         Condition = condition;
         ElseIfBlock = elseIfBlock;

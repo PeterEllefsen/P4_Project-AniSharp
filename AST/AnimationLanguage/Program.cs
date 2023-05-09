@@ -29,11 +29,11 @@ namespace AnimationLanguage
             ScopedSymbolTable scopedSymbolTable = new ScopedSymbolTable();
 
             // Instantiate the TypeCheckingVisitor to perform type checking on the AST.
-            TypeCheckingVisitor typeCheckingVisitor = new TypeCheckingVisitor(scopedSymbolTable);
-            IASTNode? decoratedAstRoot = typeCheckingVisitor.Visit((ProgramNode)astRoot);
+            //TypeCheckingVisitor typeCheckingVisitor = new TypeCheckingVisitor(scopedSymbolTable);
+            //IASTNode? decoratedAstRoot = typeCheckingVisitor.Visit((ProgramNode)astRoot);
 
 
-            PrintAST(decoratedAstRoot);
+            PrintAST(astRoot);
         }
 
         public static void PrintAST(IASTNode? node, int indentation = 0)

@@ -211,53 +211,61 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This is a custom method that visits an expression context and returns an ExpressionNode. Since it is not present in the parser, it does not need to be overridden.
     public IASTNode VisitExpression(AnimationLanguageRulesParser.ExpressionContext context)
     {
-        //Mby convert this code to a switch??
-        if (context is AnimationLanguageRulesParser.IntegerExpressionContext)
+        if (context is AnimationLanguageRulesParser.IntegerExpressionContext integerExpressionContext)
         {
-            return VisitIntegerExpression((AnimationLanguageRulesParser.IntegerExpressionContext)context); //Visit the IntegerExpressionContext and return the result.
+            return VisitIntegerExpression(integerExpressionContext);
         }
-        else if (context is AnimationLanguageRulesParser.FloatExpressionContext)
+        else if (context is AnimationLanguageRulesParser.FloatExpressionContext floatExpressionContext)
         {
-            return VisitFloatExpression((AnimationLanguageRulesParser.FloatExpressionContext)context); //Visit the FloatExpressionContext and return the result.
+            return VisitFloatExpression(floatExpressionContext);
         }
-        else if (context is AnimationLanguageRulesParser.StringExpressionContext)
+        else if (context is AnimationLanguageRulesParser.StringExpressionContext stringExpressionContext)
         {
-            return VisitStringExpression((AnimationLanguageRulesParser.StringExpressionContext)context); //Visit the BooleanExpressionContext and return the result.
+            return VisitStringExpression(stringExpressionContext);
         }
-        else if (context is AnimationLanguageRulesParser.BooleanExpressionContext)
+        else if (context is AnimationLanguageRulesParser.BooleanExpressionContext booleanExpressionContext)
         {
-            return VisitBooleanExpression((AnimationLanguageRulesParser.BooleanExpressionContext)context); //Visit the BooleanExpressionContext and return the result.
+            return VisitBooleanExpression(booleanExpressionContext);
         }
-        else if (context is AnimationLanguageRulesParser.BinaryExpressionContext)
+        else if (context is AnimationLanguageRulesParser.IdentifierExpressionContext identifierExpressionContext)
         {
-            return VisitBinaryExpression((AnimationLanguageRulesParser.BinaryExpressionContext)context); //Visit the BinaryExpressionContext and return the result.
+            return VisitTerminal(identifierExpressionContext.IDENTIFIER());
         }
-        else if (context is AnimationLanguageRulesParser.IdentifierExpressionContext)
+        else if (context is AnimationLanguageRulesParser.FunctionCallExpressionContext functionCallExpressionContext)
         {
-            ITerminalNode identifierNode = ((AnimationLanguageRulesParser.IdentifierExpressionContext)context).IDENTIFIER(); //Store the IDENTIFIER terminal in a variable.
-            return VisitTerminal(identifierNode); // Call VisitTerminal with the IDENTIFIER terminal
+            return VisitFuncCall(functionCallExpressionContext.funcCall());
         }
-        else if (context is AnimationLanguageRulesParser.FunctionCallExpressionContext)
+        else if (context is AnimationLanguageRulesParser.ShapeInitExpressionContext shapeInitExpressionContext)
         {
-            AnimationLanguageRulesParser.FuncCallContext funcCallContext = ((AnimationLanguageRulesParser.FunctionCallExpressionContext)context).funcCall(); //Store the funcCall context in a variable.
-            return VisitFuncCall(funcCallContext); // Call VisitFuncCall with the funcCall context.
+            return VisitShapeinit(shapeInitExpressionContext.shapeinit());
         }
-        else if (context is AnimationLanguageRulesParser.ShapeInitExpressionContext)
+        else if (context is AnimationLanguageRulesParser.TermExpressionContext termExpressionContext)
         {
-            AnimationLanguageRulesParser.ShapeinitContext shapeInitContext = ((AnimationLanguageRulesParser.ShapeInitExpressionContext)context).shapeinit(); //Store the shapeInit context in a variable.
-            return VisitShapeinit(shapeInitContext); // Call VisitShapeinit with the shapeInit context.
+            return VisitTerm(termExpressionContext.term());
         }
-        else if (context is AnimationLanguageRulesParser.TermExpressionContext)
+        else if (context is AnimationLanguageRulesParser.BinaryExpressionContext binaryExpressionContext)
         {
-            AnimationLanguageRulesParser.TermContext termContext = ((AnimationLanguageRulesParser.TermExpressionContext)context).term(); //Store the term context in a variable.
-            return VisitTerm(termContext); // Call VisitTerm with the term context.
+            IASTNode leftOperand = Visit(binaryExpressionContext.expression(0));
+            IASTNode rightOperand = Visit(binaryExpressionContext.expression(1));
+            OperatorNode operatorNode = (OperatorNode)VisitOperator(binaryExpressionContext.@operator());
+
+            SourceLocation sourceLocation = GetSourceLocation(binaryExpressionContext.Start);
+
+            return new ExpressionNode(
+                ExpressionNodeType.Binary,
+                leftOperand,
+                rightOperand,
+                operatorNode,
+                sourceLocation
+            );
         }
         else
         {
-            // TODO: mby consider the thought of having an EmptyNode node instead of throwing exceptions.
             throw new InvalidOperationException($"Unexpected expression type in VisitExpression at {GetSourceLocation(context.Start)}");
         }
     }
+
+
 
     public override IASTNode VisitIntegerExpression(AnimationLanguageRulesParser.IntegerExpressionContext context)
     {
@@ -601,7 +609,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     public override IASTNode VisitFor_loop(AnimationLanguageRulesParser.For_loopContext context)
     {
         AssignmentNode startExpression = (AssignmentNode)VisitAssignment(context.assignment(0));
-        ConditionNode condition = (ConditionNode)VisitCondition(context.condition());
+        ExpressionNode condition = (ExpressionNode)VisitExpression(context.expression());
         IASTNode endExpression;
 
         if (context.assignment().Length == 2)
@@ -613,14 +621,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             endExpression = (UnaryOperationNode)Visit(context.unaryOperation());
         }
 
-
         BlockNode block = (BlockNode)VisitBlock(context.block());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
         return new ForLoopNode(startExpression, condition, endExpression, block, sourceLocation);
     }
 
-    
+
     public override IASTNode VisitUnaryOperation(AnimationLanguageRulesParser.UnaryOperationContext context)
     {
         UnaryOperator unaryOperator = GetUnaryOperator(context.unary());
@@ -641,27 +648,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method in run when a while loop is met in the code.
     public override IASTNode VisitWhile_loop(AnimationLanguageRulesParser.While_loopContext context)
     {
-        ConditionNode condition = (ConditionNode)VisitCondition(context.condition()); //Visit the condition of the while loop.
-        BlockNode body = (BlockNode)VisitBlock(context.block()); //Visit the block of the while loop.
-        SourceLocation sourceLocation = GetSourceLocation(context.Start); 
+        ExpressionNode condition = (ExpressionNode)Visit(context.expression());
+        BlockNode body = (BlockNode)VisitBlock(context.block());
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
         return new WhileLoopNode(condition, body, sourceLocation);
     }
-
-
     
-    //he VisitCondition method is used when a condition is met in the code. 
-    public override IASTNode VisitCondition(AnimationLanguageRulesParser.ConditionContext context)
-    {
-        IASTNode leftExpression = Visit(context.expression(0));
-        IASTNode rightExpression = Visit(context.expression(1));
-        OperatorNode? comparisonOperator = context.comparator().Length > 0 ? (OperatorNode)Visit(context.comparator(0)) : null; //Visit the comparator of the condition if it exists. (0)) : null means that if there is no comparator, it will be null.
-        OperatorNode? logicalOperator = context.logicOpp().Length > 0 ? (OperatorNode)Visit(context.logicOpp(0)) : null; //Visit the logical operator of the condition if it exists. (0)) : null means that if there is no logical operator, it will be null.
-
-        SourceLocation sourceLocation = GetSourceLocation(context.Start);
-        
-        return new ConditionNode(leftExpression, rightExpression, comparisonOperator, logicalOperator, sourceLocation);
-    }
 
     
     //Visits the comparator operator of a condition eg: '==', '<='.
@@ -691,7 +684,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a conditional is encountered in the code.
     public override IASTNode VisitConditional(AnimationLanguageRulesParser.ConditionalContext context)
     {
-        ConditionNode condition = (ConditionNode)Visit(context.condition()); // Change the type here
+        ExpressionNode condition = (ExpressionNode)VisitExpression(context.expression());
         BlockNode ifBlock = (BlockNode)VisitBlock(context.block());
 
         IList<ElseIfNode> elseIfBranches = new List<ElseIfNode>();
@@ -701,7 +694,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         }
 
         ElseNode? elseBranch = null;
-        if (context.@else() != null) 
+        if (context.@else() != null)
         {
             elseBranch = (ElseNode)VisitElse(context.@else());
         }
@@ -713,12 +706,13 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
 
 
+
     //This method is called when an else if branch is encountered in the code.
     public override IASTNode VisitElseif(AnimationLanguageRulesParser.ElseifContext context)
     {
-        ConditionNode condition = (ConditionNode)Visit(context.condition()); //Visit the condition of the else if branch.
-        BlockNode block = (BlockNode)VisitBlock(context.block()); //Visit the block of the else if branch.
-        SourceLocation sourceLocation = GetSourceLocation(context.Start); 
+        ExpressionNode condition = (ExpressionNode)VisitExpression(context.expression());
+        BlockNode block = (BlockNode)VisitBlock(context.block());
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
         return new ElseIfNode(condition, block, sourceLocation);
     }

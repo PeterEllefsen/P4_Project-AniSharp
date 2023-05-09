@@ -489,16 +489,6 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitWhile_loop([NotNull] AnimationLanguageRulesParser.While_loopContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.condition"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterCondition([NotNull] AnimationLanguageRulesParser.ConditionContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.condition"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitCondition([NotNull] AnimationLanguageRulesParser.ConditionContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.logicOpp"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

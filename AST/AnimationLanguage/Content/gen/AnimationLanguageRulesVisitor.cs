@@ -305,12 +305,6 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitWhile_loop([NotNull] AnimationLanguageRulesParser.While_loopContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.condition"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitCondition([NotNull] AnimationLanguageRulesParser.ConditionContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.logicOpp"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

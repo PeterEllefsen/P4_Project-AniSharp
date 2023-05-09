@@ -53,7 +53,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         }
     }
 
-    Console.WriteLine("Type checked program node");
+    Console.WriteLine("Type checked program node: ");
     return new ProgramNode(decoratedPrototypes, decoratedSetup, decoratedFunctionDeclarations, decoratedSequences, decoratedTimeline, node.SourceLocation);
 }
 
@@ -70,7 +70,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         // Create a decorated SetupNode with the decorated GroupingElementsNode and set its SourceLocation.
         SetupNode decoratedSetupNode = new SetupNode(decoratedGroupingElements, node.SourceLocation);
 
-        Console.WriteLine("Type checked setup node");
+        Console.WriteLine("Type checked setup node: " + decoratedSetupNode);
         return decoratedSetupNode;
     }
 
@@ -164,50 +164,45 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     public override IASTNode? Visit(AssignmentNode node)
     {
         Console.WriteLine("Type checking assignment node:");
-        Console.WriteLine("test");
+        foreach (var child in node.Children)
+        {
+            Console.WriteLine("Child node should be of type: " + child);
+        }
         IdentifierNode identifierNode = node.Identifier;
         ExpressionNode expression = node.Expression;
         string variableName = identifierNode.Name;
-    
+        Console.WriteLine("Nodetype: " + node.NodeType);
+
         // Retrieve type information from the expression node.
-        string expressionType = expression.NodeType.ToString(); // Assuming you've added a 'Type' property to the ExpressionNode class.
+        string expressionType = expression.Type?.ToString() ?? "Unknown";
         Console.WriteLine("Identifier: " + variableName + " Expression type: " + expressionType);
-        // If the assignment node has a type, verify that it matches the expression type.
-        if (node.NodeType != null)
-        {
-            if (node.NodeType.ToString() != expressionType)
-            {
-                throw new InvalidOperationException($"Type mismatch: Cannot assign {expressionType} to {node.NodeType.ToString()} for variable '{variableName}'.");
-            }
-        }
-        else
-        {
-            throw new ArgumentNullException($"Type of variable '{variableName}' is null.");
-        }
 
-        // Check if the variable is already in the symbol table.
+        // Retrieve the variable type from the symbol table.
         Symbol? existingSymbol = _symbolTable.Lookup(variableName);
+        string variableType = existingSymbol?.Type ?? "Unknown";
 
-        if (existingSymbol != null)
+        // If the variable doesn't exist in the symbol table, add it with the expression type.
+        if (existingSymbol == null)
         {
-            if (existingSymbol.Type != node.NodeType.ToString())
-            {
-                throw new InvalidOperationException($"Type mismatch: Cannot assign {node.NodeType.ToString()} to existing variable '{variableName}' of type {existingSymbol.Type}.");
-            }
-        }
-        else
-        {
-            // If the variable is not in the symbol table, add it.
-            _symbolTable.AddVariable(variableName, node.NodeType.ToString());
+            _symbolTable.AddVariable(variableName, expressionType);
+            variableType = expressionType;
         }
 
-        Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{node.NodeType.ToString()}', ExpressionType='{expressionType}'");
+        // Check if the variable type matches the expression type.
+        if (variableType != "Unknown" && expressionType != "Unknown" && variableType != expressionType)
+        {
+            throw new InvalidOperationException($"Type mismatch: Cannot assign {expressionType} to {variableType} for variable '{variableName}'.");
+        }
 
-        return VisitChildren(node);
+        Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{variableType}', ExpressionType='{expressionType}'");
+
+        // Return a decorated AssignmentNode
+        AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, expression, node.SourceLocation);
+        return decoratedAssignmentNode;
     }
 
-    
-    
+
+
     public override IASTNode? Visit(OperatorNode node)
     {
         Console.WriteLine("Type checking operator node");
@@ -260,7 +255,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         Console.WriteLine("Type checking function declaration node");
 
         // Visit ReturnType and Identifier nodes.
-        TypeNode decoratedReturnType = (TypeNode?)Visit(node.ReturnType) ?? throw new InvalidOperationException("Failed to create a decorated return type node.");
+        TypeNode decoratedReturnType = (TypeNode?)Visit(node.ReturnType) ?? throw new InvalidOperationException("Fail in node: " + node.Identifier +". Failed to create a decorated return type node.");
         IdentifierNode decoratedIdentifier = (IdentifierNode?)Visit(node.Identifier) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
 
         // Visit Parameter nodes and create a list of decorated parameters.
@@ -293,19 +288,33 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
         foreach (IASTNode argument in node.Arguments)
         {
-            if (argument is ArgumentNode argumentNode) // Change this to integernode and floatnode and so on
+            IASTNode? decoratedArgument;
+
+            switch (argument)
             {
-                IASTNode? decoratedArgument = Visit(argumentNode);
-                if (decoratedArgument == null)
-                {
-                    throw new InvalidOperationException($"Failed to create a decorated argument node for argument: {argument}");
-                }
-                decoratedArguments.Add(decoratedArgument);
+                case ArgumentNode argumentNode:
+                    decoratedArgument = Visit(argumentNode);
+                    break;
+                case IntegerLiteralNode integerNode:
+                    decoratedArgument = Visit(integerNode);
+                    break;
+                case FloatLiteralNode floatNode:
+                    decoratedArgument = Visit(floatNode);
+                    break;
+                case IdentifierNode identifierNode:
+                    decoratedArgument = Visit(identifierNode);
+                    break;
+
+                // Add more cases here for other types of nodes that can be used as arguments.
+                default:
+                    throw new InvalidOperationException($"Invalid argument type: {argument.GetType().Name}. Expected a valid argument type.");
             }
-            else
+
+            if (decoratedArgument == null)
             {
-                throw new InvalidOperationException($"Invalid argument type: {argument.GetType().Name}. Expected: ArgumentNode");
+                throw new InvalidOperationException($"Failed to create a decorated argument node for argument: {argument}");
             }
+            decoratedArguments.Add(decoratedArgument);
         }
 
         // Use the GetFunctionReturnType method to get the return type of the function call.
@@ -315,8 +324,10 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         FunctionCallNode decoratedFunctionCallNode = new FunctionCallNode(node.FunctionIdentifier, decoratedArguments, node.SourceLocation);
         decoratedFunctionCallNode.Type = typeNode;
 
+        Console.WriteLine("HERE IS THE RETURN TYPE OF FUNCTION CALL: " + decoratedFunctionCallNode.FunctionIdentifier.ToString() + " " + decoratedFunctionCallNode.Type);
         return decoratedFunctionCallNode;
     }
+
 
 
 
@@ -584,9 +595,13 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(IntegerLiteralNode node)
     {
-        Console.WriteLine("Type checking integer literal node");
-        return VisitChildren(node);
+        TypeNode typeNode = new TypeNode(TypeNode.TypeKind.Int, node.SourceLocation);
+        IntegerLiteralNode decoratedNode = new IntegerLiteralNode(node.Value, node.SourceLocation);
+        decoratedNode.Type = typeNode;
+        Console.WriteLine("TESTING SOS: " + decoratedNode.Type);
+        return decoratedNode;
     }
+
     
     public override IASTNode? Visit(FloatLiteralNode node)
     {
@@ -749,9 +764,11 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     
     public override IASTNode? Visit(TypeNode node)
     {
-        Console.WriteLine("Type checking Type node");
-        return VisitChildren(node);
+        Console.WriteLine("TYPE NODE: " + node.GetType());
+        //TypeNode does not have any children, so it can just be returned as is
+        return node;
     }
+
     
     public override IASTNode? Visit(UnaryOperationNode node)
     {
@@ -806,20 +823,8 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
                 throw new InvalidOperationException($"Unsupported expression type: {expressionType}");
         }
     }
-    
-    
-    private TypeNode.TypeKind GetFunctionReturnType(IdentifierNode functionIdentifier)
-    {
-        Symbol? symbol = _symbolTable.Lookup(functionIdentifier.Name);
-        if (symbol == null)
-        {
-            throw new InvalidOperationException($"Function '{functionIdentifier.Name}' is not defined.");
-        }
 
-        return ConvertStringTypeToTypeKind(symbol.Type);
-    }
-    
-    
+
     private TypeNode.TypeKind ConvertStringTypeToTypeKind(string type)
     {
         type = type.ToLower();
@@ -855,7 +860,44 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
         return typeKind;
     }
+    
+    
+    // This method is used to get the return type of a function that is called.
+    private TypeNode.TypeKind GetFunctionReturnType(IdentifierNode functionIdentifier)
+    {
+        // First, check if the function is a built-in function
+        TypeNode.TypeKind? builtInFunctionType = GetBuiltInFunctionReturnType(functionIdentifier.Name);
+        if (builtInFunctionType.HasValue)
+        {
+            return builtInFunctionType.Value;
+        }
 
+        // If not a built-in function, look it up in the symbol table
+        Symbol? symbol = _symbolTable.Lookup(functionIdentifier.Name);
+        if (symbol == null)
+        {
+            throw new InvalidOperationException($"Function '{functionIdentifier.Name}' is not defined.");
+        }
+
+        return ConvertStringTypeToTypeKind(symbol.Type);
+    }
+    
+    
+    //This method is used for returning the type of the built-in functions
+    private TypeNode.TypeKind? GetBuiltInFunctionReturnType(string functionName)
+    {
+        switch (functionName)
+        {
+            case "rgb":
+                return TypeNode.TypeKind.String;
+            case "MoveTo":
+                return TypeNode.TypeKind.String;
+            case "repeat":
+                return TypeNode.TypeKind.Int;
+            default:
+                return null; // Not a built-in function
+        }
+    }
 
 }
 

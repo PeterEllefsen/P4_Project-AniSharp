@@ -16,8 +16,16 @@ setup [
 
 
 int function hejsa(){
+    int i = 1;
+    if (i < 2){
+        i = 1;
+    }
+    else if(2 and i){
+        i = 3;
+    }
+
     int hej = 5;
-    for(int i = 1; i < 3; i-= 1){
+    for(int i = 1; i or 3; i-= 1){
         i = 5;
     }
     return 2;

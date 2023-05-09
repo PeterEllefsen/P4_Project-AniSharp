@@ -127,7 +127,7 @@ expression: MINUS? INTEGER                          #integerExpression
 
 boolean: TRUE | FALSE;
 
-operator: PLUS | MINUS | MULTIPLY | DIVIDE | MODULO;
+operator: PLUS | MINUS | MULTIPLY | DIVIDE | MODULO | comparator | logicOpp;
 
 funcCall: IDENTIFIER LPAREN funcArgs? RPAREN;
 
@@ -175,19 +175,17 @@ return: RETURN expression SEMICOLON
 
 loop: for_loop | while_loop;
 
-for_loop: FOR LPAREN assignment SEMICOLON condition SEMICOLON (assignment | unaryOperation) RPAREN block;
+for_loop: FOR LPAREN assignment SEMICOLON expression SEMICOLON (assignment | unaryOperation) RPAREN block;
 
-while_loop: WHILE LPAREN condition RPAREN block;
-
-condition: expression (comparator | logicOpp) expression ((comparator | logicOpp) expression)*  ;
+while_loop: WHILE LPAREN expression RPAREN block;
 
 logicOpp: AND | OR;
 
 comparator: LT | GT | LE | GE | EQ | NE;
 
-conditional: IF LPAREN condition RPAREN block (elseif)* (else)?;
+conditional: IF LPAREN expression RPAREN block (elseif)* (else)?;
 
-elseif: ELSE IF LPAREN condition RPAREN block;
+elseif: ELSE IF LPAREN expression RPAREN block;
 
 else: ELSE block;
 
