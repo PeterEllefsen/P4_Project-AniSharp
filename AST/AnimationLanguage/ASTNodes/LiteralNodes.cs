@@ -5,6 +5,7 @@ using ASTCommon;
 public class IntegerLiteralNode : ExpressionNode
 {
     public int Value { get; }
+    private TypeNode _typeNode;
 
     public IntegerLiteralNode(int value, SourceLocation sourceLocation)
         : base(
@@ -15,19 +16,26 @@ public class IntegerLiteralNode : ExpressionNode
             sourceLocation)
     {
         Value = value;
+        _typeNode = new TypeNode(TypeNode.TypeKind.Int, sourceLocation);
     }
-    
+
+    public new TypeNode? Type
+    {
+        get => _typeNode;
+        set => _typeNode = value ?? throw new ArgumentNullException(nameof(value), "Type cannot be null.");
+    }
+
     public override string ToString()
     {
         return $"IntegerLiteralNode: {Value}";
     }
-    
-    
+
     public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);
     }
 }
+
 
 
 
