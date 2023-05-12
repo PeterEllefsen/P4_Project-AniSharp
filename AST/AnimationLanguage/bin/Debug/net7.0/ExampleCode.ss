@@ -17,6 +17,8 @@ setup [
 
 int function hejsa(){
     int i = 1;
+    float j = 2;
+    i = j;
     if (i < 2){
         i = 1;
     }
@@ -46,10 +48,7 @@ seq CarDrivingOnScreen() {
 
   cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
   
-  car[
-        carTop1, 
-        carTop2, 
-        carTop3, 
+  car[ 
         circle1wheel, 
         circle1wheelinner, 
         circle2wheel, 

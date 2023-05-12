@@ -35,8 +35,9 @@ public class TypeNode : IASTNode
     
     public override string ToString()
     {
-        return $"TypeNode: {Kind}";
+        return Kind.ToString();
     }
+
     
     
     public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode

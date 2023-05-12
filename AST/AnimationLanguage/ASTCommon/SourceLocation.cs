@@ -5,6 +5,8 @@ public struct SourceLocation
 {
     public int Line { get; set; } //What line the node is on
     public int Column { get; set; } //What column the node is on
+    public static SourceLocation None { get; } = new SourceLocation(0, 0);
+
     
     public SourceLocation(int line, int column)
     {

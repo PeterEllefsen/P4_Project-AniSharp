@@ -168,46 +168,91 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     string variableName = identifierNode.Name;
     string variableType;
 
-    // Set the Value property of the ExpressionNode before calling Visit
-    if (node.Expression.ExpressionType == ExpressionNodeType.Literal)
+    // Check if the expression is an Identifier
+    if (node.Expression.ExpressionType == ExpressionNodeType.Identifier)
     {
-        node.Expression.Value = node.Expression;
+        IdentifierNode rightIdentifierNode = (IdentifierNode)node.Expression;
+        string rightVariableName = rightIdentifierNode.Name;
+
+        // Lookup the symbols for the left and right identifiers
+        Symbol? leftSymbol = _symbolTable.Lookup(variableName);
+        Symbol? rightSymbol = _symbolTable.Lookup(rightVariableName);
+
+        Console.WriteLine("RIGHT VARIABLE NAME: " + rightVariableName);
+
+        if (leftSymbol == null || rightSymbol == null)
+        {
+            throw new InvalidOperationException($"Undefined variable(s) in assignment: '{variableName}' or '{rightVariableName}'.");
+        }
+
+        // Check if the types match
+        if (leftSymbol.Type != rightSymbol.Type)
+        {
+            throw new InvalidOperationException($"Type mismatch: Cannot assign {rightSymbol.Type} to {leftSymbol.Type} for variable '{variableName}'.");
+        }
+
+        variableType = leftSymbol.Type;
+
+        Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{variableType}', ExpressionType='{rightSymbol.Type}'");
+
+        // Return a decorated AssignmentNode
+        AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, rightIdentifierNode, node.SourceLocation);
+        return decoratedAssignmentNode;
     }
     else
     {
-        node.Expression.Value = node.Expression.RightOperand;
-    }
+        // Set the Value property of the ExpressionNode before calling Visit
+        if (node.Expression.ExpressionType == ExpressionNodeType.Literal)
+        {
+            node.Expression.Value = node.Expression;
+        }
+        else
+        {
+            node.Expression.Value = node.Expression.RightOperand;
+        }
 
-    // Visit the ExpressionNode to ensure its decorated correctly
-    ExpressionNode expression = (ExpressionNode?)Visit(node.Expression) ?? throw new InvalidOperationException("Failed to create a decorated expression node.");
-    string expressionType = expression.Type?.ToString() ?? "Unknown";
-    
-    Symbol? existingSymbol = _symbolTable.Lookup(variableName);
-    if (existingSymbol != null)
-    {
-        Console.WriteLine("THIS IS THE SYMBOL: " + existingSymbol.Name);
-        variableType = existingSymbol.Type;
-    }
-    else
-    {
-        Console.WriteLine("SYMBOL IS NULL");
-        _symbolTable.AddVariable(variableName, expressionType); //Add the symbol to the symbol table with the type of the expression if it is not null. Otherwise the type is unknown.
-        variableType = expressionType;
-        Console.WriteLine("New Symbol added to symbol table: " + node.Identifier.Name + " with type: " + expression.Type);
-    }
-    
-    // Check if the variable type matches the expression type.
-    if (variableType != "Unknown" && expressionType != "Unknown" && variableType != expressionType)
-    {
-        throw new InvalidOperationException($"Type mismatch: Cannot assign {expressionType} to {variableType} for variable '{variableName}'.");
-    }
+        // Visit the ExpressionNode to ensure its decorated correctly
+        ExpressionNode expression = (ExpressionNode?)Visit(node.Expression) ?? throw new InvalidOperationException("Failed to create a decorated expression node.");
+        string expressionType = expression.Type?.ToString() ?? "Unknown";
 
-    Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{variableType}', ExpressionType='{expressionType}'");
+        Symbol? existingSymbol = _symbolTable.Lookup(variableName);
+        if (existingSymbol != null)
+        {
+            Console.WriteLine("THIS IS THE SYMBOL: " + existingSymbol.Name);
+            variableType = existingSymbol.Type;
+        }
+        else
+        {
+            Console.WriteLine("SYMBOL IS NULL");
+            _symbolTable.AddVariable(variableName, expressionType); //Add the symbol to the symbol table with the type of the expression if it is not null. Otherwise the type is unknown.
+            variableType = expressionType;
+            Console.WriteLine("New Symbol added to symbol table: " + node.Identifier.Name + " with type: " + expression.Type);
+        }
 
-    // Return a decorated AssignmentNode
-    AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, expression, node.SourceLocation);
-    return decoratedAssignmentNode;
+        // Check if the variable type matches the expression type.
+        if (variableType != null && expressionType != null && !variableType.Equals(expressionType))
+        {
+            Console.WriteLine($"Error in assignment: variableName = {variableName}, variableType = {variableType}, expressionType = {expressionType}");
+            throw new InvalidOperationException($"Type mismatch: Cannot assign {expressionType} to {variableType} for variable '{variableName}'.");
+        }
+
+
+
+        Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{variableType}', ExpressionType='{expressionType}'");
+
+        // Return a decorated AssignmentNode
+        AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, expression, node.SourceLocation);
+        return decoratedAssignmentNode;
+    }
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -215,16 +260,35 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     public override IASTNode? Visit(OperatorNode node)
     {
         Console.WriteLine("Type checking operator node");
-        return VisitChildren(node);
+        return node;
     }
-    
-    
+
     
     public override IASTNode? Visit(IdentifierGroupingNode node)
     {
         Console.WriteLine("Type checking identifier grouping node");
-        return VisitChildren(node);
+
+        // If the identifier already exists in the symbol table, throw an error
+        if (_symbolTable.IsDefined(node.Identifier.Name))
+        {
+            throw new InvalidOperationException($"Identifier '{node.Identifier.Name}' already exists at {node.SourceLocation}");
+        }
+
+        // Visit the grouping elements and create a decorated grouping elements node
+        GroupingElementsNode decoratedGroupingElements = (GroupingElementsNode)Visit(node.GroupingElements)
+                                                         ?? throw new InvalidOperationException("Failed to create a decorated grouping elements node.");
+
+        // Create a decorated identifier grouping node with type information
+        IdentifierGroupingNode decoratedNode = new IdentifierGroupingNode(node.Identifier, decoratedGroupingElements, node.SourceLocation);
+
+        // Add the identifier to the symbol table with the appropriate type and values
+        _symbolTable.AddVariable(node.Identifier.Name, "Group", decoratedNode);
+
+        Console.WriteLine("Type checked identifier grouping node");
+        return decoratedNode;
     }
+
+
     
     
     
@@ -418,9 +482,9 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         {
             decoratedNode = Visit(node.IfStatement);
         }
-        else if (node.ForStatement != null)
+        else if (node.ForStatement != null || node is ForLoopNode)
         {
-            decoratedNode = Visit(node.ForStatement);
+            decoratedNode = Visit((ForLoopNode)node);
         }
         else if (node.WhileStatement != null)
         {
@@ -430,16 +494,18 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         {
             decoratedNode = Visit(node.ReturnStatement);
         }
-        // Add a branch for IfStatementNode
         else if (node is IfStatementNode ifStatementNode)
         {
             decoratedNode = Visit(ifStatementNode);
+        }
+        else if (node is IdentifierGroupingNode identifierGroupingNode)
+        {
+            decoratedNode = Visit(identifierGroupingNode);
         }
         else
         {
             throw new InvalidOperationException($"Unrecognized statement at {node.SourceLocation}");
         }
-
         if (decoratedNode == null)
         {
             throw new InvalidOperationException("Failed to create a decorated statement node.");
@@ -448,6 +514,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         Console.WriteLine("Type checked statement node");
         return decoratedNode;
     }
+
 
     
     
@@ -490,8 +557,21 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     public override IASTNode? Visit(ElseIfNode node)
     {
         Console.WriteLine("Type checking else if node");
-        return VisitChildren(node);
+        Console.WriteLine("Condition " + node.Condition);
+
+        // Type check the condition
+        ExpressionNode decoratedCondition = (ExpressionNode?)Visit(node.Condition) ?? throw new InvalidOperationException("Failed to create a decorated condition.");
+
+        // Type check the else if block
+        BlockNode decoratedElseIfBlock = (BlockNode?)Visit(node.ElseIfBlock) ?? throw new InvalidOperationException("Failed to create a decorated else if block.");
+
+        // Create a new decorated ElseIfNode with the type checked condition and else if block
+        ElseIfNode decoratedElseIfNode = new ElseIfNode(decoratedCondition, decoratedElseIfBlock, node.SourceLocation);
+
+        Console.WriteLine("Type checked else if node");
+        return decoratedElseIfNode;
     }
+
     
     public override IASTNode? Visit(ElseNode node)
     {
@@ -505,11 +585,26 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         return VisitChildren(node);
     }
     
-    public override IASTNode? Visit(ForLoopNode node)
+    public override IASTNode Visit(ForLoopNode node)
     {
         Console.WriteLine("Type checking for loop node");
-        return VisitChildren(node);
+
+        // Perform type checking and other operations on the ForLoopNode's properties
+        // For example:
+        Visit((AssignmentNode)node.Initialization);
+        Visit((ExpressionNode)node.Condition);
+        Visit((AssignmentNode)node.Update);
+
+
+
+        _symbolTable.EnterScope(); // Enter new scope
+        Visit(node.Body);
+        _symbolTable.ExitScope();
+
+        Console.WriteLine("Type checked for loop node");
+        return node;
     }
+
     
     
     
@@ -588,6 +683,8 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     
     public override IASTNode? Visit(ExpressionNode node)
     {
+        Console.WriteLine("NOW VISITING EXPRESSION: " + node);
+        Console.WriteLine("Node type is: " + node.Value);
         if (node.ExpressionType == ExpressionNodeType.Literal && node.Value != null)
         {
             Console.WriteLine("THIS IS THE EXPRESSION TYPE " + node.ExpressionType);
@@ -613,11 +710,53 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
             {
                 decoratedLiteralExpressionNode.Type = floatNode.Type;
             }
-            // Add more conditions here for other types of literal nodes with a Type property
+            else if (decoratedValueNode is StringLiteralNode stringLiteralNode)
+            {
+                decoratedLiteralExpressionNode.Type = stringLiteralNode.Type;
+            }
+            else if (decoratedValueNode is BooleanLiteralNode boolNode)
+            {
+                decoratedLiteralExpressionNode.Type = boolNode.Type;
+            }
 
             Console.WriteLine("Type checked expression node");
             return decoratedLiteralExpressionNode;
         }
+
+        if (node.ExpressionType == ExpressionNodeType.Identifier)
+        {
+            if (node is IdentifierNode identifierNode)
+            {
+                string variableName = identifierNode.Name;
+                Symbol? symbol = _symbolTable.Lookup(variableName);
+                if (symbol == null)
+                {
+                    throw new InvalidOperationException($"Undefined variable '{variableName}' used in expression.");
+                }
+                
+                ExpressionNode decoratedIdentifierExpressionNode = new ExpressionNode(
+                    node.ExpressionType,
+                    null, // LeftOperand
+                    null, // RightOperand
+                    null, // OperatorNode
+                    node.SourceLocation
+                )
+                {
+                    Value = symbol.Value,
+                };
+
+                decoratedIdentifierExpressionNode.Type = new TypeNode(GetTypeKindFromString(symbol.Type), node.SourceLocation);
+                Console.WriteLine("decoratedIdentifierExpressionNode type is: " + decoratedIdentifierExpressionNode.Type);
+                Console.WriteLine("Type checked expression node");
+                return decoratedIdentifierExpressionNode;
+            }
+            else
+            {
+                throw new InvalidOperationException("Invalid node type for identifier expression.");
+            }
+        }
+
+
 
         IASTNode? decoratedLeftOperand = null;
         IASTNode? decoratedRightOperand = null;
@@ -682,20 +821,29 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     
     public override IASTNode? Visit(FloatLiteralNode node)
     {
-        Console.WriteLine("Type checking float literal node");
-        return VisitChildren(node);
+        Console.WriteLine("Type checking float literal node with value " + node.Value);
+        TypeNode typeNode = new TypeNode(TypeNode.TypeKind.Float, node.SourceLocation);
+        FloatLiteralNode decoratedNode = new FloatLiteralNode(node.Value, node.SourceLocation);
+        decoratedNode.Type = typeNode;
+        return decoratedNode;
     }
     
     public override IASTNode? Visit(StringLiteralNode node)
     {
         Console.WriteLine("Type checking string literal node");
-        return VisitChildren(node);
+        TypeNode typeNode = new TypeNode(TypeNode.TypeKind.String, node.SourceLocation);
+        StringLiteralNode decoratedNode = new StringLiteralNode(node.Value, node.SourceLocation);
+        decoratedNode.Type = typeNode;
+        return decoratedNode;
     }
     
     public override IASTNode? Visit(BooleanLiteralNode node)
     {
         Console.WriteLine("Type checking boolean literal node");
-        return VisitChildren(node);
+        TypeNode typeNode = new TypeNode(TypeNode.TypeKind.Bool, node.SourceLocation);
+        BooleanLiteralNode decoratedNode = new BooleanLiteralNode(node.Value, node.SourceLocation);
+        decoratedNode.Type = typeNode;
+        return decoratedNode;
     }
     
     
@@ -769,7 +917,10 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         Console.WriteLine("Type checking sequence node");
 
         // Visit Identifier node.
-        IdentifierNode decoratedName = (IdentifierNode?)Visit(node.Name) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
+        IdentifierNode decoratedName = node.Name;
+        
+        // Add the sequence identifier to the symbol table before entering the sequence scope
+        _symbolTable.AddSequence(decoratedName.Name);
 
         // Visit Parameter nodes and create a list of decorated parameters.
         List<ParameterNode> decoratedParameters = new List<ParameterNode>();
@@ -793,6 +944,33 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         Console.WriteLine("Type checked sequence node");
         return decoratedSequenceNode;
     }
+
+    
+    
+    public override IASTNode? Visit(ShapeInitNode node)
+    {
+        Console.WriteLine("Type checking shape initialization node");
+
+        // Visit the arguments and create decorated arguments
+        Dictionary<string, IASTNode> decoratedArguments = new Dictionary<string, IASTNode>();
+        foreach (KeyValuePair<string, IASTNode> arg in node.Arguments)
+        {
+            IASTNode decoratedArgValue;
+
+            // Call VisitNodeBasedOnExpressionType method with the expression type of arg.Value
+            decoratedArgValue = VisitNodeBasedOnExpressionType(((ExpressionNode)arg.Value).ExpressionType, arg.Value) ?? throw new InvalidOperationException($"Failed to create a decorated argument value for '{arg.Key}'.");
+
+            decoratedArguments.Add(arg.Key, decoratedArgValue);
+        }
+
+        // Create a decorated shape initialization node with the same shape type and decorated arguments
+        ShapeInitNode decoratedNode = new ShapeInitNode(node.ShapeType, decoratedArguments, node.SourceLocation);
+
+        Console.WriteLine("Type checked shape initialization node");
+        return decoratedNode;
+    }
+
+
 
     
     public override IASTNode? Visit(PolygonNode node)
@@ -976,6 +1154,40 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
                 return null; // Not a built-in function
         }
     }
+    
+    private TypeNode.TypeKind GetTypeKindFromString(string type)
+    {
+        // Extract the type name from the string representation of the TypeNode
+        string[] typeParts = type.ToLower().Split();
+
+        // If the string does not contain a space character, use the first element directly
+        string typeName = typeParts.Length > 1 ? typeParts[1] : typeParts[0];
+
+        return typeName switch
+        {
+            "int" => TypeNode.TypeKind.Int,
+            "float" => TypeNode.TypeKind.Float,
+            "bool" => TypeNode.TypeKind.Bool,
+            "string" => TypeNode.TypeKind.String,
+            "Circle" => TypeNode.TypeKind.Circle,
+            "Polygon" => TypeNode.TypeKind.Polygon,
+            _ => throw new InvalidOperationException($"Unknown type '{typeName}'."),
+        };
+    }
+
+
+    private Symbol? GetSymbolFromIdentifierNode(IdentifierNode identifierNode)
+    {
+        string variableName = identifierNode.Name;
+        Symbol? symbol = _symbolTable.Lookup(variableName);
+        if (symbol == null)
+        {
+            throw new InvalidOperationException($"Undefined variable '{variableName}' used in expression.");
+        }
+
+        return symbol;
+    }
+
 
 }
 

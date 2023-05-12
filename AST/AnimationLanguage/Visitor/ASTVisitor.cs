@@ -36,6 +36,7 @@ public abstract class ASTVisitor<T> where T : IASTNode
     public abstract T? Visit(SequenceCallNode node);
     public abstract T? Visit(SequenceNode node);
     public abstract T? Visit(SetupNode node);
+    public abstract T? Visit(ShapeInitNode node);
     public abstract T? Visit(PolygonNode node);
     public abstract T? Visit(CircleNode node);
     public abstract T? Visit(StatementNode node);

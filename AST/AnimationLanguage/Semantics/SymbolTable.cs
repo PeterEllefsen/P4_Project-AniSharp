@@ -1,4 +1,5 @@
-﻿using AnimationLanguage.ASTNodes;
+﻿using AnimationLanguage.ASTCommon;
+using AnimationLanguage.ASTNodes;
 namespace AnimationLanguage.Visitor;
 
 //The symbol class represents a variable or function in the symbol table.
@@ -6,13 +7,16 @@ public class Symbol
 {
     public string Name { get; } // The name of the symbol.
     public string Type { get; } // The type of the symbol.
+    public IASTNode? Value { get; set; } // The value of the symbol, if any.
 
-    public Symbol(string name, string type)
+    public Symbol(string name, string type, IASTNode? value = null)
     {
         Name = name;
         Type = type;
+        Value = value;
     }
 }
+
 
 //The symbol table class represents a symbol table. It is used to store variables, functions, prototypes and sequences.
 //A symbol table is used to check for duplicate declarations and to check if a variable or function exists.
@@ -20,15 +24,16 @@ public class SymbolTable
 {
     private readonly Dictionary<string, Symbol> symbols = new Dictionary<string, Symbol>(); // The dictionary that stores the symbols.
 
-    public void AddVariable(string name, string type) // This method adds a variable to the symbol table.
+    public void AddVariable(string name, string type, IASTNode? value = null) // This method adds a variable to the symbol table.
     {
         if (symbols.ContainsKey(name)) // Check if the variable already exists.
         {
             throw new InvalidOperationException($"Variable '{name}' already exists.");
         }
 
-        symbols[name] = new Symbol(name, type); // Add the variable to the symbol table by using the name as the key and a new symbol as the value.
+        symbols[name] = new Symbol(name, type, value); // Add the variable to the symbol table by using the name as the key and a new symbol as the value.
     }
+
 
     public void AddFunction(string name, string returnType) // This method adds a function to tthe symbol table
     {
@@ -89,9 +94,9 @@ public class ScopedSymbolTable
         _scopeStack.Pop();
     }
 
-    public void AddVariable(string name, string type) // This method adds a variable to the scope in the top of the stack
+    public void AddVariable(string name, string type, IASTNode? value = null) // This method adds a variable to the scope in the top of the stack
     {
-        _scopeStack.Peek().AddVariable(name, type);
+        _scopeStack.Peek().AddVariable(name, type, value);
     }
 
     public void AddFunction(string name, string returnType) // This method adds a function to the scope in the top of the stack.
