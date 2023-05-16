@@ -233,6 +233,18 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitBooleanExpression([NotNull] AnimationLanguageRulesParser.BooleanExpressionContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>parenthesizedExpressionExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterParenthesizedExpressionExpression([NotNull] AnimationLanguageRulesParser.ParenthesizedExpressionExpressionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>parenthesizedExpressionExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitParenthesizedExpressionExpression([NotNull] AnimationLanguageRulesParser.ParenthesizedExpressionExpressionContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>integerExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// </summary>
@@ -245,18 +257,6 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>termExpression</c>
-	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterTermExpression([NotNull] AnimationLanguageRulesParser.TermExpressionContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>termExpression</c>
-	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitTermExpression([NotNull] AnimationLanguageRulesParser.TermExpressionContext context);
-	/// <summary>
 	/// Enter a parse tree produced by the <c>floatExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// </summary>
@@ -268,6 +268,16 @@ public interface IAnimationLanguageRulesListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitFloatExpression([NotNull] AnimationLanguageRulesParser.FloatExpressionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.parenthesizedExpression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterParenthesizedExpression([NotNull] AnimationLanguageRulesParser.ParenthesizedExpressionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AnimationLanguageRulesParser.parenthesizedExpression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitParenthesizedExpression([NotNull] AnimationLanguageRulesParser.ParenthesizedExpressionContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AnimationLanguageRulesParser.boolean"/>.
 	/// </summary>

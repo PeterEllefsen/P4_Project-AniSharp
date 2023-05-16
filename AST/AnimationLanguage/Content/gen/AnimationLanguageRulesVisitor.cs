@@ -152,6 +152,13 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitBooleanExpression([NotNull] AnimationLanguageRulesParser.BooleanExpressionContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>parenthesizedExpressionExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitParenthesizedExpressionExpression([NotNull] AnimationLanguageRulesParser.ParenthesizedExpressionExpressionContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>integerExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// </summary>
@@ -159,19 +166,18 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>termExpression</c>
-	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitTermExpression([NotNull] AnimationLanguageRulesParser.TermExpressionContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>floatExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitFloatExpression([NotNull] AnimationLanguageRulesParser.FloatExpressionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.parenthesizedExpression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitParenthesizedExpression([NotNull] AnimationLanguageRulesParser.ParenthesizedExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.boolean"/>.
 	/// </summary>

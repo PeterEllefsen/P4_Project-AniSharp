@@ -231,6 +231,17 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// <return>The visitor result.</return>
 	public virtual Result VisitBooleanExpression([NotNull] AnimationLanguageRulesParser.BooleanExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by the <c>parenthesizedExpressionExpression</c>
+	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitParenthesizedExpressionExpression([NotNull] AnimationLanguageRulesParser.ParenthesizedExpressionExpressionContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by the <c>integerExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// <para>
@@ -242,17 +253,6 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// <return>The visitor result.</return>
 	public virtual Result VisitIntegerExpression([NotNull] AnimationLanguageRulesParser.IntegerExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>termExpression</c>
-	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitTermExpression([NotNull] AnimationLanguageRulesParser.TermExpressionContext context) { return VisitChildren(context); }
-	/// <summary>
 	/// Visit a parse tree produced by the <c>floatExpression</c>
 	/// labeled alternative in <see cref="AnimationLanguageRulesParser.expression"/>.
 	/// <para>
@@ -263,6 +263,16 @@ public partial class AnimationLanguageRulesBaseVisitor<Result> : AbstractParseTr
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitFloatExpression([NotNull] AnimationLanguageRulesParser.FloatExpressionContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.parenthesizedExpression"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitParenthesizedExpression([NotNull] AnimationLanguageRulesParser.ParenthesizedExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.boolean"/>.
 	/// <para>

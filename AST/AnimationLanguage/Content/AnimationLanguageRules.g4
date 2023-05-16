@@ -109,21 +109,23 @@ unaryOperation: IDENTIFIER unary
 
 assOps: (EQUAL | PLUSEQUAL | MINUSEQUAL);
 
-term: LPAREN (expression | IDENTIFIER | term)  RPAREN;
+term: LPAREN expression RPAREN;
 
 type: INT | FLOAT_TYPE | STRING_TYPE | BOOL | CIRCLE | POLYGON | GROUP;
 
-expression: MINUS? INTEGER                          #integerExpression
-          | MINUS? FLOAT                            #floatExpression
-          | STRING                                  #stringExpression
-          | boolean                                 #booleanExpression
-          | expression operator expression          #binaryExpression
-          | IDENTIFIER                              #identifierExpression
-          | funcCall                                #functionCallExpression
-          | shapeinit                               #shapeInitExpression
-          | term                                    #termExpression
-          ;
+expression
+    : MINUS? INTEGER                                 # integerExpression
+    | MINUS? FLOAT                                   # floatExpression
+    | STRING                                         # stringExpression
+    | boolean                                        # booleanExpression
+    | IDENTIFIER                                     # identifierExpression
+    | funcCall                                       # functionCallExpression
+    | shapeinit                                      # shapeInitExpression
+    | parenthesizedExpression                        # parenthesizedExpressionExpression
+    | expression operator expression                 # binaryExpression
+    ;
 
+parenthesizedExpression: LPAREN expression RPAREN;
 
 boolean: TRUE | FALSE;
 
