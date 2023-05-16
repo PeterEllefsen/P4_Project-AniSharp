@@ -150,15 +150,37 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
             return node;
         }
 
+        // Check if the identifier is a built-in function
+        TypeNode.TypeKind? builtInFunctionReturnType = GetBuiltInFunctionReturnType(node.Name);
+
+        if (builtInFunctionReturnType.HasValue)
+        {
+            node.Type = new TypeNode(builtInFunctionReturnType.Value, node.SourceLocation);
+            Console.WriteLine("Type checked identifier node (built-in function)");
+            return node;
+        }
+
         if (!_symbolTable.IsDefined(node.Name))
         {
             throw new InvalidOperationException($"Identifier '{node.Name}' is not defined.");
         }
 
-        IdentifierNode decoratedIdentifierNode = new IdentifierNode(node.Name, node.SourceLocation);
+        // Look up the corresponding symbol in the symbol table
+        Symbol? symbol = _symbolTable.Lookup(node.Name);
+
+        // Set the Type property of the IdentifierNode to the type of the symbol
+        if (symbol != null)
+        {
+            TypeNode.TypeKind typeKind = ConvertStringTypeToTypeKind(symbol.Type);
+            TypeNode typeNode = new TypeNode(typeKind, node.SourceLocation);
+            node.Type = typeNode;
+        }
+
         Console.WriteLine("Type checked identifier node");
-        return decoratedIdentifierNode;
+        return node;
     }
+
+
 
 
 
@@ -652,6 +674,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
         foreach (var animationNode in node.Animations)
         {
+            Console.WriteLine($"Visiting node: {animationNode}, NodeType: {animationNode.NodeType}");
             AnimationNode decoratedAnimationNode = (AnimationNode?)Visit(animationNode) ?? throw new InvalidOperationException("Failed to create a decorated animation node.");
             decoratedAnimations.Add(decoratedAnimationNode);
         }
@@ -663,17 +686,82 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     }
 
     
-    public override IASTNode? Visit(AnimationNode node)
+    public override IASTNode Visit(AnimationNode node)
     {
-        Console.WriteLine("Type checking declaration node");
-        return VisitChildren(node);
+        Console.WriteLine("Type checking animation node");
+
+        // Type check IdentifierNode
+        IdentifierNode decoratedIdentifierNode = (IdentifierNode?)Visit(node.Identifier) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
+
+        // Type check CommandNode if it exists
+        CommandNode? decoratedCommandNode = null;
+        if (node.Command != null)
+        {
+            decoratedCommandNode = (CommandNode?)Visit(node.Command) ?? throw new InvalidOperationException("Failed to create a decorated command node.");
+        }
+
+        // Type check each TransitionNode in the list
+        List<TransitionNode> decoratedTransitions = new List<TransitionNode>();
+        foreach (var transitionNode in node.Transitions)
+        {
+            TransitionNode decoratedTransitionNode = (TransitionNode?)Visit(transitionNode) ?? throw new InvalidOperationException("Failed to create a decorated transition node.");
+            decoratedTransitions.Add(decoratedTransitionNode);
+        }
+
+        AnimationNode decoratedAnimationNode = new AnimationNode(decoratedIdentifierNode, decoratedCommandNode, decoratedTransitions, node.SourceLocation);
+
+        Console.WriteLine("Type checked animation node");
+        return decoratedAnimationNode;
     }
+
     
-    public override IASTNode? Visit(CommandNode node)
+    public override IASTNode Visit(CommandNode node)
     {
         Console.WriteLine("Type checking command node");
-        return VisitChildren(node);
+        Console.WriteLine(node);
+        // Type check IdentifierNode
+        IdentifierNode decoratedIdentifierNode = (IdentifierNode?)Visit(node.Identifier) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
+
+        // Type check each parameter in the list
+        List<IASTNode> decoratedParameters = new List<IASTNode>();
+        if (node.Parameters != null)
+        {
+            foreach (var parameter in node.Parameters)
+            {
+                IASTNode? decoratedParameter;
+
+                if (parameter is ParameterNode parameterNode)
+                {
+                    decoratedParameter = Visit(parameterNode);
+                }
+                else if (parameter is CallParameterNode callParameterNode)
+                {
+                    decoratedParameter = Visit(callParameterNode);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Unexpected parameter type.");
+                }
+
+                if (decoratedParameter != null)
+                {
+                    decoratedParameters.Add(decoratedParameter);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Failed to create a decorated parameter node.");
+                }
+            }
+        }
+
+        CommandNode decoratedCommandNode = new CommandNode(decoratedIdentifierNode, decoratedParameters, node.SourceLocation);
+
+        Console.WriteLine("Type checked command node");
+        return decoratedCommandNode;
     }
+
+
+
     
     public override IASTNode? Visit(ConditionNode node)
     {
@@ -727,6 +815,25 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         {
             if (node is IdentifierNode identifierNode)
             {
+                string functionName = identifierNode.Name;
+
+                // Check if the identifier represents a built-in function
+                TypeNode.TypeKind? functionReturnType = GetBuiltInFunctionReturnType(functionName);
+                if (functionReturnType.HasValue)
+                {
+                    // If it's a built-in function, set the Type property based on the function's return type
+                    ExpressionNode decoratedFunctionExpressionNode = new ExpressionNode(
+                        node.ExpressionType,
+                        null, // LeftOperand
+                        null, // RightOperand
+                        null, // OperatorNode
+                        node.SourceLocation
+                    );
+
+                    decoratedFunctionExpressionNode.Type = new TypeNode(functionReturnType.Value, node.SourceLocation);
+                    Console.WriteLine("Type checked built-in function expression node");
+                    return decoratedFunctionExpressionNode;
+                }
                 string variableName = identifierNode.Name;
                 Symbol? symbol = _symbolTable.Lookup(variableName);
                 if (symbol == null)
@@ -745,7 +852,9 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
                     Value = symbol.Value,
                 };
 
-                decoratedIdentifierExpressionNode.Type = new TypeNode(GetTypeKindFromString(symbol.Type), node.SourceLocation);
+                Console.WriteLine($"Variable name: {variableName}");
+                Console.WriteLine($"Symbol type: {symbol.Type}");
+                decoratedIdentifierExpressionNode.Type = new TypeNode(ConvertStringTypeToTypeKind(symbol.Type), node.SourceLocation);
                 Console.WriteLine("decoratedIdentifierExpressionNode type is: " + decoratedIdentifierExpressionNode.Type);
                 Console.WriteLine("Type checked expression node");
                 return decoratedIdentifierExpressionNode;
@@ -1005,11 +1114,45 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         return decoratedTimelineBlockNode;
     }
 
-    public override IASTNode? Visit(TransitionNode node)
+    public override IASTNode Visit(TransitionNode node)
     {
-        Console.WriteLine("Type checking Transition node");
-        return VisitChildren(node);
+        Console.WriteLine("Type checking transition node");
+
+        // Type check each parameter in the list
+        List<IASTNode> decoratedParameters = new List<IASTNode>();
+        foreach (var parameter in node.Parameters)
+        {
+            IASTNode? decoratedParameter;
+
+            if (parameter is ParameterNode parameterNode)
+            {
+                decoratedParameter = Visit(parameterNode);
+            }
+            else if (parameter is CallParameterNode callParameterNode)
+            {
+                decoratedParameter = Visit(callParameterNode);
+            }
+            else
+            {
+                throw new InvalidOperationException("Unexpected parameter type.");
+            }
+
+            if (decoratedParameter != null)
+            {
+                decoratedParameters.Add(decoratedParameter);
+            }
+            else
+            {
+                throw new InvalidOperationException("Failed to create a decorated parameter node.");
+            }
+        }
+
+        TransitionNode decoratedTransitionNode = new TransitionNode(decoratedParameters, node.SourceLocation);
+
+        Console.WriteLine("Type checked transition node");
+        return decoratedTransitionNode;
     }
+
     
     public override IASTNode? Visit(TupleNode node)
     {
@@ -1110,7 +1253,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
                 typeKind = TypeNode.TypeKind.Group;
                 break;
             default:
-                typeKind = TypeNode.TypeKind.None;
+                typeKind = TypeNode.TypeKind.Unknown;
                 break;
         }
 
@@ -1155,27 +1298,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         }
     }
     
-    private TypeNode.TypeKind GetTypeKindFromString(string type)
-    {
-        // Extract the type name from the string representation of the TypeNode
-        string[] typeParts = type.ToLower().Split();
-
-        // If the string does not contain a space character, use the first element directly
-        string typeName = typeParts.Length > 1 ? typeParts[1] : typeParts[0];
-
-        return typeName switch
-        {
-            "int" => TypeNode.TypeKind.Int,
-            "float" => TypeNode.TypeKind.Float,
-            "bool" => TypeNode.TypeKind.Bool,
-            "string" => TypeNode.TypeKind.String,
-            "Circle" => TypeNode.TypeKind.Circle,
-            "Polygon" => TypeNode.TypeKind.Polygon,
-            _ => throw new InvalidOperationException($"Unknown type '{typeName}'."),
-        };
-    }
-
-
+    
     private Symbol? GetSymbolFromIdentifierNode(IdentifierNode identifierNode)
     {
         string variableName = identifierNode.Name;
@@ -1189,5 +1312,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     }
 
 
+    
+    
 }
 

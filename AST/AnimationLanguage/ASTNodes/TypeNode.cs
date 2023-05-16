@@ -15,7 +15,7 @@ public class TypeNode : IASTNode
         Circle,
         Polygon,
         Group,
-        None,
+        Unknown,
     }
 
     public TypeKind Kind { get; set; } //The kind of type this node represents.
