@@ -11,25 +11,30 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 {
     private void CreateFilesForCompilation() {
 
+        //if file exists delete it
+        if (File.Exists("../../codegen/Program.txt"))
+        {
+            File.Delete("../../codegen/Program.txt");
+        }
         //files to create
         //Program.cs for main
         //function class for all functions
         //Sequence class containing methods that create sequences
-        using (FileStream fs = File.Create("../../codegen/Program.cs", 1024))
+        using (FileStream fs = File.Create("../../../codegen/Program.txt", 1024))
         {
         }
-        using (FileStream fs = File.Create("../../codegen/Functions.cs", 1024))
-        {
-        }
-        using (FileStream fs = File.Create("../../codegen/Sequences.cs", 1024))
-        {
-        }
+        // using (FileStream fs = File.Create("../../codegen/Functions.cs", 1024))
+        // {
+        // }
+        // using (FileStream fs = File.Create("../../codegen/Sequences.cs", 1024))
+        // {
+        // }
     }
 
     private void AppendToFile(string file, string appendingString) {
         string path = "";
         if (file == "main") {
-            path = "../../../codegen/Program.cs";
+            path = "../../../codegen/Program.txt";
         }
 
         if (path != "") {
@@ -47,7 +52,23 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ProgramNode node)
     {
-        AppendToFile("main", "indsæt kode her");
+
+        CreateFilesForCompilation();
+        
+        string programCode = @"
+        namespace GeneratedCode
+        {
+            class Program
+            {
+                static void Main(string[] args)
+                {
+
+                }
+            }
+        }           
+        ";
+        
+        AppendToFile("main", programCode);
         
         return VisitChildren(node);
     }
