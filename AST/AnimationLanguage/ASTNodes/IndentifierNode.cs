@@ -6,7 +6,7 @@ public class IdentifierNode : ExpressionNode
     public string Name { get; set; }
 
     public IdentifierNode(string name, SourceLocation sourceLocation)
-        : base(ExpressionNodeType.Identifier, null, null, null, sourceLocation)
+        : base(ExpressionNodeType.Identifier, null, null, null, VariableType.Null, sourceLocation)
     {
         Name = name;
     }

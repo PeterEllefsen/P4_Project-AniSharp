@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿﻿using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Channels;
 using AnimationLanguage.ASTNodes;
@@ -189,7 +189,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     IdentifierNode identifierNode = node.Identifier;
     string variableName = identifierNode.Name;
     string variableType;
-
+    IASTNode decoratedAssignmentNode = identifierNode;
     // Check if the expression is an Identifier
     if (node.Expression.ExpressionType == ExpressionNodeType.Identifier)
     {
@@ -218,7 +218,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{variableType}', ExpressionType='{rightSymbol.Type}'");
 
         // Return a decorated AssignmentNode
-        AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, rightIdentifierNode, node.SourceLocation);
+        //AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, rightIdentifierNode,  node.SourceLocation);
         return decoratedAssignmentNode;
     }
     else
@@ -263,13 +263,10 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{variableType}', ExpressionType='{expressionType}'");
 
         // Return a decorated AssignmentNode
-        AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, expression, node.SourceLocation);
+        //AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, expression, node.SourceLocation);
         return decoratedAssignmentNode;
     }
 }
-
-
-
 
 
 
@@ -771,134 +768,136 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     
     public override IASTNode? Visit(ExpressionNode node)
     {
-        Console.WriteLine("NOW VISITING EXPRESSION: " + node);
-        Console.WriteLine("Node type is: " + node.Value);
-        if (node.ExpressionType == ExpressionNodeType.Literal && node.Value != null)
-        {
-            Console.WriteLine("THIS IS THE EXPRESSION TYPE " + node.ExpressionType);
-            // Visit the literal value node and set the Type of the decorated expression node
-            IASTNode? decoratedValueNode = VisitNodeBasedOnExpressionType(node.ExpressionType, node.Value);
-            ExpressionNode decoratedLiteralExpressionNode = new ExpressionNode(
-                node.ExpressionType,
-                null, // LeftOperand
-                null, // RightOperand
-                null, // OperatorNode
-                node.SourceLocation
-            )
-            {
-                Value = decoratedValueNode
-            };
-
-            // Set the Type property based on the type of decoratedValueNode
-            if (decoratedValueNode is IntegerLiteralNode intNode)
-            {
-                decoratedLiteralExpressionNode.Type = intNode.Type;
-            }
-            else if (decoratedValueNode is FloatLiteralNode floatNode)
-            {
-                decoratedLiteralExpressionNode.Type = floatNode.Type;
-            }
-            else if (decoratedValueNode is StringLiteralNode stringLiteralNode)
-            {
-                decoratedLiteralExpressionNode.Type = stringLiteralNode.Type;
-            }
-            else if (decoratedValueNode is BooleanLiteralNode boolNode)
-            {
-                decoratedLiteralExpressionNode.Type = boolNode.Type;
-            }
-
-            Console.WriteLine("Type checked expression node");
-            return decoratedLiteralExpressionNode;
-        }
-
-        if (node.ExpressionType == ExpressionNodeType.Identifier)
-        {
-            if (node is IdentifierNode identifierNode)
-            {
-                string functionName = identifierNode.Name;
-
-                // Check if the identifier represents a built-in function
-                TypeNode.TypeKind? functionReturnType = GetBuiltInFunctionReturnType(functionName);
-                if (functionReturnType.HasValue)
-                {
-                    // If it's a built-in function, set the Type property based on the function's return type
-                    ExpressionNode decoratedFunctionExpressionNode = new ExpressionNode(
-                        node.ExpressionType,
-                        null, // LeftOperand
-                        null, // RightOperand
-                        null, // OperatorNode
-                        node.SourceLocation
-                    );
-
-                    decoratedFunctionExpressionNode.Type = new TypeNode(functionReturnType.Value, node.SourceLocation);
-                    Console.WriteLine("Type checked built-in function expression node");
-                    return decoratedFunctionExpressionNode;
-                }
-                string variableName = identifierNode.Name;
-                Symbol? symbol = _symbolTable.Lookup(variableName);
-                if (symbol == null)
-                {
-                    throw new InvalidOperationException($"Undefined variable '{variableName}' used in expression.");
-                }
-                
-                ExpressionNode decoratedIdentifierExpressionNode = new ExpressionNode(
-                    node.ExpressionType,
-                    null, // LeftOperand
-                    null, // RightOperand
-                    null, // OperatorNode
-                    node.SourceLocation
-                )
-                {
-                    Value = symbol.Value,
-                };
-
-                Console.WriteLine($"Variable name: {variableName}");
-                Console.WriteLine($"Symbol type: {symbol.Type}");
-                decoratedIdentifierExpressionNode.Type = new TypeNode(ConvertStringTypeToTypeKind(symbol.Type), node.SourceLocation);
-                Console.WriteLine("decoratedIdentifierExpressionNode type is: " + decoratedIdentifierExpressionNode.Type);
-                Console.WriteLine("Type checked expression node");
-                return decoratedIdentifierExpressionNode;
-            }
-            else
-            {
-                throw new InvalidOperationException("Invalid node type for identifier expression.");
-            }
-        }
-
-
-
-        IASTNode? decoratedLeftOperand = null;
-        IASTNode? decoratedRightOperand = null;
-        OperatorNode? decoratedOperatorNode = null;
-
-        if (node.LeftOperand != null)
-        {
-            Console.WriteLine("Left operand: " + node.LeftOperand);
-            decoratedLeftOperand = VisitNodeBasedOnExpressionType(node.ExpressionType, node.LeftOperand) ?? throw new InvalidOperationException("Failed to create a decorated left operand node.");
-        }
-
-        if (node.RightOperand != null)
-        {
-            Console.WriteLine("Right operand: " + node.RightOperand);
-            decoratedRightOperand = VisitNodeBasedOnExpressionType(node.ExpressionType, node.RightOperand) ?? throw new InvalidOperationException("Failed to create a decorated right operand node.");
-        }
-
-        if (node.OperatorNode != null)
-        {
-            Console.WriteLine("Operator: " + node.OperatorNode);
-            decoratedOperatorNode = (OperatorNode?)Visit(node.OperatorNode) ?? throw new InvalidOperationException("Failed to create a decorated operator node.");
-        }
-
-        ExpressionNode decoratedExpressionNode = new ExpressionNode(
-            node.ExpressionType,
-            decoratedLeftOperand,
-            decoratedRightOperand,
-            decoratedOperatorNode,
-            node.SourceLocation
-        );
-
-        Console.WriteLine("Type checked expression node");
-        return decoratedExpressionNode;
+        IASTNode decoratedExpressionNode = node;
+        // Console.WriteLine("NOW VISITING EXPRESSION: " + node);
+        // Console.WriteLine("Node type is: " + node.Value);
+        // if (node.ExpressionType == ExpressionNodeType.Literal && node.Value != null)
+        // {
+        //     Console.WriteLine("THIS IS THE EXPRESSION TYPE " + node.ExpressionType);
+        //     // Visit the literal value node and set the Type of the decorated expression node
+        //     IASTNode? decoratedValueNode = VisitNodeBasedOnExpressionType(node.ExpressionType, node.Value);
+        //     ExpressionNode decoratedLiteralExpressionNode = new ExpressionNode(
+        //         node.ExpressionType,
+        //         null, // LeftOperand
+        //         null, // RightOperand
+        //         null, // OperatorNode
+        //         null, // IdentifierNode
+        //         node.SourceLocation
+        //     )
+        //     {
+        //         Value = decoratedValueNode
+        //     };
+        //
+        //     // Set the Type property based on the type of decoratedValueNode
+        //     if (decoratedValueNode is IntegerLiteralNode intNode)
+        //     {
+        //         decoratedLiteralExpressionNode.Type = intNode.Type;
+        //     }
+        //     else if (decoratedValueNode is FloatLiteralNode floatNode)
+        //     {
+        //         decoratedLiteralExpressionNode.Type = floatNode.Type;
+        //     }
+        //     else if (decoratedValueNode is StringLiteralNode stringLiteralNode)
+        //     {
+        //         decoratedLiteralExpressionNode.Type = stringLiteralNode.Type;
+        //     }
+        //     else if (decoratedValueNode is BooleanLiteralNode boolNode)
+        //     {
+        //         decoratedLiteralExpressionNode.Type = boolNode.Type;
+        //     }
+        //
+        //     Console.WriteLine("Type checked expression node");
+        //     return decoratedLiteralExpressionNode;
+        // }
+        //
+        // if (node.ExpressionType == ExpressionNodeType.Identifier)
+        // {
+        //     if (node is IdentifierNode identifierNode)
+        //     {
+        //         string functionName = identifierNode.Name;
+        //
+        //         // Check if the identifier represents a built-in function
+        //         TypeNode.TypeKind? functionReturnType = GetBuiltInFunctionReturnType(functionName);
+        //         if (functionReturnType.HasValue)
+        //         {
+        //             // If it's a built-in function, set the Type property based on the function's return type
+        //             ExpressionNode decoratedFunctionExpressionNode = new ExpressionNode(
+        //                 node.ExpressionType,
+        //                 null, // LeftOperand
+        //                 null, // RightOperand
+        //                 null, // OperatorNode
+        //                 node.SourceLocation
+        //             );
+        //
+        //             decoratedFunctionExpressionNode.Type = new TypeNode(functionReturnType.Value, node.SourceLocation);
+        //             Console.WriteLine("Type checked built-in function expression node");
+        //             return decoratedFunctionExpressionNode;
+        //         }
+        //         string variableName = identifierNode.Name;
+        //         Symbol? symbol = _symbolTable.Lookup(variableName);
+        //         if (symbol == null)
+        //         {
+        //             throw new InvalidOperationException($"Undefined variable '{variableName}' used in expression.");
+        //         }
+        //         
+        //         ExpressionNode decoratedIdentifierExpressionNode = new ExpressionNode(
+        //             node.ExpressionType,
+        //             null, // LeftOperand
+        //             null, // RightOperand
+        //             null, // OperatorNode
+        //             node.SourceLocation
+        //         )
+        //         {
+        //             Value = symbol.Value,
+        //         };
+        //
+        //         Console.WriteLine($"Variable name: {variableName}");
+        //         Console.WriteLine($"Symbol type: {symbol.Type}");
+        //         decoratedIdentifierExpressionNode.Type = new TypeNode(ConvertStringTypeToTypeKind(symbol.Type), node.SourceLocation);
+        //         Console.WriteLine("decoratedIdentifierExpressionNode type is: " + decoratedIdentifierExpressionNode.Type);
+        //         Console.WriteLine("Type checked expression node");
+        //         return decoratedIdentifierExpressionNode;
+        //     }
+        //     else
+        //     {
+        //         throw new InvalidOperationException("Invalid node type for identifier expression.");
+        //     }
+        // }
+        //
+        //
+        //
+        // IASTNode? decoratedLeftOperand = null;
+        // IASTNode? decoratedRightOperand = null;
+        // OperatorNode? decoratedOperatorNode = null;
+        //
+        // if (node.LeftOperand != null)
+        // {
+        //     Console.WriteLine("Left operand: " + node.LeftOperand);
+        //     decoratedLeftOperand = VisitNodeBasedOnExpressionType(node.ExpressionType, node.LeftOperand) ?? throw new InvalidOperationException("Failed to create a decorated left operand node.");
+        // }
+        //
+        // if (node.RightOperand != null)
+        // {
+        //     Console.WriteLine("Right operand: " + node.RightOperand);
+        //     decoratedRightOperand = VisitNodeBasedOnExpressionType(node.ExpressionType, node.RightOperand) ?? throw new InvalidOperationException("Failed to create a decorated right operand node.");
+        // }
+        //
+        // if (node.OperatorNode != null)
+        // {
+        //     Console.WriteLine("Operator: " + node.OperatorNode);
+        //     decoratedOperatorNode = (OperatorNode?)Visit(node.OperatorNode) ?? throw new InvalidOperationException("Failed to create a decorated operator node.");
+        // }
+        //
+        // ExpressionNode decoratedExpressionNode = new ExpressionNode(
+        //     node.ExpressionType,
+        //     decoratedLeftOperand,
+        //     decoratedRightOperand,
+        //     decoratedOperatorNode,
+        //     node.SourceLocation
+        // );
+        //
+        // Console.WriteLine("Type checked expression node");
+         return decoratedExpressionNode;
     }
 
 
@@ -1315,4 +1314,3 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     
     
 }
-

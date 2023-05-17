@@ -11,13 +11,13 @@ public class ShapeInitNode : ExpressionNode
     public Dictionary<string, IASTNode> Arguments { get; set; } //The arguments that are being provided when initializing the shape.
 
     public ShapeInitNode(TypeNode shapeType, Dictionary<string, IASTNode> arguments, SourceLocation sourceLocation)
-        : base(ExpressionNodeType.ShapeInit, null, null, null, sourceLocation)
+        : base(ExpressionNodeType.ShapeInit, null, null, null, VariableType.Null, sourceLocation)
     {
         ShapeType = shapeType;
         Arguments = arguments;
         SourceLocation = sourceLocation;
     }
-    
+
     public IEnumerable<IASTNode> GetChildren()
     {
         return Arguments.Values; //The arguments are the children of the ShapeInit node, so they are returned.
