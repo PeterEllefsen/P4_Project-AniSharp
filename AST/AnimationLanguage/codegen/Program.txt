@@ -1,0 +1,23 @@
+using System;
+
+namespace AnimationLanguage
+{
+   public static class Program
+   {
+       public static void Main()
+       {
+           public static group ColorBasedOnNumber(int number)
+           {
+            int red += ExpressionNode: 4  ExpressionNode: number  4;
+            int green -= 6;
+            int blue = number;
+           }
+
+           public static string ColorBasedOnNumber(string text)
+           {
+            string text = StringLiteralNode: hej;
+           }
+
+       }
+    }
+}

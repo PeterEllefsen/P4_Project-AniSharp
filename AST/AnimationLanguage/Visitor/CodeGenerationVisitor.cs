@@ -1,4 +1,5 @@
-﻿using AnimationLanguage.ASTCommon;
+﻿using System.Reflection.Emit;
+using AnimationLanguage.ASTCommon;
 using AnimationLanguage.ASTNodes;
 using systemio = System.IO;
 
@@ -26,323 +27,395 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
         // }
     }
 
-    private void AppendToFile(string file, string appendingString)
+    private void codeBuilder(string p, string appendingString)
     {
         var path = "";
-        if (file == "main") path = "../../../codegen/Program.txt";
+        path = "../../../codegen/Program.txt";
 
-        if (path != "")
+
+        if (p == "a")
+        {
+            using (var sw = File.AppendText(path))
+            {
+                sw.Write(appendingString);
+            }
+        }
+        else if (p == "w")
+        {
             using (var sw = File.AppendText(path))
             {
                 sw.WriteLine(appendingString);
             }
+        }
     }
 
     public override IASTNode? Visit(ProgramNode node)
     {
         CreateFilesForCompilation();
+        codeBuilder("w","using System;");
+        codeBuilder("w","");
+        codeBuilder("w","namespace AnimationLanguage");
+        codeBuilder("w","{");
+        codeBuilder("w","   public static class Program");
+        codeBuilder("w","   {");
+        codeBuilder("w","       public static void Main()");
+        codeBuilder("w","       {");
 
-//         string programCode = @"
-//         namespace GeneratedCode
-//         {
-//             class Program
-//             {
-//                 static void Main(string[] args)
-//                 {
-//
-//                 }
-//             }
-//         }           
-//         ";
-//         
-//         AppendToFile("main", programCode);
-//         
-        foreach (var Child in node.GetChildren())
+        foreach (var child in node.GetChildren())
+        {
+            if (child is FunctionDeclarationNode functionDeclarationNode)
+            {
+                Visit(functionDeclarationNode);
+                codeBuilder("w", "");
+            }
+        }
+
+        
+        codeBuilder("w","       }");
+        codeBuilder("w","    }");
+        codeBuilder("w","}");
+            
+        
+    
+        
             //Console.WriteLine(Child.GetType());
-            if (Child is SetupNode setupNode)
-            {
-                Console.WriteLine("Found a SetupNode from ProgramNode: " + setupNode + "\n");
-                   Visit(setupNode);
-            }
-            else if (Child is FunctionDeclarationNode funcDecNode)
-            {
-                //Console.WriteLine("\n Found a Function Declaration from ProgramNode: " + funcDecNode.Identifier + "\n\n");
-                 Visit(funcDecNode);
-            }
-            else if (Child is SequenceNode seqDecNode)
-            {
-                //Console.WriteLine("\n Found a Sequence Declaration from ProgramNode: " + seqDecNode.Name + "\n\n");
-                 Visit(seqDecNode);
-            }
-            else if (Child is TimelineBlockNode timelineBlockNode) 
-            {
-                    //Console.WriteLine("\n Found a Timeline from ProgramNode: " + "\n\n");
-                     Visit(timelineBlockNode);
-            } 
+            
         return node;
     }
-
-
-    //return VisitChildren(node);
+    
     public override IASTNode? Visit(SetupNode node)
     {
-        Console.WriteLine("The following nodes are present in SetupNode:");
-
+        
+        
         foreach (var Child in node.GetChildren())
         {
-            Console.WriteLine(Child.GetType()+"\n");
-            if (Child is GroupingElementsNode groupingElementsNode ) 
+            if (Child is GroupingElementsNode groupingElementsNode)
+            {
                 Visit(groupingElementsNode);
+            }
+            
+            
         }
+        
         return node;
     }
 
     public override IASTNode? Visit(GroupingElementsNode node)
     {
-        // Cant be bothered with this right now. W.I.P
-        // I get a list of KeyValuePairsNodes and IdentifierNodes. We know this works from a previous example (Daniel knows)
-        //Also how do we handle the values? Do they get converted to dictionaries or arrays? In that case, we'd need to know the size of the array.
-        // but we cannot use .Count on the number of keyvaluepairs nodes?
-        Console.WriteLine("The following nodes are present in GroupingElementsNode:");
         foreach (var Child in node.GetChildren())
         {
-            Console.WriteLine(Child.GetType());
+            if (Child is KeyValuePairNode keyValuePair)
+            {
+                Visit(keyValuePair);
+            }
         }
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(KeyValuePairNode node)
     {
-        return VisitChildren(node);
+
+        foreach (var Child in node.GetChildren())
+        {
+            if (Child is IntegerLiteralNode integerLiteralNode)
+            {
+                //AppendToFile("main", Child.ToString() + ";\n");
+            } else if (Child is IdentifierNode identifierNode)
+            {
+                //AppendToFile("main", "int ");
+                Visit(identifierNode);
+            }
+        }
+        return node;
     }
 
     public override IASTNode? Visit(IdentifierNode node)
     {
-        //Console.WriteLine(node.Type);
-        return VisitChildren(node);
+        //AppendToFile("main", node.ToString() + " = ");
+        
+        return node;
     }
 
     public override IASTNode? Visit(AssignmentNode node)
     {
-        // foreach (var Child in node.GetChildren())
-        // {
-        //     Console.WriteLine(Child);
-        //     if (Child is IdentifierNode idNode)
-        //     {
-        //         
-        //         Visit(idNode);
-        //     }
-        //
-        // }
+        if (node.VariableType != VariableType.Null)
+        {
+            codeBuilder("a",$"            {node.VariableType.ToString().ToLower()} {node.Identifier}");
+            
+            
+            //assigment operator insert
+            switch (node.AssignmentOperator)
+            {
+                case AssignmentOperator.Assign:
+                    codeBuilder("a", " = ");
+                    break;
+                case AssignmentOperator.PlusEqual:
+                    codeBuilder("a", " += ");
+                    break;
+                case AssignmentOperator.MinusEqual:
+                    codeBuilder("a", " -= ");
+                    break;
+                // Add cases for other assignment operators as needed
+                default:
+                    // Handle the default case, if necessary
+                    break;
+            }
 
-        return VisitChildren(node);
+            //insert expression
+            
+            Visit(node.Expression);
+            
+            
+            codeBuilder("w",";");
+            
+            
+            
+            
+            
+        }else 
+        {
+            Console.WriteLine("Variable type is null");
+        }
+        
+        
+        return node;
     }
 
     public override IASTNode? Visit(OperatorNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(IdentifierGroupingNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(ArgumentNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(FunctionDeclarationNode node)
     {
-        // foreach (var Child in node.GetChildren())
-        // {
-        //     if (Child is BlockNode blockNode)
-        //     {
-        //         //Console.WriteLine("Entering SetupNode");
-        //         Visit(blockNode);
-        //     }
-        // }
+        codeBuilder("a",$"           public static {node.ReturnType.ToString().ToLower()} {node.Identifier}(");
+        foreach (var Child in node.GetChildren())
+        {
+            if (Child is ParameterNode parameterNode)
+            {
+                Visit(parameterNode);
+            }
+        }
+        codeBuilder("w",")");
+        codeBuilder("w","           {");
+        foreach (var Child in node.GetChildren())
+        {
+            if (Child is BlockNode blockNode)
+            {
+                Visit(blockNode);
+            }
+        }
+        codeBuilder("w","           }");
 
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(FunctionCallNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(ParameterNode node)
     {
-        return VisitChildren(node);
+        codeBuilder("a",$"{node.DataType.ToString().ToLower()} {node.Name}");
+        return node;
     }
 
     public override IASTNode? Visit(CallParameterNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(PrototypeNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(StatementNode node)
     {
-        return VisitChildren(node);
+        if (node is AssignmentNode assignmentNode)
+        {
+            Visit(assignmentNode);
+        }
+
+
+        return node;
     }
 
     public override IASTNode? Visit(IfStatementNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(ElseIfNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(ElseNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(WhileLoopNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(ForLoopNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(BlockNode node)
     {
-        // foreach (var child in node.GetChildren())
-        // {
-        //     Console.WriteLine(child.GetType());
-        //     if (child is AssignmentNode assnode)
-        //     {
-        //         Visit(assnode);
-        //     }
-        // }
+        foreach (var Child in node.GetChildren())
+        {
+            if (Child is StatementNode statementNode)
+            {
+                //Console.WriteLine(Child.GetType());
+                Visit(statementNode);
 
-        return VisitChildren(node);
+            }else if (Child is ReturnNode returnNode)
+            {
+                Visit(returnNode);
+            }
+        }
+
+        return node;
     }
 
     public override IASTNode? Visit(SeqBlockNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(AnimationNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(CommandNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(ConditionNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(ExpressionNode node)
     {
-        return VisitChildren(node);
+        
+
+        
+
+        codeBuilder("a",node.ToString());
+        return node;
     }
 
     public override IASTNode? Visit(FrameDefNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(IntegerLiteralNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(FloatLiteralNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(StringLiteralNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(BooleanLiteralNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(ReturnNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(SeqBlockPartNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(SequenceCallNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(SequenceNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(PolygonNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(CircleNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(TimelineBlockNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(TransitionNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(TupleNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(TypeNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(UnaryOperationNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(NodeList<IASTNode> node)
     {
-        return VisitChildren(node);
+        return node;
     }
 
     public override IASTNode? Visit(ShapeInitNode node)
     {
-        return VisitChildren(node);
+        return node;
     }
+    
+
+
 }
+

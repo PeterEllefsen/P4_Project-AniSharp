@@ -28,7 +28,7 @@ public class IntegerLiteralNode : ExpressionNode
 
     public override string ToString()
     {
-        return $"IntegerLiteralNode: {Value}";
+        return $"{Value}";
     }
 
     public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode

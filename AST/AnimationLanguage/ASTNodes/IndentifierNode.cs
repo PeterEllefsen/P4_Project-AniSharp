@@ -18,7 +18,7 @@ public class IdentifierNode : ExpressionNode
 
     public override string ToString()
     {
-        return $"IdentifierNode: {Name}";
+        return $"{Name}";
     }
     
     

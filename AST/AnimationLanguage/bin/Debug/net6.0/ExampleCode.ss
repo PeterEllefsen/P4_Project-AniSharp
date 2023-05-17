@@ -16,9 +16,9 @@ setup [
 
 group function ColorBasedOnNumber(int number) {
 
-      int red = 4 * ((number) * 4);
-      int green = 6;
-      int blue = 0;
+      int red += 4 * ((number) * 4);
+      int green -= 6;
+      int blue = number;
 
 
     if (number <= to) {
@@ -35,6 +35,12 @@ group function ColorBasedOnNumber(int number) {
     }
     return [red, green, blue];
 
+}
+
+string function ColorBasedOnNumber(string text) {
+    text = "hej";
+    
+    return text;
 }
 
 
