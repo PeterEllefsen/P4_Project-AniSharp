@@ -257,12 +257,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     private IASTNode VisitBinaryExpression(AnimationLanguageRulesParser.BinaryExpressionContext context)
     {
-        Console.WriteLine("Visiting binary expression: " + context.GetText());
-        Console.WriteLine("Left expression context: " + context.expression(0).GetText());
-        Console.WriteLine("Right expression context: " + context.expression(1).GetText());
-
         IASTNode leftOperand = Visit(context.expression(0));
-        Console.WriteLine("Left operand: " + leftOperand);
 
         AnimationLanguageRulesParser.ExpressionContext rightExpressionContext = context.expression(1);
     
@@ -271,9 +266,9 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             rightExpressionContext = parenthesizedExpressionContext.expression();
         }
 
-        Console.WriteLine("right expression context" + rightExpressionContext.GetText());
+        
         IASTNode rightOperand = VisitExpression(rightExpressionContext);
-        Console.WriteLine("Right operand: " + rightOperand);
+        
 
         OperatorNode operatorNode = (OperatorNode)VisitOperator(context.@operator());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
@@ -427,9 +422,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitParenthesizedExpression(AnimationLanguageRulesParser.ParenthesizedExpressionContext context)
     {
-        Console.WriteLine("Visiting parenthesized expression: " + context.GetText());
         IASTNode innerExpression = VisitExpression(context.expression());
-        Console.WriteLine("Inner expression: " + innerExpression.ToString());
         return innerExpression;
     }
 
