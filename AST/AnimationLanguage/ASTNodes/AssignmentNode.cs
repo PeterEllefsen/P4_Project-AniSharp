@@ -8,13 +8,17 @@ public class AssignmentNode : StatementNode
     public AssignmentOperator AssignmentOperator { get; set; } // Add the AssignmentOperator property
     public ExpressionNode Expression { get; set; } //This is the expression that is being assigned to the identifier.
 
+    public VariableType VariableType { get; set; }
+
+    
     //Constructor taking in the identifier, expression, and source location:
-    public AssignmentNode(IdentifierNode identifier, AssignmentOperator assignmentOperator, ExpressionNode expression, SourceLocation sourceLocation)
+    public AssignmentNode(IdentifierNode identifier, AssignmentOperator assignmentOperator, ExpressionNode expression, VariableType variableType, SourceLocation sourceLocation)
         : base(sourceLocation)
     {
         Identifier = identifier;
         AssignmentOperator = assignmentOperator;
         Expression = expression;
+        VariableType = variableType;
         InitializeStatementNode();
     }
 
@@ -30,8 +34,10 @@ public class AssignmentNode : StatementNode
     public override string ToString()
     {
         string assignmentOperatorStr = AssignmentOperator.ToString();
-        return $"AssignmentNode: {Identifier} {assignmentOperatorStr} {Expression}";
+        string variableTypeStr = VariableType.ToString();
+        return $"AssignmentNode: {Identifier} {assignmentOperatorStr} {Expression} (VariableType: {variableTypeStr})";
     }
+
     
     
     public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
@@ -46,5 +52,14 @@ public enum AssignmentOperator //The different types of assignment operators.
     Assign,
     PlusEqual,
     MinusEqual,
+    Null,
+}
+
+public enum VariableType //The different types of variables.
+{
+    Int,
+    Float,
+    String,
+    Bool,
     Null,
 }

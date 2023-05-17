@@ -128,12 +128,59 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     public override IASTNode VisitAssignment(AnimationLanguageRulesParser.AssignmentContext context)
     {
         AssignmentOperator assignmentOperator = VisitAssOps(context.assOps());
-        int identifierChildIndex = context.type() != null ? 1 : 0; //Checks if the first element in the assignment is a type. If it is, the identifier is the second element, otherwise it is the first element.
-        IdentifierNode identifierNode = (IdentifierNode)Visit(context.GetChild(identifierChildIndex)); //Visit the identifier context and get the IdentifierNode.
-        ExpressionNode expression = (ExpressionNode)VisitExpression(context.expression()); 
-        AssignmentNode assignmentNode = new AssignmentNode(identifierNode, assignmentOperator, expression, GetSourceLocation(context.Start));
+        int identifierChildIndex = context.type() != null ? 1 : 0;
+        IdentifierNode identifierNode = (IdentifierNode)Visit(context.GetChild(identifierChildIndex));
+        ExpressionNode expression = (ExpressionNode)VisitExpression(context.expression());
+        SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        // Determine the VariableType for the assignment
+        VariableType variableType = VariableType.Null;
+        if (context.type() != null)
+        {
+            TypeNode.TypeKind typeKind = VisitType(context.type());
+            variableType = TypeKindToVariableType(typeKind);
+        }
+        else
+        {
+            variableType = expression.VariableType;
+        }
+
+        AssignmentNode assignmentNode = new AssignmentNode(
+            identifierNode,
+            assignmentOperator,
+            expression,
+            variableType,
+            sourceLocation
+        );
         return assignmentNode;
     }
+
+    
+    
+    public TypeNode.TypeKind VisitType(AnimationLanguageRulesParser.TypeContext context)
+    {
+        if (context.INT() != null)
+        {
+            return TypeNode.TypeKind.Int;
+        }
+        else if (context.FLOAT_TYPE() != null)
+        {
+            return TypeNode.TypeKind.Float;
+        }
+        else if (context.STRING_TYPE() != null)
+        {
+            return TypeNode.TypeKind.String;
+        }
+        else if (context.BOOL() != null)
+        {
+            return TypeNode.TypeKind.Bool;
+        }
+        else
+        {
+            throw new InvalidOperationException($"Unexpected type in VisitType at {GetSourceLocation(context.Start)}");
+        }
+    }
+
 
 
 
@@ -257,35 +304,49 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     private IASTNode VisitBinaryExpression(AnimationLanguageRulesParser.BinaryExpressionContext context)
     {
-        Console.WriteLine("Visiting binary expression: " + context.GetText());
-        Console.WriteLine("Left expression context: " + context.expression(0).GetText());
-        Console.WriteLine("Right expression context: " + context.expression(1).GetText());
-
         IASTNode leftOperand = Visit(context.expression(0));
-        Console.WriteLine("Left operand: " + leftOperand);
 
         AnimationLanguageRulesParser.ExpressionContext rightExpressionContext = context.expression(1);
-    
+
         if (rightExpressionContext.Parent is AnimationLanguageRulesParser.ParenthesizedExpressionContext parenthesizedExpressionContext)
         {
             rightExpressionContext = parenthesizedExpressionContext.expression();
         }
 
-        Console.WriteLine("right expression context" + rightExpressionContext.GetText());
         IASTNode rightOperand = VisitExpression(rightExpressionContext);
-        Console.WriteLine("Right operand: " + rightOperand);
 
         OperatorNode operatorNode = (OperatorNode)VisitOperator(context.@operator());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
+
+        // Add this line to determine the variable type of the binary expression:
+        VariableType variableType = DetermineVariableType(leftOperand, operatorNode, rightOperand);
 
         return new ExpressionNode(
             ExpressionNodeType.Binary,
             leftOperand,
             rightOperand,
             operatorNode,
+            variableType,
             sourceLocation
         );
     }
+
+    
+    //This method determines the variable type of a binary expression.
+    private VariableType DetermineVariableType(IASTNode leftOperand, OperatorNode operatorNode, IASTNode rightOperand)
+    {
+        if (leftOperand is ExpressionNode leftExpression && rightOperand is ExpressionNode rightExpression)
+        {
+            if (leftExpression.VariableType == rightExpression.VariableType)
+            {
+                return leftExpression.VariableType;
+            }
+        }
+
+        // If the types do not match or cannot be determined, return Null.
+        return VariableType.Null;
+    }
+
 
 
 
@@ -427,9 +488,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitParenthesizedExpression(AnimationLanguageRulesParser.ParenthesizedExpressionContext context)
     {
-        Console.WriteLine("Visiting parenthesized expression: " + context.GetText());
         IASTNode innerExpression = VisitExpression(context.expression());
-        Console.WriteLine("Inner expression: " + innerExpression.ToString());
         return innerExpression;
     }
 
@@ -1164,6 +1223,19 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         }
 
         return (transitions, commands);
+    }
+    
+    
+    private VariableType TypeKindToVariableType(TypeNode.TypeKind typeKind)
+    {
+        return typeKind switch
+        {
+            TypeNode.TypeKind.Int => VariableType.Int,
+            TypeNode.TypeKind.Float => VariableType.Float,
+            TypeNode.TypeKind.String => VariableType.String,
+            TypeNode.TypeKind.Bool => VariableType.Bool,
+            _ => VariableType.Null
+        };
     }
 
 }

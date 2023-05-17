@@ -17,17 +17,21 @@ public class ExpressionNode : IASTNode
     public OperatorNode? OperatorNode { get; set; } //The operator node of the expression.
     public IASTNode? Value { get; set; } //The value of the expression. This is an IASTNode because it can be any type of node.
     
+    public VariableType VariableType { get; set; }
+
     public ExpressionNode(
         ExpressionNodeType expressionType, 
         IASTNode? leftOperand,
         IASTNode? rightOperand,
         OperatorNode? operatorNode,
+        VariableType variableType,
         SourceLocation sourceLocation)
     {
         ExpressionType = expressionType;
         LeftOperand = leftOperand;
         RightOperand = rightOperand;
         OperatorNode = operatorNode;
+        VariableType = variableType;
         SourceLocation = sourceLocation;
 
         if (leftOperand != null)
