@@ -247,6 +247,22 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
             Visit(assignmentNode);
         }
 
+        if (node is IdentifierGroupingNode identifierNode)
+        {
+            Visit(identifierNode);
+        }
+
+        if (node is ForLoopNode forLoopNode)
+        {
+            Visit(forLoopNode);
+        }
+
+        if (node is WhileLoopNode whileLoopNode)
+        {
+            Visit(whileLoopNode);
+        }
+        
+        
 
         return node;
     }
@@ -316,29 +332,33 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ExpressionNode node)
     {
-        if (node.OperatorNode != null)
+        
+        if (node.RightOperand != null)
         {
-            var operatorNodeOperatorSymbol = node.OperatorNode.OperatorSymbol;
-            Console.WriteLine(node.LeftOperand + " " + operatorNodeOperatorSymbol + " " + node.LeftOperand);
-            codeBuilder("a",node.LeftOperand + " " + operatorNodeOperatorSymbol + " " + node.RightOperand);
+            
+            if (node.LeftOperand is ExpressionNode leftOperand)
+            {
+                codeBuilder("a", leftOperand.ToString());
+            }
+        
+            if (node.OperatorNode is OperatorNode operatorNode)
+            {
+                codeBuilder("a", " " + operatorNode.OperatorSymbol + " ");
+            }
+        
+            if (node.RightOperand is ExpressionNode rightOperand)
+            {
+                
+                codeBuilder("a", rightOperand.ToString());
+                
+            }
+            
         }
         else
         {
-            codeBuilder("a",node.ToString());
+            codeBuilder("a", $"{node.ToString()}");
         }
 
-        // if (node.LeftOperand is ExpressionNode leftOperand)
-        // {
-        //     Visit(leftOperand);
-        // }
-        //
-        // // Visit the right operand, if it exists and is an ExpressionNode
-        // if (node.RightOperand is ExpressionNode rightOperand)
-        // {
-        //     Visit(rightOperand);
-        // }
-        
-        // Visit any other children or sub-expressions, if applicable
     
         return node;
     }
@@ -370,6 +390,8 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ReturnNode node)
     {
+        codeBuilder("w", $"");
+        codeBuilder("w", $"            return {node};");
         return node;
     }
 

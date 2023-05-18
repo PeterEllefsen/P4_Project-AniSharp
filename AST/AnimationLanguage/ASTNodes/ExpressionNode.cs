@@ -54,10 +54,10 @@ public class ExpressionNode : IASTNode
     
     public override string ToString()
     {
-        return $"ExpressionNode: {LeftOperand} {OperatorNode} {RightOperand}";
+        return $"({LeftOperand} {OperatorNode} {RightOperand})";
     }
-    
-    
+
+
     public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);

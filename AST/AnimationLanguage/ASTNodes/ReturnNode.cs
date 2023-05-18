@@ -29,7 +29,7 @@ public class ReturnNode : IASTNode
     
     public override string ToString()
     {
-        return $"ReturnNode: {ReturnValue}";
+        return $"{ReturnValue}";
     }
     
     
