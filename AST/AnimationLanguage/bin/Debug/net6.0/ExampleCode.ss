@@ -15,6 +15,7 @@ setup [
 
 
 int function ColorBasedOnNumber(int number) {
+      int purple = 0;
       int red = 4 + (number + ((2 * 2) / 2));
       int green -= 6;
       int blue = number;
