@@ -16,9 +16,9 @@ setup [
 
 
 int function hejsa(){
-    int i = 1.5;
+    int i = 1;
     int a = 1 + 5;
-    float j = 2;
+    int j = 1;
     i = j;
     if (i < 2){
         i = 1;

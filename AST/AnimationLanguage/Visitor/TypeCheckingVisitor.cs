@@ -195,7 +195,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
         // Type check ExpressionNode
         ExpressionNode decoratedExpressionNode = (ExpressionNode?)Visit(node.Expression) ?? throw new InvalidOperationException("Failed to create a decorated expression node.");
-
+        Console.WriteLine("heii");
         // Check if the identifier already exists in the symbol table
         if (_symbolTable.IsDefined(node.Identifier.Name))
         {
@@ -205,16 +205,25 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
             if (symbol != null)
             {
                 VariableType symbolVariableType = ConvertStringTypeToVariableType(symbol.Type);
-                if (node.VariableType == VariableType.Null && symbolVariableType != decoratedExpressionNode.VariableType)
+
+                if (node.IsDeclaration == false && symbolVariableType != decoratedExpressionNode.VariableType)
                 {
-                    throw new InvalidOperationException("Type mismatch in assignment.");
+                    throw new InvalidOperationException(
+                        $"Type mismatch in assignment. Cannot assign a value of type '{decoratedExpressionNode.VariableType}' to variable '{node.Identifier.Name}' whose type is '{symbolVariableType}'");
                 }
             }
         }
         else
         {
-            // If the identifier doesn't exist in the symbol table, add it
+            Console.WriteLine("Here is node variable type: " + node.VariableType);
+            Console.WriteLine("Here is decorated expression node variable type: " + decoratedExpressionNode.VariableType);
+            if (decoratedExpressionNode.VariableType != node.VariableType)
+            {
+                throw new InvalidOperationException($"Type mismatch in assignment. Cannot assign a value of type '{decoratedExpressionNode.VariableType}' to variable of type '{node.VariableType}'.");
+            }
+            
             _symbolTable.AddVariable(node.Identifier.Name, ConvertVariableTypeToString(decoratedExpressionNode.VariableType), decoratedExpressionNode);
+            Console.WriteLine($"Added variable '{node.Identifier.Name}' of type '{ConvertVariableTypeToString(decoratedExpressionNode.VariableType)}' with value '{decoratedExpressionNode}' to symbol table");
         }
 
         // Type check IdentifierNode
@@ -740,34 +749,23 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     {
         Console.WriteLine("Type checking expression node");
 
-        // Type check operands
-        //IASTNode? decoratedLeftOperand = Visit(node.LeftOperand);
-        //IASTNode? decoratedRightOperand = Visit(node.RightOperand);
+        if (node is IdentifierNode identifierNode)
+        {
+            IdentifierNode decoratedIdentifierNode = (IdentifierNode?)Visit(identifierNode) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
+            if (_symbolTable.IsDefined(decoratedIdentifierNode.Name))
+            {
+                Symbol? symbol = _symbolTable.Lookup(decoratedIdentifierNode.Name);
+                Console.WriteLine($"Fetched symbol {decoratedIdentifierNode.Name} with type {symbol?.Type} and value {symbol?.Value} from symbol table");
+            }
+            return node;
+        }
+        else if (node.ExpressionType is ExpressionNodeType.Binary)
+        {
+        }
 
-        // Ensure both operands are ExpressionNodes and have the same VariableType
-        // if (decoratedLeftOperand is ExpressionNode leftExpression && decoratedRightOperand is ExpressionNode rightExpression)
-        // {
-        //     if (leftExpression.VariableType != rightExpression.VariableType)
-        //     {
-        //         throw new InvalidOperationException($"Type mismatch in expression at {node.SourceLocation}");
-        //     }
-        //
-        //     // The variable type of the expression node itself should be the same as its operands
-        //     node.VariableType = leftExpression.VariableType;
-        // }
-        // else
-        // {
-        //     // If the operands aren't ExpressionNodes, or if one or both of them are null, that's a problem
-        //     throw new InvalidOperationException($"Invalid operands in expression at {node.SourceLocation}");
-        // }
-
-        // Set the type property based on the VariableType
-        //TypeNode.TypeKind typeKind = ConvertVariableTypeToTypeKind(node.VariableType);
-        //node.Type = new TypeNode(typeKind, node.SourceLocation);
-
-        Console.WriteLine("Type checked expression node");
         return node;
     }
+
 
 
 

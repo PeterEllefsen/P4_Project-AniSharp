@@ -326,6 +326,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         // Add this line to determine the variable type of the binary expression:
         VariableType variableType = DetermineVariableType(leftOperand, operatorNode, rightOperand);
 
+        Console.WriteLine("Operator" + operatorNode);
         return new ExpressionNode(
             ExpressionNodeType.Binary,
             leftOperand,
@@ -356,7 +357,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitOperator(AnimationLanguageRulesParser.OperatorContext operatorContext)
     {
-        Console.WriteLine(operatorContext.GetText());
         if (operatorContext.logicOpp() != null)
         {
             return VisitLogicOpp(operatorContext.logicOpp());
