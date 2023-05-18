@@ -8,14 +8,14 @@ namespace AnimationLanguage
        {
            public static group ColorBasedOnNumber(int number)
            {
-            int red += ExpressionNode: 4  ExpressionNode: number  4;
+            int red = 44ExpressionNode: 4  4;
             int green -= 6;
             int blue = number;
            }
 
-           public static string ColorBasedOnNumber(string text)
+           public static string ColorBasedOnText(string text)
            {
-            string text = StringLiteralNode: hej;
+            string text = "hej jeg er sej";
            }
 
        }

@@ -162,7 +162,6 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
             }
 
             //insert expression
-            
             Visit(node.Expression);
             
             
@@ -317,11 +316,24 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ExpressionNode node)
     {
-        
 
+        if (node.LeftOperand is ExpressionNode leftOperand)
+        {
+            Visit(leftOperand);
+        }
+    
+        // Visit the right operand, if it exists and is an ExpressionNode
+        if (node.RightOperand is ExpressionNode rightOperand)
+        {
+            Visit(rightOperand);
+        }
         
-
+    
+        Console.WriteLine(node.ToString());
         codeBuilder("a",node.ToString());
+        
+        // Visit any other children or sub-expressions, if applicable
+    
         return node;
     }
 

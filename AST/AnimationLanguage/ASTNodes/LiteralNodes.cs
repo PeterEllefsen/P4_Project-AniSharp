@@ -88,7 +88,7 @@ public class StringLiteralNode : ExpressionNode
     
     public override string ToString()
     {
-        return $"StringLiteralNode: {Value}";
+        return $"\"{Value}\"";
     }
     
     
