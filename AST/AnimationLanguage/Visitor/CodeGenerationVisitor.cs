@@ -59,7 +59,13 @@ public class Polygon{
     
     public int borderWidth { get; set; }
 }
-
+public class group : Dictionary<string, object>
+{
+   public void Add(string key, object value)
+   {
+      base.Add(key, value);
+   }
+}
 ");
     }
 
@@ -476,8 +482,6 @@ public class Polygon{
                         foreach (var arg in shapeInitNode.Arguments)
                         {
                             
-                            Console.WriteLine(arg.Value.GetType());
-                            Console.WriteLine("PARAMETER COUNT: " + parameterCount);
                             if (arg.Value is FunctionCallNode functionCallNode)
                             {
                                 if (parameterCount > 0)
@@ -553,6 +557,42 @@ public class Polygon{
             }
         }
 
+        foreach (var child in node.GetChildren())
+        {
+            if (child is IdentifierGroupingNode identifierGroupingNode)
+            {
+                codeBuilder("a", $"group {identifierGroupingNode.Identifier} = new group();\n");
+
+
+
+                foreach (var expressionNode in identifierGroupingNode.GroupingElements.Expressions)
+                {
+                    Console.WriteLine(expressionNode);
+                    
+                    codeBuilder("w", $"{identifierGroupingNode.Identifier}.Add(\"{expressionNode}\", {expressionNode});");
+                }
+                
+                // foreach (var VARIABLE in identifierGroupingNode.GroupingElements.KeyValuePairs)
+                // {
+                //     Console.WriteLine(VARIABLE.NodeType);
+                // }
+                //
+                // foreach (var VARIABLE in identifierGroupingNode.GroupingElements.Identifiers)
+                // {
+                //     Console.WriteLine(VARIABLE.NodeType);
+                // }
+                
+                
+                
+
+
+            }
+
+            
+        }
+        
+        
+        
         return node;
     }
 
@@ -685,7 +725,7 @@ public class Polygon{
             
             if (child is IdentifierNode identifierNode)
             {
-                 //Console.WriteLine(child);
+                // Console.WriteLine(child);
             }
             
             

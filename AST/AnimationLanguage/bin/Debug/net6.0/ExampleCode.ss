@@ -14,8 +14,7 @@ setup [
 
 
 
-group function ColorBasedOnNumber(int number) {
-      int purple = 1;  
+int function ColorBasedOnNumber(int number) {
       int red = 4 + (number + ((2 * 2) / 2));
       int green -= 6;
       int blue = number;
@@ -39,7 +38,7 @@ group function ColorBasedOnNumber(int number) {
             green = 100-69;
         }
     }
-    return [red, green, blue];
+    return red;
 
 }
 
@@ -68,9 +67,6 @@ seq CarDrivingOnScreen() {
   cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
 
   car[
-        carTop1, 
-        carTop2, 
-        carTop3, 
         circle1wheel, 
         circle1wheelinner, 
         circle2wheel, 
