@@ -149,11 +149,7 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
             {
                 codeBuilder("a",$"            {node.Identifier}");
             }
-            
-            
-            
-            
-            
+
             //assigment operator insert
             switch (node.AssignmentOperator)
             {
@@ -174,14 +170,9 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
             //insert expression
             Visit(node.Expression);
-            
-            
+
             codeBuilder("w",";");
-            
-            
-            
-            
-            
+
         }else 
         {
             Console.WriteLine("Variable type is null");
@@ -285,6 +276,7 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(IfStatementNode node)
     {
+        codeBuilder("w", ""); 
         codeBuilder("a","            if ");
         codeBuilder("w",$"{node.Condition}" + "{");
         codeBuilder("a", "   ");

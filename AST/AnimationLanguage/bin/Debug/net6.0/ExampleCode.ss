@@ -28,8 +28,8 @@ group function ColorBasedOnNumber(int number) {
        blue = 255-69; 
     }else if((number > 5) or (number < 10)) {
         blue = 50;
-    }else {
-    blue = 0
+    }else if((number > 2) or (number < 10)) {
+             blue = 50;
     }
 
       for(int i = 0; i < 10; i++) {

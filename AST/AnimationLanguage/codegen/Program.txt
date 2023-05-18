@@ -13,6 +13,35 @@ namespace AnimationLanguage
             int green -= 6;
             int blue = number;
 
+<<<<<<< Updated upstream
+=======
+namespace AnimationLanguage
+{
+   public static class Program
+   {
+       public static void Main()
+       {
+           public static group ColorBasedOnNumber(int number)
+           {
+            int purple = 1;
+            int red = 4 + (number + ((2 * 2) / 2));
+            int green -= 6;
+            int blue = number;
+
+            if (number <= 5){
+               blue = 255 - 69;
+            }
+            else if ((number > 5) or (number < 10)){
+               blue = 50;
+            }
+            else if ((number > 2) or (number < 10)){
+               blue = 50;
+
+            if (number > 5){
+               blue = 100;
+            }
+            }
+>>>>>>> Stashed changes
 
             while(10)
             {
