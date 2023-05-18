@@ -15,20 +15,25 @@ setup [
 
 
 group function ColorBasedOnNumber(int number) {
+      int purple = 1;  
+      int red = 4 + (number + ((2 * 2) / 2));
+      int green -= 6;
+      int blue = number;
 
-      int red = 4 * ((number) * 4);
-      int test= 4 + 4;
-      float uu += 4.5;
-      bool aa -= false;
-      string yee = "yesss";
-      int green = 6;
-      int blue = 0;
-      green = 3;
+    while(purple < 10) {
+        purple += 1;
+    }
 
+    if(purple < 10){
+        purple += 1;
+    }
 
-    if (number <= to) {
+    if (number <= 5) {
        blue = 255-69; 
-
+    }else if((number > 5) or (number < 10)) {
+        blue = 50;
+    }else {
+    blue = 0
     }
 
       for(int i = 0; i < 10; i++) {
@@ -40,6 +45,12 @@ group function ColorBasedOnNumber(int number) {
     }
     return [red, green, blue];
 
+}
+
+string function ColorBasedOnText(string text) {
+    text = "hej jeg er sej" + "hej";
+    
+    return text;
 }
 
 

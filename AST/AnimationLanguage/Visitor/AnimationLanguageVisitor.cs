@@ -758,10 +758,11 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method in run when a while loop is met in the code.
     public override IASTNode VisitWhile_loop(AnimationLanguageRulesParser.While_loopContext context)
     {
-        ExpressionNode condition = (ExpressionNode)Visit(context.expression());
+        ExpressionNode condition = (ExpressionNode)VisitExpression(context.expression());
         BlockNode body = (BlockNode)VisitBlock(context.block());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
+        Console.WriteLine(condition);
         return new WhileLoopNode(condition, body, sourceLocation);
     }
     
@@ -808,7 +809,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         {
             elseBranch = (ElseNode)VisitElse(context.@else());
         }
-
+        
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
         return new IfStatementNode(condition, ifBlock, elseIfBranches, elseBranch, sourceLocation);
