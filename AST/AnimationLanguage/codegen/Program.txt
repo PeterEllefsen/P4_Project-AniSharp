@@ -13,13 +13,13 @@ namespace AnimationLanguage
             int green -= 6;
             int blue = number;
             if (number <= 5){
-               int blue = 255 - 69;
+               blue = 255 - 69;
             }
             else if ((number > 5) or (number < 10)){
-               int blue = 50;
+               blue = 50;
             }
             else{
-               int blue = 0;
+               blue = 0;
             }
 
             return GroupingElementsNode: (red, green, blue, , );
@@ -27,7 +27,7 @@ namespace AnimationLanguage
 
            public static string ColorBasedOnText(string text)
            {
-            string text = "hej jeg er sej" + "hej";
+            text = "hej jeg er sej" + "hej";
 
             return text;
            }

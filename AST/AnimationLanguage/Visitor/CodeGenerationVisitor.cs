@@ -141,7 +141,15 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
         
         if (node.VariableType != VariableType.Null)
         {
-            codeBuilder("a",$"            {node.VariableType.ToString().ToLower()} {node.Identifier}");
+            if (node.IsDeclaration)
+            {
+                codeBuilder("a",$"            {node.VariableType.ToString().ToLower()} {node.Identifier}");
+            }
+            else
+            {
+                codeBuilder("a",$"            {node.Identifier}");
+            }
+            
             
             
             
