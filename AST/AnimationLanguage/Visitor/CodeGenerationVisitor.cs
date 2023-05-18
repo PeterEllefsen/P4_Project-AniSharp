@@ -333,7 +333,14 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
     }
 
     public override IASTNode? Visit(WhileLoopNode node)
-    {
+    {   
+        codeBuilder("a", "\n\n");
+        codeBuilder("a", "            while(");
+        codeBuilder("w", $"{node.Condition}" + ")" + "\n" + "            {");
+        codeBuilder("a", "   ");
+        //codeBuilder("w", $"{node.Body}" + "\n");
+        Visit(node.Body);
+        codeBuilder("w", "            }");
         return node;
     }
 

@@ -20,7 +20,9 @@ group function ColorBasedOnNumber(int number) {
       int green -= 6;
       int blue = number;
 
-    
+    while(purple < 10) {
+        purple += 1;
+    }
 
     if (number <= 5) {
        blue = 255-69; 
