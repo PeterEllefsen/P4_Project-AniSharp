@@ -15,16 +15,19 @@ setup [
 
 
 group function ColorBasedOnNumber(int number) {
-
+      int purple = 1;  
       int red = 4 + (number + ((2 * 2) / 2));
       int green -= 6;
       int blue = number;
 
     
 
-    if (number <= to) {
+    if (number <= 5) {
        blue = 255-69; 
-
+    }else if((number > 5) or (number < 10)) {
+        blue = 50;
+    }else {
+    blue = 0
     }
 
       for(int i = 0; i < 10; i++) {

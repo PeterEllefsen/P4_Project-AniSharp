@@ -8,9 +8,19 @@ namespace AnimationLanguage
        {
            public static group ColorBasedOnNumber(int number)
            {
+            int purple = 1;
             int red = 4 + (number + ((2 * 2) / 2));
             int green -= 6;
             int blue = number;
+            if (number <= 5){
+               int blue = 255 - 69;
+            }
+            else if ((number > 5) or (number < 10)){
+               int blue = 50;
+            }
+            else{
+               int blue = 0;
+            }
 
             return GroupingElementsNode: (red, green, blue, , );
            }

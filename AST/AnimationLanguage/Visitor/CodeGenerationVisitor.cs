@@ -138,9 +138,12 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(AssignmentNode node)
     {
+        
         if (node.VariableType != VariableType.Null)
         {
             codeBuilder("a",$"            {node.VariableType.ToString().ToLower()} {node.Identifier}");
+            
+            
             
             
             //assigment operator insert
@@ -252,6 +255,11 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
             Visit(identifierNode);
         }
 
+        if (node is IfStatementNode ifStatementNode)
+        {
+            Visit(ifStatementNode);
+        }
+
         if (node is ForLoopNode forLoopNode)
         {
             Visit(forLoopNode);
@@ -269,16 +277,50 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(IfStatementNode node)
     {
+        codeBuilder("a","            if ");
+        codeBuilder("w",$"{node.Condition}" + "{");
+        codeBuilder("a", "   ");
+        Visit(node.IfBlock);
+        codeBuilder("w","            }");
+
+        foreach (var child in node.ElseIfBranches)
+        {
+            Visit(child);
+        }
+
+        if (node.ElseBranch != null)
+        {
+            Visit(node.ElseBranch);
+        }
+        
+        
+
+        
+        //codeBuilder("w", node.ToString());
+        
+        
         return node;
     }
 
     public override IASTNode? Visit(ElseIfNode node)
     {
+        codeBuilder("a","            else if ");
+        codeBuilder("w",$"{node.Condition}" + "{");
+        codeBuilder("a", "   ");
+        Visit(node.ElseIfBlock);
+        codeBuilder("w","            }");
+        
         return node;
     }
 
     public override IASTNode? Visit(ElseNode node)
     {
+        codeBuilder("a","            else");
+        codeBuilder("w","{");
+        codeBuilder("a", "   ");
+        Visit(node.ElseBlock);
+        codeBuilder("w","            }");
+        
         return node;
     }
 
@@ -390,8 +432,13 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ReturnNode node)
     {
-        codeBuilder("w", $"");
-        codeBuilder("w", $"            return {node};");
+        if(node.ToString() != "")
+        {
+            codeBuilder("w", $"");
+            codeBuilder("w", $"            return {node};");
+        }
+        
+        
         return node;
     }
 
