@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "Dzl1/4YHKNHSQnFYOK7W5w33xoKuoRWIxr72wKsiYVHMm9Ksh/gRt3qb2duVeHm6dJPfjYfP8xY7fr4X0HEENA==",
+  "dgSpecHash": "HcWyU3QqL5ZYE/35zKrQPYT+Mx6pjGc3hWaI7JNmxNNER3/X6Q0gGjF1C68Q4dWUh8AII0/kIonw0yFp5898eA==",
   "success": true,
-  "projectFilePath": "/home/daniel/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj",
+  "projectFilePath": "C:\\Users\\p-l-g\\OneDrive\\Dokumenter\\GitHub\\P4-Project\\AST\\AnimationLanguage\\AnimationLanguage.csproj",
   "expectedPackageFiles": [
-    "/home/daniel/.nuget/packages/antlr4.runtime.standard/4.12.0/antlr4.runtime.standard.4.12.0.nupkg.sha512"
+    "C:\\Users\\p-l-g\\.nuget\\packages\\antlr4.runtime.standard\\4.12.0\\antlr4.runtime.standard.4.12.0.nupkg.sha512",
+    "C:\\Users\\p-l-g\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.16\\microsoft.netcore.app.ref.6.0.16.nupkg.sha512",
+    "C:\\Users\\p-l-g\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.16\\microsoft.windowsdesktop.app.ref.6.0.16.nupkg.sha512",
+    "C:\\Users\\p-l-g\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.16\\microsoft.aspnetcore.app.ref.6.0.16.nupkg.sha512",
+    "C:\\Users\\p-l-g\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.16\\microsoft.netcore.app.host.win-x64.6.0.16.nupkg.sha512"
   ],
   "logs": []
 }

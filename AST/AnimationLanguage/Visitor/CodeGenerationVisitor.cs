@@ -337,6 +337,31 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ForLoopNode node)
     {
+        Console.WriteLine(node.ToString());
+        codeBuilder("a", "\n\n");
+        codeBuilder("a", "            for(");
+        
+        if (node.Initialization is AssignmentNode assignmentNode)
+        {
+            Visit(assignmentNode);
+        }
+
+
+        codeBuilder("a", node.Condition.ToString());
+        codeBuilder("a", ";");
+        
+        Console.WriteLine(node.Update);
+        if (node.Update is UnaryOperationNode unaryOperationNode)
+        {
+            Visit(unaryOperationNode);
+            codeBuilder("a", ")");
+        }
+        codeBuilder("a", "{");
+        if (node.Body is BlockNode blockNode)
+        {
+            Visit(blockNode);
+        }
+        codeBuilder("a", "}");
         return node;
     }
 
@@ -495,6 +520,15 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(UnaryOperationNode node)
     {
+        switch (node.Operator)
+        {
+            case UnaryOperator.Increment:
+                codeBuilder("a", $"{node.Identifier}++");
+                break;
+            case UnaryOperator.Decrement:
+                codeBuilder("a", $"{node.Identifier}--");
+                break;
+        }
         return node;
     }
 
