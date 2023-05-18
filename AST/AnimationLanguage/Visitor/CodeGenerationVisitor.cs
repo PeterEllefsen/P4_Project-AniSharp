@@ -316,21 +316,27 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ExpressionNode node)
     {
+        if (node.OperatorNode != null)
+        {
+            var operatorNodeOperatorSymbol = node.OperatorNode.OperatorSymbol;
+            Console.WriteLine(node.LeftOperand + " " + operatorNodeOperatorSymbol + " " + node.LeftOperand);
+            codeBuilder("a",node.LeftOperand + " " + operatorNodeOperatorSymbol + " " + node.RightOperand);
+        }
+        else
+        {
+            codeBuilder("a",node.ToString());
+        }
 
-        if (node.LeftOperand is ExpressionNode leftOperand)
-        {
-            Visit(leftOperand);
-        }
-    
-        // Visit the right operand, if it exists and is an ExpressionNode
-        if (node.RightOperand is ExpressionNode rightOperand)
-        {
-            Visit(rightOperand);
-        }
-        
-    
-        Console.WriteLine(node.ToString());
-        codeBuilder("a",node.ToString());
+        // if (node.LeftOperand is ExpressionNode leftOperand)
+        // {
+        //     Visit(leftOperand);
+        // }
+        //
+        // // Visit the right operand, if it exists and is an ExpressionNode
+        // if (node.RightOperand is ExpressionNode rightOperand)
+        // {
+        //     Visit(rightOperand);
+        // }
         
         // Visit any other children or sub-expressions, if applicable
     

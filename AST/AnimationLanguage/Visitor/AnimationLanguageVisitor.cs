@@ -1164,7 +1164,16 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         return frameDefNode;
     }
 
-    
+    public override IASTNode VisitOperator(AnimationLanguageRulesParser.OperatorContext operatorContext)
+    {
+        string operatorString = operatorContext.GetText();
+
+        // Create your OperatorNode here, using whatever constructor or factory method your class provides.
+        // For this example, we'll assume OperatorNode has a constructor that takes a string.
+        OperatorNode operatorNode = new OperatorNode(operatorString, GetSourceLocation(operatorContext.Start));
+
+        return operatorNode;
+    }
 
     //---------------------------Helper methods---------------------------//
     private SourceLocation GetSourceLocation(IToken token)
