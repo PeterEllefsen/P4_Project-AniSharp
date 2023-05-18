@@ -38,7 +38,7 @@ public class SequenceCallNode : IASTNode
     public override string ToString()
     {
         string argumentsStr = string.Join(", ", Arguments.Select(a => a.ToString()));
-        return $"SequenceCallNode: {Name}({argumentsStr})";
+        return $"{Name}({argumentsStr})";
     }
     
     

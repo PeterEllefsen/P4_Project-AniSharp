@@ -24,7 +24,7 @@ group function ColorBasedOnNumber(int number) {
         purple += 1;
     }
 
-    if (number <= 5) {
+    if (number < 5) {
        blue = 255-69; 
     }else if((number > 5) or (number < 10)) {
         blue = 50;
@@ -56,6 +56,7 @@ seq CarDrivingOnScreen() {
     //Headlights
   circleHeadlight = Circle(center: (x: 327, y: 135), radius: 10, color: Rgb(255,255,0)); //yellow
 
+
   //Back Wheel
   circle1wheel = Circle(center: (x: 187, y: 170), radius: 25, color: Rgb(0,0,0));
   circle1wheelinner = Circle(center: (x: 187, y: 170), radius: 12.5, color: Rgb(165,165,165));
@@ -82,7 +83,9 @@ seq CarDrivingOnScreen() {
 }
 
 seq CircleGoVroomInTriangle() {
-    cirkel1->repeat()->(EndFrame: 50, x: 50, color: Rgb(ColorBasedOnNumber(frame)))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
+    carTop3 = Polygon(point1: (x: 250, y: 118), point2: (x: 302, y: 118), point3: (x: 276, y: 73), color: Rgb(165,165,165)); 
+
+    cirkel1->repeat()->(EndFrame: 50, x: 50, color: Rgb(255,129,125))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
 }
 
 

@@ -59,7 +59,7 @@ public class FloatLiteralNode : ExpressionNode
     
     public override string ToString()
     {
-        return $"FloatLiteralNode: {Value}";
+        return $"{Value}";
     }
     
     

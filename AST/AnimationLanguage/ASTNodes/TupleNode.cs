@@ -23,7 +23,7 @@ public class TupleNode : IASTNode
     
     public override string ToString()
     {
-        return $"TupleNode: {string.Join(", ", Arguments.Select(keyvaluepair => $"{keyvaluepair.Key}: {keyvaluepair.Value}"))}"; //the arrow function is used to create a string for each keyvaluepair in the Arguments dictionary.
+        return $"{string.Join(", ", Arguments.Select(keyvaluepair => $"{keyvaluepair.Value}"))}"; //the arrow function is used to create a string for each keyvaluepair in the Arguments dictionary.
     }
     
     

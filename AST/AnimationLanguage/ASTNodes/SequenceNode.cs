@@ -41,7 +41,7 @@ public class SequenceNode : IASTNode
     public override string ToString()
     {
         string parametersStr = string.Join(", ", Parameters.Select(p => p.ToString()));
-        return $"SequenceNode: seq {Name}({parametersStr})";
+        return $"{Name}({parametersStr})";
     }
     
     

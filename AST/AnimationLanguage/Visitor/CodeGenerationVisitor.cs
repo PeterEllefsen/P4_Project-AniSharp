@@ -7,11 +7,11 @@ namespace AnimationLanguage.Visitor;
 
 public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 {
+
     private void CreateFilesForCompilation()
     {
         //if file exists delete it
-        if (File.Exists("../../codegen/Program.txt")) File.Delete("../../codegen/Program.cs");
-
+        if (File.Exists("../../codegen/Program.cs")) File.Delete("../../codegen/Program.cs");
         //files to create
         //Program.cs for main
         //function class for all functions
@@ -19,12 +19,6 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
         using (var fs = File.Create("../../../codegen/Program.cs", 1024))
         {
         }
-        // using (FileStream fs = File.Create("../../codegen/Functions.cs", 1024))
-        // {
-        // }
-        // using (FileStream fs = File.Create("../../codegen/Sequences.cs", 1024))
-        // {
-        // }
     }
 
     private void codeBuilder(string p, string appendingString)
@@ -49,18 +43,65 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
         }
     }
 
+    private void insertBoilerplate()
+    {
+        codeBuilder("w", @"public class Circle{
+    public (int, int) center { get; set; }
+    public double radius { get; set; }
+    public string color { get; set; }
+    
+    public int borderWidth { get; set; }
+}
+public class Polygon{
+    public (int, int) center { get; set; }
+    public double radius { get; set; }
+    public string color { get; set; }
+    
+    public int borderWidth { get; set; }
+}
+
+");
+    }
+
+    private void insertFuncBoilerplate()
+    {
+        codeBuilder("w", @"public static string Rgb(int red, int green, int blue)
+{
+    string hex = $""#{red:X2}{green:X2}{blue:X2}"";
+    return hex;
+}");
+    }
+    
+    
     public override IASTNode? Visit(ProgramNode node)
     {
         CreateFilesForCompilation();
+        
         codeBuilder("w","using System;");
         codeBuilder("w","");
-        codeBuilder("w","namespace AnimationLanguage");
-        codeBuilder("w","{");
-        codeBuilder("w","   public static class Program");
-        codeBuilder("w","   {");
-        codeBuilder("w","       public static void Main()");
-        codeBuilder("w","       {");
-
+        codeBuilder("w","namespace AnimationLanguage;");
+        codeBuilder("w","");
+        
+        
+        insertBoilerplate();
+        
+        codeBuilder("w", "public static class Sequences {");
+        
+        foreach (var child in node.GetChildren())
+        {
+            if (child is SequenceNode sequenceNode) 
+            {
+                codeBuilder("a","\tpublic static List<List<string>>" + child.ToString() + " { \n");
+                codeBuilder("a","\t\tList<List<string>> framebuffer = new List<List<string>>(); \n");
+                Visit(sequenceNode);
+            }
+        }
+        codeBuilder("w", "}  ");
+        
+        
+        codeBuilder("w","public static class Functions");
+        codeBuilder("w", "   {");
+        insertFuncBoilerplate();
         foreach (var child in node.GetChildren())
         {
             if (child is FunctionDeclarationNode functionDeclarationNode)
@@ -69,14 +110,32 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
                 codeBuilder("w", "");
             }
         }
-        codeBuilder("w","       }");
-        codeBuilder("w","    }");
+        codeBuilder("w","   }");
+        
+        
+        codeBuilder("w","public static class Program");
+        codeBuilder("w","{");
+        codeBuilder("w","   public static void Main()");
+        codeBuilder("w","   {");
+        
+        foreach (var child in node.GetChildren())
+        {
+            if (child.GetType() == typeof(TimelineBlockNode)) 
+            {
+                foreach (var timelineChild in child.GetChildren()) 
+                {
+                    Visit((FrameDefNode)timelineChild);
+                }
+            }
+        }
+        
+        codeBuilder("w","   }");
         codeBuilder("w","}");
-            
-        
-    
-        
-            //Console.WriteLine(Child.GetType());
+
+
+
+
+        //Console.WriteLine(Child.GetType());
             
         return node;
     }
@@ -277,8 +336,11 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
     public override IASTNode? Visit(IfStatementNode node)
     {
         codeBuilder("w", ""); 
-        codeBuilder("a","            if ");
-        codeBuilder("w",$"{node.Condition}" + "{");
+        codeBuilder("a","            if (");
+
+        Visit(node.Condition);
+        codeBuilder("a", ")");
+        codeBuilder("w", "{");
         codeBuilder("a", "   ");
         Visit(node.IfBlock);
         codeBuilder("w","            }");
@@ -304,8 +366,11 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ElseIfNode node)
     {
-        codeBuilder("a","            else if ");
-        codeBuilder("w",$"{node.Condition}" + "{");
+
+        codeBuilder("a","            else if (");
+        Visit(node.Condition);
+        codeBuilder("a", $")");
+        codeBuilder("w", "{");
         codeBuilder("a", "   ");
         Visit(node.ElseIfBlock);
         codeBuilder("w","            }");
@@ -350,7 +415,6 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
         codeBuilder("a", node.Condition.ToString());
         codeBuilder("a", ";");
         
-        Console.WriteLine(node.Update);
         if (node.Update is UnaryOperationNode unaryOperationNode)
         {
             Visit(unaryOperationNode);
@@ -367,11 +431,9 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(BlockNode node)
     {
-        Console.WriteLine(node);
-        
+
         foreach (var Child in node.GetChildren())
         {
-            Console.WriteLine(Child);
             if (Child is StatementNode statementNode)
             {
                 //Console.WriteLine(Child.GetType());
@@ -395,6 +457,102 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(SeqBlockNode node)
     {
+        
+        //get type
+        foreach (var child in node.GetChildren())
+        {
+            if (child is AssignmentNode assignmentNode)
+            {
+                string identifier = assignmentNode.Identifier.ToString();
+               
+                foreach (var gchild in child.GetChildren())
+                {
+                    
+                    if (gchild is ShapeInitNode shapeInitNode)
+                    {
+                        codeBuilder("a", $"         {shapeInitNode.ShapeType} {identifier} = new {shapeInitNode.ShapeType}");
+                        codeBuilder("a", "{");
+                        int parameterCount = 0;
+                        foreach (var arg in shapeInitNode.Arguments)
+                        {
+                            
+                            Console.WriteLine(arg.Value.GetType());
+                            Console.WriteLine("PARAMETER COUNT: " + parameterCount);
+                            if (arg.Value is FunctionCallNode functionCallNode)
+                            {
+                                if (parameterCount > 0)
+                                {
+                                    codeBuilder("a", ",");
+                                }
+
+                                codeBuilder("a", $"{arg.Key} = Functions.{functionCallNode.FunctionIdentifier}(");
+                                parameterCount++;
+                                int Count = 0;
+                                foreach (var Farg in functionCallNode.Arguments)
+                                {
+                                    if (Count > 0)
+                                    {
+                                        codeBuilder("a", ",");
+
+                                    }
+                                    codeBuilder("a",$"{Farg.ToString()}");
+                                    Count++;   
+                                }
+                                codeBuilder("a", ")");
+                                
+                                //Console.WriteLine(functionCallNode);
+                            }
+                            
+                            if (arg.Value is TupleNode tupleNode)
+                            {
+                                if (parameterCount > 0)
+                                {
+                                    codeBuilder("a", ",");
+                                }
+                                
+                               
+                                
+                                codeBuilder("a", $"{arg.Key} = ({arg.Value})");
+                                parameterCount++;
+                                //Console.WriteLine(tupleNode);
+                            }
+                            
+                            if (arg.Value is IntegerLiteralNode integerLiteralNode)
+                            {
+                                if (parameterCount > 0)
+                                {
+                                    codeBuilder("a", ",");
+                                }
+                                
+                                codeBuilder("a", $"{arg.Key} = {integerLiteralNode}");
+                                parameterCount++;
+                                //Console.WriteLine(integerLiteralNode);
+                            }
+                            
+                            if (arg.Value is FloatLiteralNode floatLiteralNode)
+                            {
+                                if (parameterCount > 0)
+                                {
+                                    codeBuilder("a", ",");
+                                }
+                                
+                                
+                                
+                                codeBuilder("a", $"{arg.Key} = {floatLiteralNode}");
+                                parameterCount++;
+                                //Console.WriteLine(floatLiteralNode);
+                            }
+                            
+                            
+                        }
+                        
+                        codeBuilder("a", "};");
+                        codeBuilder("w","");
+                    }
+                }
+            }
+        }
+
         return node;
     }
 
@@ -415,7 +573,6 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ExpressionNode node)
     {
-        
         if (node.RightOperand != null)
         {
             
@@ -426,7 +583,19 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
         
             if (node.OperatorNode is OperatorNode operatorNode)
             {
-                codeBuilder("a", " " + operatorNode.OperatorSymbol + " ");
+                switch (node.OperatorNode.OperatorSymbol)
+                {
+                    case "and":
+                        codeBuilder("a", " && ");
+                        break;
+                    case "or":
+                        codeBuilder("a", " || ");
+                        break;
+                    default:
+                        codeBuilder("a", " " + operatorNode.OperatorSymbol + " ");
+                        break;
+                }
+                
             }
         
             if (node.RightOperand is ExpressionNode rightOperand)
@@ -448,6 +617,15 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(FrameDefNode node)
     {
+        string sequenceCallWithoutParams = node.SequenceCall.ToString().Substring(0, node.SequenceCall.ToString().IndexOf('(') + 1);
+        string sequenceCallParams = node.SequenceCall.ToString().Substring(node.SequenceCall.ToString().IndexOf('(') + 1);
+        
+        if (sequenceCallParams.Substring(0, sequenceCallParams.IndexOf(')')) != "") {
+            sequenceCallParams = $", {sequenceCallParams}";
+        }
+        
+        codeBuilder("w", $"\t \t \t {sequenceCallWithoutParams}{node.FrameTime}{sequenceCallParams};");
+        
         return node;
     }
 
@@ -490,11 +668,44 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(SequenceCallNode node)
     {
+        
+        
         return node;
     }
 
     public override IASTNode? Visit(SequenceNode node)
     {
+
+        foreach (var child in node.GetChildren()) {
+            //Console.WriteLine(child.GetType());
+            if (child is SeqBlockNode seqBlockNode)
+            {
+                Visit(seqBlockNode);
+            }
+            
+            if (child is IdentifierNode identifierNode)
+            {
+                 //Console.WriteLine(child);
+            }
+            
+            
+            // if (child.GetType() == typeof(SeqBlockNode)) {
+            //     foreach (var grandChild in child.GetChildren()) {
+            //         
+            //         if (grandChild.GetType() != typeof(AnimationNode)) {
+            //             codeBuilder("a", $"\t\t{grandChild.ToString()} \n");
+            //         }
+            //         if (grandChild.GetType() == typeof(AnimationNode)) {
+            //             codeBuilder("a", $"\t\tframeBuffer = renderAnimation({grandChild.ToString()}, frameOffset, frameBuffer); \n");
+            //         }
+            //         Console.WriteLine($"\t {grandChild.ToString()}");
+            //
+            //     }
+            // }
+            //Visit((SeqBlockPartNode)child);
+        }
+        codeBuilder("a", "\t\treturn framebuffer; \n \t} \n");
+        
         return node;
     }
 

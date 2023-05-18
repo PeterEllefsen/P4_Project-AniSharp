@@ -356,16 +356,19 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitOperator(AnimationLanguageRulesParser.OperatorContext operatorContext)
     {
-        string operatorString = operatorContext.GetText();
-        
-        OperatorNode operatorNode = new OperatorNode(operatorString, GetSourceLocation(operatorContext.Start));
+        if (operatorContext.logicOpp() != null)
+        {
+            return VisitLogicOpp(operatorContext.logicOpp());
+        }
 
+        string operatorString = operatorContext.GetText();
+        OperatorNode operatorNode = new OperatorNode(operatorString, GetSourceLocation(operatorContext.Start));
         return operatorNode;
     }
 
 
-    
-    
+
+
 
     public override IASTNode VisitIntegerExpression(AnimationLanguageRulesParser.IntegerExpressionContext context)
     {
