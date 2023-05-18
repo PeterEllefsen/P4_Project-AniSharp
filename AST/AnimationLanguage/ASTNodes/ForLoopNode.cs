@@ -4,13 +4,13 @@ using ASTCommon;
 public class ForLoopNode : StatementNode
 {
     public IASTNode Initialization { get; set; } // Represents the initialization of the for loop.
-    public IASTNode Condition { get; set; } // Represents the condition that must be met for the for loop to continue running.
+    public ExpressionNode Condition { get; set; } // Represents the condition that must be met for the for loop to continue running.
     public IASTNode Update { get; set; } // Represents the update of the for loop.
     public BlockNode Body { get; set; } // Represents the body of the for loop.
 
     public ForLoopNode(
         IASTNode initialization,
-        IASTNode condition,
+        ExpressionNode condition,
         IASTNode update,
         BlockNode body,
         SourceLocation sourceLocation)
