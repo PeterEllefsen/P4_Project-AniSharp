@@ -44,6 +44,7 @@ group function ColorBasedOnNumber(int number) {
 }
 
 string function ColorBasedOnText(string text) {
+
     text = "hej jeg er sej" + "hej";
     
     return text;

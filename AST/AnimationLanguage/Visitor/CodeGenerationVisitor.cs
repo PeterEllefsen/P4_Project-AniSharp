@@ -10,13 +10,13 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
     private void CreateFilesForCompilation()
     {
         //if file exists delete it
-        if (File.Exists("../../codegen/Program.txt")) File.Delete("../../codegen/Program.txt");
+        if (File.Exists("../../codegen/Program.txt")) File.Delete("../../codegen/Program.cs");
 
         //files to create
         //Program.cs for main
         //function class for all functions
         //Sequence class containing methods that create sequences
-        using (var fs = File.Create("../../../codegen/Program.txt", 1024))
+        using (var fs = File.Create("../../../codegen/Program.cs", 1024))
         {
         }
         // using (FileStream fs = File.Create("../../codegen/Functions.cs", 1024))
@@ -30,7 +30,7 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
     private void codeBuilder(string p, string appendingString)
     {
         var path = "";
-        path = "../../../codegen/Program.txt";
+        path = "../../../codegen/Program.cs";
 
 
         if (p == "a")
@@ -69,8 +69,6 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
                 codeBuilder("w", "");
             }
         }
-
-        
         codeBuilder("w","       }");
         codeBuilder("w","    }");
         codeBuilder("w","}");
@@ -139,8 +137,6 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
     public override IASTNode? Visit(AssignmentNode node)
     {
         
-        if (node.VariableType != VariableType.Null)
-        {
             if (node.IsDeclaration)
             {
                 codeBuilder("a",$"            {node.VariableType.ToString().ToLower()} {node.Identifier}");
@@ -150,33 +146,37 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
                 codeBuilder("a",$"            {node.Identifier}");
             }
 
-            //assigment operator insert
-            switch (node.AssignmentOperator)
+            if (node.IsDeclaration)
             {
-                case AssignmentOperator.Assign:
-                    codeBuilder("a", " = ");
-                    break;
-                case AssignmentOperator.PlusEqual:
-                    codeBuilder("a", " += ");
-                    break;
-                case AssignmentOperator.MinusEqual:
-                    codeBuilder("a", " -= ");
-                    break;
-                // Add cases for other assignment operators as needed
-                default:
-                    // Handle the default case, if necessary
-                    break;
+                codeBuilder("a", " = ");
             }
+            else
+            {
+                switch (node.AssignmentOperator)
+                {
+                    case AssignmentOperator.Assign:
+                        codeBuilder("a", " = ");
+                        break;
+                    case AssignmentOperator.PlusEqual:
+                        codeBuilder("a", " += ");
+                        break;
+                    case AssignmentOperator.MinusEqual:
+                        codeBuilder("a", " -= ");
+                        break;
+                    // Add cases for other assignment operators as needed
+                    default:
+                        // Handle the default case, if necessary
+                        break;
+                }
+            }
+           
 
             //insert expression
             Visit(node.Expression);
 
             codeBuilder("w",";");
 
-        }else 
-        {
-            Console.WriteLine("Variable type is null");
-        }
+       
         
         
         return node;
@@ -199,7 +199,7 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(FunctionDeclarationNode node)
     {
-        codeBuilder("a",$"           public static {node.ReturnType.ToString().ToLower()} {node.Identifier}(");
+        codeBuilder("a",$"           static {node.ReturnType.ToString().ToLower()} {node.Identifier}(");
         foreach (var Child in node.GetChildren())
         {
             if (Child is ParameterNode parameterNode)
@@ -337,7 +337,7 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(ForLoopNode node)
     {
-        Console.WriteLine(node.ToString());
+        //Console.WriteLine(node.ToString());
         codeBuilder("a", "\n\n");
         codeBuilder("a", "            for(");
         
@@ -367,16 +367,26 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 
     public override IASTNode? Visit(BlockNode node)
     {
+        Console.WriteLine(node);
+        
         foreach (var Child in node.GetChildren())
         {
+            Console.WriteLine(Child);
             if (Child is StatementNode statementNode)
             {
                 //Console.WriteLine(Child.GetType());
                 Visit(statementNode);
 
-            }else if (Child is ReturnNode returnNode)
+            }
+            
+            if (Child is ReturnNode returnNode)
             {
                 Visit(returnNode);
+            }
+            
+            if (Child is BlockNode blockNode)
+            {
+                Visit(blockNode);
             }
         }
 
