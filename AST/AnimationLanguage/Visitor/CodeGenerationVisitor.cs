@@ -330,7 +330,6 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
         codeBuilder("a", "            while(");
         codeBuilder("w", $"{node.Condition}" + ")" + "\n" + "            {");
         codeBuilder("a", "   ");
-        //codeBuilder("w", $"{node.Body}" + "\n");
         Visit(node.Body);
         codeBuilder("w", "            }");
         return node;
