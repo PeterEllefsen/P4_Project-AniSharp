@@ -9,6 +9,8 @@ public class AssignmentNode : StatementNode
     public ExpressionNode Expression { get; set; } //This is the expression that is being assigned to the identifier.
 
     public VariableType VariableType { get; set; }
+    
+    public bool IsDeclaration { get; set; }
 
     
     //Constructor taking in the identifier, expression, and source location:
@@ -35,7 +37,7 @@ public class AssignmentNode : StatementNode
     {
         string assignmentOperatorStr = AssignmentOperator.ToString();
         string variableTypeStr = VariableType.ToString();
-        return $"AssignmentNode: {Identifier} {assignmentOperatorStr} {Expression} (VariableType: {variableTypeStr})";
+        return $"AssignmentNode: {Identifier} {assignmentOperatorStr} {Expression} (IsDeclaration? {IsDeclaration}) (VariableType: {variableTypeStr})";
     }
 
     

@@ -135,8 +135,10 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
         // Determine the VariableType for the assignment
         VariableType variableType = VariableType.Null;
+        bool isDeclaration = false;
         if (context.type() != null)
         {
+            isDeclaration = true; // The assignment is a declaration
             TypeNode.TypeKind typeKind = VisitType(context.type());
             variableType = TypeKindToVariableType(typeKind);
         }
@@ -151,12 +153,15 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             expression,
             variableType,
             sourceLocation
-        );
+        )
+        {
+            IsDeclaration = isDeclaration // Set the IsDeclaration property
+        };
         return assignmentNode;
     }
 
-    
-    
+
+
     public TypeNode.TypeKind VisitType(AnimationLanguageRulesParser.TypeContext context)
     {
         if (context.INT() != null)
@@ -351,11 +356,8 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitOperator(AnimationLanguageRulesParser.OperatorContext operatorContext)
     {
-        Console.WriteLine($"VisitOperator: {operatorContext.GetText()}");
         string operatorString = operatorContext.GetText();
-
-        // Create your OperatorNode here, using whatever constructor or factory method your class provides.
-        // For this example, we'll assume OperatorNode has a constructor that takes a string.
+        
         OperatorNode operatorNode = new OperatorNode(operatorString, GetSourceLocation(operatorContext.Start));
 
         return operatorNode;
@@ -1051,7 +1053,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitCall_parameters(AnimationLanguageRulesParser.Call_parametersContext context)
     {
-        Console.WriteLine("VisitCall_parameters" + context.GetText());
         List<IASTNode> arguments = new List<IASTNode>();
         
         foreach(var child in context.children)

@@ -174,6 +174,9 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
             TypeNode.TypeKind typeKind = ConvertStringTypeToTypeKind(symbol.Type);
             TypeNode typeNode = new TypeNode(typeKind, node.SourceLocation);
             node.Type = typeNode;
+
+            // Set the VariableType property of the IdentifierNode to the VariableType of the symbol
+            node.VariableType = ConvertStringTypeToVariableType(symbol.Type);
         }
 
         Console.WriteLine("Type checked identifier node");
@@ -184,89 +187,53 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
 
 
-    public override IASTNode? Visit(AssignmentNode node)
-{
-    IdentifierNode identifierNode = node.Identifier;
-    string variableName = identifierNode.Name;
-    string variableType;
-    IASTNode decoratedAssignmentNode = identifierNode;
-    // Check if the expression is an Identifier
-    if (node.Expression.ExpressionType == ExpressionNodeType.Identifier)
+
+    public override IASTNode Visit(AssignmentNode node)
     {
-        IdentifierNode rightIdentifierNode = (IdentifierNode)node.Expression;
-        string rightVariableName = rightIdentifierNode.Name;
+        Console.WriteLine("Type checking assignment node");
+        Console.WriteLine(node);
 
-        // Lookup the symbols for the left and right identifiers
-        Symbol? leftSymbol = _symbolTable.Lookup(variableName);
-        Symbol? rightSymbol = _symbolTable.Lookup(rightVariableName);
+        // Type check IdentifierNode
+        IdentifierNode decoratedIdentifierNode = (IdentifierNode?)Visit(node.Identifier) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
 
-        Console.WriteLine("RIGHT VARIABLE NAME: " + rightVariableName);
+        // Type check ExpressionNode
+        ExpressionNode decoratedExpressionNode = (ExpressionNode?)Visit(node.Expression) ?? throw new InvalidOperationException("Failed to create a decorated expression node.");
 
-        if (leftSymbol == null || rightSymbol == null)
+        // Check if the identifier already exists in the symbol table
+        if (_symbolTable.IsDefined(decoratedIdentifierNode.Name))
         {
-            throw new InvalidOperationException($"Undefined variable(s) in assignment: '{variableName}' or '{rightVariableName}'.");
-        }
-
-        // Check if the types match
-        if (leftSymbol.Type != rightSymbol.Type)
-        {
-            throw new InvalidOperationException($"Type mismatch: Cannot assign {rightSymbol.Type} to {leftSymbol.Type} for variable '{variableName}'.");
-        }
-
-        variableType = leftSymbol.Type;
-
-        Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{variableType}', ExpressionType='{rightSymbol.Type}'");
-
-        // Return a decorated AssignmentNode
-        //AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, rightIdentifierNode,  node.SourceLocation);
-        return decoratedAssignmentNode;
-    }
-    else
-    {
-        // Set the Value property of the ExpressionNode before calling Visit
-        if (node.Expression.ExpressionType == ExpressionNodeType.Literal)
-        {
-            node.Expression.Value = node.Expression;
+            // If the assignment is not a declaration (node.VariableType is Null), 
+            // then the variable type should match the type of the variable in the symbol table
+            Symbol? symbol = _symbolTable.Lookup(decoratedIdentifierNode.Name);
+            if (symbol != null)
+            {
+                VariableType symbolVariableType = ConvertStringTypeToVariableType(symbol.Type);
+                // if (node.VariableType == VariableType.Null && symbolVariableType != decoratedExpressionNode.NodeType)
+                // {
+                //     throw new InvalidOperationException("Type mismatch in assignment.");
+                // }
+            }
         }
         else
         {
-            node.Expression.Value = node.Expression.RightOperand;
+            // If the identifier doesn't exist in the symbol table, add it
+            _symbolTable.AddVariable(decoratedIdentifierNode.Name, decoratedExpressionNode.NodeType.ToString(), decoratedExpressionNode);
         }
 
-        // Visit the ExpressionNode to ensure its decorated correctly
-        ExpressionNode expression = (ExpressionNode?)Visit(node.Expression) ?? throw new InvalidOperationException("Failed to create a decorated expression node.");
-        string expressionType = expression.Type?.ToString() ?? "Unknown";
+        // Create decorated AssignmentNode
+        AssignmentNode decoratedAssignmentNode = new AssignmentNode(
+            decoratedIdentifierNode,
+            node.AssignmentOperator,
+            decoratedExpressionNode,
+            node.VariableType,
+            node.SourceLocation
+        );
 
-        Symbol? existingSymbol = _symbolTable.Lookup(variableName);
-        if (existingSymbol != null)
-        {
-            Console.WriteLine("THIS IS THE SYMBOL: " + existingSymbol.Name);
-            variableType = existingSymbol.Type;
-        }
-        else
-        {
-            Console.WriteLine("SYMBOL IS NULL");
-            _symbolTable.AddVariable(variableName, expressionType); //Add the symbol to the symbol table with the type of the expression if it is not null. Otherwise the type is unknown.
-            variableType = expressionType;
-            Console.WriteLine("New Symbol added to symbol table: " + node.Identifier.Name + " with type: " + expression.Type);
-        }
-
-        // Check if the variable type matches the expression type.
-        if (variableType != null && expressionType != null && !variableType.Equals(expressionType))
-        {
-            Console.WriteLine($"Error in assignment: variableName = {variableName}, variableType = {variableType}, expressionType = {expressionType}");
-            throw new InvalidOperationException($"Type mismatch: Cannot assign {expressionType} to {variableType} for variable '{variableName}'.");
-        }
-
-
-
-        Console.WriteLine($"Type checked assignment node: Identifier='{variableName}', Type='{variableType}', ExpressionType='{expressionType}'");
-
-        // Return a decorated AssignmentNode
-        //AssignmentNode decoratedAssignmentNode = new AssignmentNode(identifierNode, node.AssignmentOperator, expression, node.SourceLocation);
+        Console.WriteLine("Type checked assignment node");
         return decoratedAssignmentNode;
     }
-}
+
+
 
 
 
@@ -1311,7 +1278,30 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     }
 
 
-    
+    public VariableType ConvertStringTypeToVariableType(string type)
+    {
+        return type.ToLower() switch
+        {
+            "int" => VariableType.Int,
+            "float" => VariableType.Float,
+            "string" => VariableType.String,
+            "bool" => VariableType.Bool,
+            _ => VariableType.Null,
+        };
+    }
+
+    public string ConvertVariableTypeToString(VariableType variableType)
+    {
+        return variableType switch
+        {
+            VariableType.Int => "int",
+            VariableType.Float => "float",
+            VariableType.String => "string",
+            VariableType.Bool => "bool",
+            _ => "null",
+        };
+    }
+
     
 }
 
