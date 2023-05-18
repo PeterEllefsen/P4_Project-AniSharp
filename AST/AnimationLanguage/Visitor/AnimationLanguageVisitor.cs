@@ -356,12 +356,17 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitOperator(AnimationLanguageRulesParser.OperatorContext operatorContext)
     {
-        string operatorString = operatorContext.GetText();
-        
-        OperatorNode operatorNode = new OperatorNode(operatorString, GetSourceLocation(operatorContext.Start));
+        Console.WriteLine(operatorContext.GetText());
+        if (operatorContext.logicOpp() != null)
+        {
+            return VisitLogicOpp(operatorContext.logicOpp());
+        }
 
+        string operatorString = operatorContext.GetText();
+        OperatorNode operatorNode = new OperatorNode(operatorString, GetSourceLocation(operatorContext.Start));
         return operatorNode;
     }
+
 
 
     
@@ -761,8 +766,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         ExpressionNode condition = (ExpressionNode)VisitExpression(context.expression());
         BlockNode body = (BlockNode)VisitBlock(context.block());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
-
-        Console.WriteLine(condition);
+        
         return new WhileLoopNode(condition, body, sourceLocation);
     }
     
