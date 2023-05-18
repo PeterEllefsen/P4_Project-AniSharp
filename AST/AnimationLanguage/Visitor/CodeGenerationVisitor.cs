@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Emit;
+using System.Text.RegularExpressions;
 using AnimationLanguage.ASTCommon;
 using AnimationLanguage.ASTNodes;
 using systemio = System.IO;
@@ -7,7 +8,6 @@ namespace AnimationLanguage.Visitor;
 
 public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 {
-
     private void CreateFilesForCompilation()
     {
         //if file exists delete it
@@ -49,15 +49,29 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
     public (int, int) center { get; set; }
     public double radius { get; set; }
     public string color { get; set; }
-    
     public int borderWidth { get; set; }
+
+         public Circle()
+        {
+        center = (0,0); // Default center
+        radius = 1; // Default radius
+        color = ""#000000""; // Default color
+        borderWidth = 1; // Default border width
+        }
+
 }
 public class Polygon{
-    public (int, int) center { get; set; }
-    public double radius { get; set; }
+    public List<double[]> points { get; set; }
     public string color { get; set; }
-    
     public int borderWidth { get; set; }
+
+     public Polygon()
+    {
+        points = new List<double[]>();
+        color = ""#000000""; // Default color
+        borderWidth = 1; // Default border width
+    }
+
 }
 public class group : Dictionary<string, object>
 {
@@ -77,35 +91,36 @@ public class group : Dictionary<string, object>
     return hex;
 }");
     }
-    
-    
+
+
     public override IASTNode? Visit(ProgramNode node)
     {
         CreateFilesForCompilation();
-        
-        codeBuilder("w","using System;");
-        codeBuilder("w","");
-        codeBuilder("w","namespace AnimationLanguage;");
-        codeBuilder("w","");
-        
-        
+
+        codeBuilder("w", "using System;");
+        codeBuilder("w", "");
+        codeBuilder("w", "namespace AnimationLanguage;");
+        codeBuilder("w", "");
+
+
         insertBoilerplate();
-        
+
         codeBuilder("w", "public static class Sequences {");
-        
+
         foreach (var child in node.GetChildren())
         {
-            if (child is SequenceNode sequenceNode) 
+            if (child is SequenceNode sequenceNode)
             {
-                codeBuilder("a","\tpublic static List<List<string>>" + child.ToString() + " { \n");
-                codeBuilder("a","\t\tList<List<string>> framebuffer = new List<List<string>>(); \n");
+                codeBuilder("a", "\tpublic static List<List<string>>" + child.ToString() + " { \n");
+                codeBuilder("a", "\t\tList<List<string>> framebuffer = new List<List<string>>(); \n");
                 Visit(sequenceNode);
             }
         }
+
         codeBuilder("w", "}  ");
-        
-        
-        codeBuilder("w","public static class Functions");
+
+
+        codeBuilder("w", "public static class Functions");
         codeBuilder("w", "   {");
         insertFuncBoilerplate();
         foreach (var child in node.GetChildren())
@@ -116,50 +131,45 @@ public class group : Dictionary<string, object>
                 codeBuilder("w", "");
             }
         }
-        codeBuilder("w","   }");
-        
-        
-        codeBuilder("w","public static class Program");
-        codeBuilder("w","{");
-        codeBuilder("w","   public static void Main()");
-        codeBuilder("w","   {");
-        
+
+        codeBuilder("w", "   }");
+
+
+        codeBuilder("w", "public static class Program");
+        codeBuilder("w", "{");
+        codeBuilder("w", "   public static void Main()");
+        codeBuilder("w", "   {");
+
         foreach (var child in node.GetChildren())
         {
-            if (child.GetType() == typeof(TimelineBlockNode)) 
+            if (child.GetType() == typeof(TimelineBlockNode))
             {
-                foreach (var timelineChild in child.GetChildren()) 
+                foreach (var timelineChild in child.GetChildren())
                 {
                     Visit((FrameDefNode)timelineChild);
                 }
             }
         }
-        
-        codeBuilder("w","   }");
-        codeBuilder("w","}");
 
-
+        codeBuilder("w", "   }");
+        codeBuilder("w", "}");
 
 
         //Console.WriteLine(Child.GetType());
-            
+
         return node;
     }
-    
+
     public override IASTNode? Visit(SetupNode node)
     {
-        
-        
         foreach (var Child in node.GetChildren())
         {
             if (Child is GroupingElementsNode groupingElementsNode)
             {
                 Visit(groupingElementsNode);
             }
-            
-            
         }
-        
+
         return node;
     }
 
@@ -172,78 +182,77 @@ public class group : Dictionary<string, object>
                 Visit(keyValuePair);
             }
         }
+
         return node;
     }
 
     public override IASTNode? Visit(KeyValuePairNode node)
     {
-
         foreach (var Child in node.GetChildren())
         {
             if (Child is IntegerLiteralNode integerLiteralNode)
             {
                 //AppendToFile("main", Child.ToString() + ";\n");
-            } else if (Child is IdentifierNode identifierNode)
+            }
+            else if (Child is IdentifierNode identifierNode)
             {
                 //AppendToFile("main", "int ");
                 Visit(identifierNode);
             }
         }
+
         return node;
     }
 
     public override IASTNode? Visit(IdentifierNode node)
     {
         //AppendToFile("main", node.ToString() + " = ");
-        
+
         return node;
     }
 
     public override IASTNode? Visit(AssignmentNode node)
     {
-        
-            if (node.IsDeclaration)
-            {
-                codeBuilder("a",$"            {node.VariableType.ToString().ToLower()} {node.Identifier}");
-            }
-            else
-            {
-                codeBuilder("a",$"            {node.Identifier}");
-            }
+        if (node.IsDeclaration)
+        {
+            codeBuilder("a", $"            {node.VariableType.ToString().ToLower()} {node.Identifier}");
+        }
+        else
+        {
+            codeBuilder("a", $"            {node.Identifier}");
+        }
 
-            if (node.IsDeclaration)
+        if (node.IsDeclaration)
+        {
+            codeBuilder("a", " = ");
+        }
+        else
+        {
+            switch (node.AssignmentOperator)
             {
-                codeBuilder("a", " = ");
+                case AssignmentOperator.Assign:
+                    codeBuilder("a", " = ");
+                    break;
+                case AssignmentOperator.PlusEqual:
+                    codeBuilder("a", " += ");
+                    break;
+                case AssignmentOperator.MinusEqual:
+                    codeBuilder("a", " -= ");
+                    break;
+                // Add cases for other assignment operators as needed
+                default:
+                    // Handle the default case, if necessary
+                    break;
             }
-            else
-            {
-                switch (node.AssignmentOperator)
-                {
-                    case AssignmentOperator.Assign:
-                        codeBuilder("a", " = ");
-                        break;
-                    case AssignmentOperator.PlusEqual:
-                        codeBuilder("a", " += ");
-                        break;
-                    case AssignmentOperator.MinusEqual:
-                        codeBuilder("a", " -= ");
-                        break;
-                    // Add cases for other assignment operators as needed
-                    default:
-                        // Handle the default case, if necessary
-                        break;
-                }
-            }
-           
+        }
 
-            //insert expression
-            Visit(node.Expression);
 
-            codeBuilder("w",";");
+        //insert expression
+        Visit(node.Expression);
 
-       
-        
-        
+        codeBuilder("w", ";");
+
+
         return node;
     }
 
@@ -264,7 +273,7 @@ public class group : Dictionary<string, object>
 
     public override IASTNode? Visit(FunctionDeclarationNode node)
     {
-        codeBuilder("a",$"           static {node.ReturnType.ToString().ToLower()} {node.Identifier}(");
+        codeBuilder("a", $"           static {node.ReturnType.ToString().ToLower()} {node.Identifier}(");
         foreach (var Child in node.GetChildren())
         {
             if (Child is ParameterNode parameterNode)
@@ -272,8 +281,9 @@ public class group : Dictionary<string, object>
                 Visit(parameterNode);
             }
         }
-        codeBuilder("w",")");
-        codeBuilder("w","           {");
+
+        codeBuilder("w", ")");
+        codeBuilder("w", "           {");
         foreach (var Child in node.GetChildren())
         {
             if (Child is BlockNode blockNode)
@@ -281,7 +291,8 @@ public class group : Dictionary<string, object>
                 Visit(blockNode);
             }
         }
-        codeBuilder("w","           }");
+
+        codeBuilder("w", "           }");
 
         return node;
     }
@@ -293,7 +304,7 @@ public class group : Dictionary<string, object>
 
     public override IASTNode? Visit(ParameterNode node)
     {
-        codeBuilder("a",$"{node.DataType.ToString().ToLower()} {node.Name}");
+        codeBuilder("a", $"{node.DataType.ToString().ToLower()} {node.Name}");
         return node;
     }
 
@@ -333,23 +344,22 @@ public class group : Dictionary<string, object>
         {
             Visit(whileLoopNode);
         }
-        
-        
+
 
         return node;
     }
 
     public override IASTNode? Visit(IfStatementNode node)
     {
-        codeBuilder("w", ""); 
-        codeBuilder("a","            if (");
+        codeBuilder("w", "");
+        codeBuilder("a", "            if (");
 
         Visit(node.Condition);
         codeBuilder("a", ")");
         codeBuilder("w", "{");
         codeBuilder("a", "   ");
         Visit(node.IfBlock);
-        codeBuilder("w","            }");
+        codeBuilder("w", "            }");
 
         foreach (var child in node.ElseIfBranches)
         {
@@ -360,43 +370,40 @@ public class group : Dictionary<string, object>
         {
             Visit(node.ElseBranch);
         }
-        
-        
 
-        
+
         //codeBuilder("w", node.ToString());
-        
-        
+
+
         return node;
     }
 
     public override IASTNode? Visit(ElseIfNode node)
     {
-
-        codeBuilder("a","            else if (");
+        codeBuilder("a", "            else if (");
         Visit(node.Condition);
         codeBuilder("a", $")");
         codeBuilder("w", "{");
         codeBuilder("a", "   ");
         Visit(node.ElseIfBlock);
-        codeBuilder("w","            }");
-        
+        codeBuilder("w", "            }");
+
         return node;
     }
 
     public override IASTNode? Visit(ElseNode node)
     {
-        codeBuilder("a","            else");
-        codeBuilder("w","{");
+        codeBuilder("a", "            else");
+        codeBuilder("w", "{");
         codeBuilder("a", "   ");
         Visit(node.ElseBlock);
-        codeBuilder("w","            }");
-        
+        codeBuilder("w", "            }");
+
         return node;
     }
 
     public override IASTNode? Visit(WhileLoopNode node)
-    {   
+    {
         codeBuilder("a", "\n\n");
         codeBuilder("a", "            while(");
         codeBuilder("w", $"{node.Condition}" + ")" + "\n" + "            {");
@@ -411,7 +418,7 @@ public class group : Dictionary<string, object>
         //Console.WriteLine(node.ToString());
         codeBuilder("a", "\n\n");
         codeBuilder("a", "            for(");
-        
+
         if (node.Initialization is AssignmentNode assignmentNode)
         {
             Visit(assignmentNode);
@@ -420,38 +427,38 @@ public class group : Dictionary<string, object>
 
         codeBuilder("a", node.Condition.ToString());
         codeBuilder("a", ";");
-        
+
         if (node.Update is UnaryOperationNode unaryOperationNode)
         {
             Visit(unaryOperationNode);
             codeBuilder("a", ")");
         }
+
         codeBuilder("a", "{");
         if (node.Body is BlockNode blockNode)
         {
             Visit(blockNode);
         }
+
         codeBuilder("a", "}");
         return node;
     }
 
     public override IASTNode? Visit(BlockNode node)
     {
-
         foreach (var Child in node.GetChildren())
         {
             if (Child is StatementNode statementNode)
             {
                 //Console.WriteLine(Child.GetType());
                 Visit(statementNode);
-
             }
-            
+
             if (Child is ReturnNode returnNode)
             {
                 Visit(returnNode);
             }
-            
+
             if (Child is BlockNode blockNode)
             {
                 Visit(blockNode);
@@ -463,95 +470,198 @@ public class group : Dictionary<string, object>
 
     public override IASTNode? Visit(SeqBlockNode node)
     {
-        
         //get type
         foreach (var child in node.GetChildren())
         {
             if (child is AssignmentNode assignmentNode)
             {
                 string identifier = assignmentNode.Identifier.ToString();
-               
+
                 foreach (var gchild in child.GetChildren())
                 {
-                    
+                    string points = "";
                     if (gchild is ShapeInitNode shapeInitNode)
                     {
-                        codeBuilder("a", $"         {shapeInitNode.ShapeType} {identifier} = new {shapeInitNode.ShapeType}");
+                        codeBuilder("a",
+                            $"         {shapeInitNode.ShapeType} {identifier} = new {shapeInitNode.ShapeType}");
                         codeBuilder("a", "{");
-                        int parameterCount = 0;
-                        foreach (var arg in shapeInitNode.Arguments)
-                        {
-                            
-                            if (arg.Value is FunctionCallNode functionCallNode)
-                            {
-                                if (parameterCount > 0)
-                                {
-                                    codeBuilder("a", ",");
-                                }
 
-                                codeBuilder("a", $"{arg.Key} = Functions.{functionCallNode.FunctionIdentifier}(");
-                                parameterCount++;
-                                int Count = 0;
-                                foreach (var Farg in functionCallNode.Arguments)
+
+                        if (shapeInitNode.ShapeType.ToString() == "Circle")
+                        {
+                            int parameterCount = 0;
+                            foreach (var arg in shapeInitNode.Arguments)
+                            {
+                                if (arg.Value is FunctionCallNode functionCallNode)
                                 {
-                                    if (Count > 0)
+                                    if (parameterCount > 0)
                                     {
                                         codeBuilder("a", ",");
-
                                     }
-                                    codeBuilder("a",$"{Farg.ToString()}");
-                                    Count++;   
+
+                                    codeBuilder("a", $"{arg.Key} = Functions.{functionCallNode.FunctionIdentifier}(");
+                                    parameterCount++;
+                                    int Count = 0;
+                                    foreach (var Farg in functionCallNode.Arguments)
+                                    {
+                                        if (Count > 0)
+                                        {
+                                            codeBuilder("a", ",");
+                                        }
+
+                                        codeBuilder("a", $"{Farg.ToString()}");
+                                        Count++;
+                                    }
+
+                                    codeBuilder("a", ")");
+
+                                    //Console.WriteLine(functionCallNode);
                                 }
-                                codeBuilder("a", ")");
-                                
-                                //Console.WriteLine(functionCallNode);
-                            }
-                            
-                            if (arg.Value is TupleNode tupleNode)
-                            {
-                                if (parameterCount > 0)
+
+                                if (arg.Value is TupleNode tupleNode)
                                 {
-                                    codeBuilder("a", ",");
+                                    if (parameterCount > 0)
+                                    {
+                                        codeBuilder("a", ",");
+                                    }
+
+
+                                    codeBuilder("a", $"{arg.Key} = ({arg.Value})");
+                                    parameterCount++;
+                                    //Console.WriteLine(tupleNode);
                                 }
-                                
-                               
-                                
-                                codeBuilder("a", $"{arg.Key} = ({arg.Value})");
-                                parameterCount++;
-                                //Console.WriteLine(tupleNode);
-                            }
-                            
-                            if (arg.Value is IntegerLiteralNode integerLiteralNode)
-                            {
-                                if (parameterCount > 0)
+
+                                if (arg.Value is IntegerLiteralNode integerLiteralNode)
                                 {
-                                    codeBuilder("a", ",");
+                                    if (parameterCount > 0)
+                                    {
+                                        codeBuilder("a", ",");
+                                    }
+
+                                    codeBuilder("a", $"{arg.Key} = {integerLiteralNode}");
+                                    parameterCount++;
+                                    //Console.WriteLine(integerLiteralNode);
                                 }
-                                
-                                codeBuilder("a", $"{arg.Key} = {integerLiteralNode}");
-                                parameterCount++;
-                                //Console.WriteLine(integerLiteralNode);
-                            }
-                            
-                            if (arg.Value is FloatLiteralNode floatLiteralNode)
-                            {
-                                if (parameterCount > 0)
+
+                                if (arg.Value is FloatLiteralNode floatLiteralNode)
                                 {
-                                    codeBuilder("a", ",");
+                                    if (parameterCount > 0)
+                                    {
+                                        codeBuilder("a", ",");
+                                    }
+
+
+                                    codeBuilder("a", $"{arg.Key} = {floatLiteralNode}");
+                                    parameterCount++;
+                                    //Console.WriteLine(floatLiteralNode);
                                 }
-                                
-                                
-                                
-                                codeBuilder("a", $"{arg.Key} = {floatLiteralNode}");
-                                parameterCount++;
-                                //Console.WriteLine(floatLiteralNode);
+                            }
+                        }
+                        else if (shapeInitNode.ShapeType.ToString() == "Polygon")
+                        {
+                            
+                            foreach (var arg in shapeInitNode.Arguments)
+                            {
+                                int parameterCount = 0;
+
+                                if (arg.Value is FunctionCallNode functionCallNode)
+                                {
+                                    if (parameterCount > 0)
+                                    {
+                                        codeBuilder("a", ",");
+                                    }
+
+                                    codeBuilder("a", $"{arg.Key} = Functions.{functionCallNode.FunctionIdentifier}(");
+                                    parameterCount++;
+                                    int Count = 0;
+                                    foreach (var Farg in functionCallNode.Arguments)
+                                    {
+                                        if (Count > 0)
+                                        {
+                                            codeBuilder("a", ",");
+                                        }
+
+                                        codeBuilder("a", $"{Farg.ToString()}");
+                                        Count++;
+                                    }
+
+                                    codeBuilder("a", ")");
+
+                                    //Console.WriteLine(functionCallNode);
+                                }
+
+                                if (arg.Value is TupleNode tupleNode)
+                                {
+                                    if (parameterCount > 0)
+                                    {
+                                        codeBuilder("a", ",");
+                                    }
+
+                                    if (Regex.IsMatch(arg.Key.ToString(), @"point\d+"))
+                                    {
+                                        Console.WriteLine(arg.Value);
+                                        if (points != "")
+                                        {
+                                            points += ",";
+                                        }
+                                        
+                                        points += $"new double[2] {{{arg.Value}}}";
+                                    }
+                                    else
+                                    {
+                                        codeBuilder("a", $"{arg.Key} = ({arg.Value})");
+                                    }
+                                    
+                                    parameterCount++;
+                                    //Console.WriteLine(tupleNode);
+                                }
+
+                                if (arg.Value is IntegerLiteralNode integerLiteralNode)
+                                {
+                                    if (parameterCount > 0)
+                                    {
+                                        codeBuilder("a", ",");
+                                    }
+
+                                    codeBuilder("a", $"{arg.Key} = {integerLiteralNode}");
+                                    parameterCount++;
+                                    //Console.WriteLine(integerLiteralNode);
+                                }
+
+                                if (arg.Value is FloatLiteralNode floatLiteralNode)
+                                {
+                                    if (parameterCount > 0)
+                                    {
+                                        codeBuilder("a", ",");
+                                    }
+
+
+                                    codeBuilder("a", $"{arg.Key} = {floatLiteralNode}");
+                                    parameterCount++;
+                                    //Console.WriteLine(floatLiteralNode);
+                                }
                             }
                             
                             
                         }
                         
+                        
+                        
                         codeBuilder("a", "};");
-                        codeBuilder("w","");
+                        codeBuilder("w", "");
+
+                        if (shapeInitNode.ShapeType.ToString() == "Polygon")
+                        {
+                            codeBuilder("w", $"List<double[]> {identifier}Points = new List<double[]>");
+                            codeBuilder("w", "{");
+                            codeBuilder("w", points);
+                            codeBuilder("w", "};");
+                            
+                            codeBuilder("w", $"{identifier}.points = {identifier}Points;");
+                        }
+                        
+           
+
                     }
                 }
             }
@@ -564,14 +674,14 @@ public class group : Dictionary<string, object>
                 codeBuilder("a", $"group {identifierGroupingNode.Identifier} = new group();\n");
 
 
-
                 foreach (var expressionNode in identifierGroupingNode.GroupingElements.Expressions)
                 {
-                    Console.WriteLine(expressionNode);
-                    
-                    codeBuilder("w", $"{identifierGroupingNode.Identifier}.Add(\"{expressionNode}\", {expressionNode});");
+                    //Console.WriteLine(expressionNode);
+
+                    codeBuilder("w",
+                        $"{identifierGroupingNode.Identifier}.Add(\"{expressionNode}\", {expressionNode});");
                 }
-                
+
                 // foreach (var VARIABLE in identifierGroupingNode.GroupingElements.KeyValuePairs)
                 // {
                 //     Console.WriteLine(VARIABLE.NodeType);
@@ -581,18 +691,10 @@ public class group : Dictionary<string, object>
                 // {
                 //     Console.WriteLine(VARIABLE.NodeType);
                 // }
-                
-                
-                
-
-
             }
-
-            
         }
-        
-        
-        
+
+
         return node;
     }
 
@@ -615,12 +717,11 @@ public class group : Dictionary<string, object>
     {
         if (node.RightOperand != null)
         {
-            
             if (node.LeftOperand is ExpressionNode leftOperand)
             {
                 codeBuilder("a", leftOperand.ToString());
             }
-        
+
             if (node.OperatorNode is OperatorNode operatorNode)
             {
                 switch (node.OperatorNode.OperatorSymbol)
@@ -635,37 +736,36 @@ public class group : Dictionary<string, object>
                         codeBuilder("a", " " + operatorNode.OperatorSymbol + " ");
                         break;
                 }
-                
             }
-        
+
             if (node.RightOperand is ExpressionNode rightOperand)
             {
-                
                 codeBuilder("a", rightOperand.ToString());
-                
             }
-            
         }
         else
         {
             codeBuilder("a", $"{node.ToString()}");
         }
 
-    
+
         return node;
     }
 
     public override IASTNode? Visit(FrameDefNode node)
     {
-        string sequenceCallWithoutParams = node.SequenceCall.ToString().Substring(0, node.SequenceCall.ToString().IndexOf('(') + 1);
-        string sequenceCallParams = node.SequenceCall.ToString().Substring(node.SequenceCall.ToString().IndexOf('(') + 1);
-        
-        if (sequenceCallParams.Substring(0, sequenceCallParams.IndexOf(')')) != "") {
+        string sequenceCallWithoutParams =
+            node.SequenceCall.ToString().Substring(0, node.SequenceCall.ToString().IndexOf('(') + 1);
+        string sequenceCallParams =
+            node.SequenceCall.ToString().Substring(node.SequenceCall.ToString().IndexOf('(') + 1);
+
+        if (sequenceCallParams.Substring(0, sequenceCallParams.IndexOf(')')) != "")
+        {
             sequenceCallParams = $", {sequenceCallParams}";
         }
-        
+
         codeBuilder("w", $"\t \t \t {sequenceCallWithoutParams}{node.FrameTime}{sequenceCallParams};");
-        
+
         return node;
     }
 
@@ -691,13 +791,13 @@ public class group : Dictionary<string, object>
 
     public override IASTNode? Visit(ReturnNode node)
     {
-        if(node.ToString() != "")
+        if (node.ToString() != "")
         {
             codeBuilder("w", $"");
             codeBuilder("w", $"            return {node};");
         }
-        
-        
+
+
         return node;
     }
 
@@ -708,27 +808,25 @@ public class group : Dictionary<string, object>
 
     public override IASTNode? Visit(SequenceCallNode node)
     {
-        
-        
         return node;
     }
 
     public override IASTNode? Visit(SequenceNode node)
     {
-
-        foreach (var child in node.GetChildren()) {
+        foreach (var child in node.GetChildren())
+        {
             //Console.WriteLine(child.GetType());
             if (child is SeqBlockNode seqBlockNode)
             {
                 Visit(seqBlockNode);
             }
-            
+
             if (child is IdentifierNode identifierNode)
             {
                 // Console.WriteLine(child);
             }
-            
-            
+
+
             // if (child.GetType() == typeof(SeqBlockNode)) {
             //     foreach (var grandChild in child.GetChildren()) {
             //         
@@ -744,8 +842,9 @@ public class group : Dictionary<string, object>
             // }
             //Visit((SeqBlockPartNode)child);
         }
+
         codeBuilder("a", "\t\treturn framebuffer; \n \t} \n");
-        
+
         return node;
     }
 
@@ -790,6 +889,7 @@ public class group : Dictionary<string, object>
                 codeBuilder("a", $"{node.Identifier}--");
                 break;
         }
+
         return node;
     }
 
@@ -802,8 +902,4 @@ public class group : Dictionary<string, object>
     {
         return node;
     }
-    
-
-
 }
-
