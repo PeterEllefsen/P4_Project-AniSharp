@@ -17,6 +17,7 @@ setup [
 group function ColorBasedOnNumber(int number) {
 
       int red = 4 * ((number) * 4);
+      int test= 4 + 4;
       float uu += 4.5;
       bool aa -= false;
       string yee = "yesss";

@@ -349,6 +349,17 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
 
 
+    public override IASTNode VisitOperator(AnimationLanguageRulesParser.OperatorContext operatorContext)
+    {
+        Console.WriteLine($"VisitOperator: {operatorContext.GetText()}");
+        string operatorString = operatorContext.GetText();
+
+        // Create your OperatorNode here, using whatever constructor or factory method your class provides.
+        // For this example, we'll assume OperatorNode has a constructor that takes a string.
+        OperatorNode operatorNode = new OperatorNode(operatorString, GetSourceLocation(operatorContext.Start));
+
+        return operatorNode;
+    }
 
 
     
@@ -1040,6 +1051,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitCall_parameters(AnimationLanguageRulesParser.Call_parametersContext context)
     {
+        Console.WriteLine("VisitCall_parameters" + context.GetText());
         List<IASTNode> arguments = new List<IASTNode>();
         
         foreach(var child in context.children)
