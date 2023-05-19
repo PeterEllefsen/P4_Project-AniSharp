@@ -109,8 +109,6 @@ unaryOperation: IDENTIFIER unary
 
 assOps: (EQUAL | PLUSEQUAL | MINUSEQUAL);
 
-term: LPAREN expression RPAREN;
-
 type: INT | FLOAT_TYPE | STRING_TYPE | BOOL | CIRCLE | POLYGON | GROUP;
 
 expression

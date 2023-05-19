@@ -325,8 +325,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
         // Add this line to determine the variable type of the binary expression:
         VariableType variableType = DetermineVariableType(leftOperand, operatorNode, rightOperand);
-
-        Console.WriteLine("Operator" + operatorNode);
+        
         return new ExpressionNode(
             ExpressionNodeType.Binary,
             leftOperand,
@@ -454,14 +453,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
         return new ShapeInitNode(shapeType, arguments, sourceLocation);
-    }
-
-    
-    //This method is called when a term is encountered in the code.
-    public override IASTNode VisitTerm(AnimationLanguageRulesParser.TermContext context)
-    {
-        IASTNode innerExpression = Visit(context.GetChild(1)); //Visit the inner expression of the term and store the result in a variable.
-        return innerExpression;
     }
 
 

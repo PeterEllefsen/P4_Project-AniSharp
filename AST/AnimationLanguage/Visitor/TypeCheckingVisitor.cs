@@ -205,7 +205,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
             if (symbol != null)
             {
                 VariableType symbolVariableType = ConvertStringTypeToVariableType(symbol.Type);
-
+                Console.WriteLine("decorated expression node variable type: " + decoratedExpressionNode.VariableType);
                 if (node.IsDeclaration == false && symbolVariableType != decoratedExpressionNode.VariableType)
                 {
                     throw new InvalidOperationException(
@@ -704,6 +704,8 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         {
             foreach (var parameter in node.Parameters)
             {
+                Console.WriteLine($"Processing parameter of type: {parameter.GetType().Name}");
+
                 IASTNode? decoratedParameter;
 
                 if (parameter is ParameterNode parameterNode)
@@ -714,9 +716,17 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
                 {
                     decoratedParameter = Visit(callParameterNode);
                 }
+                else if (parameter is ExpressionNode expressionNode)
+                {
+                    decoratedParameter = Visit(expressionNode);
+                }
+                else if (parameter is TupleNode tupleNode)
+                {
+                    decoratedParameter = Visit(tupleNode);
+                }
                 else
                 {
-                    throw new InvalidOperationException("Unexpected parameter type.");
+                    throw new InvalidOperationException($"Unexpected parameter type: {parameter.GetType().Name}");
                 }
 
                 if (decoratedParameter != null)
@@ -738,6 +748,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
 
 
+
     
     public override IASTNode? Visit(ConditionNode node)
     {
@@ -747,7 +758,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     
     public override IASTNode? Visit(ExpressionNode node)
     {
-        Console.WriteLine("Type checking expression node");
+        Console.WriteLine("Type checking expression node: " + node);
 
         if (node is IdentifierNode identifierNode)
         {
@@ -761,10 +772,95 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         }
         else if (node.ExpressionType is ExpressionNodeType.Binary)
         {
+            return VisitBinaryExpression(node);
         }
 
         return node;
     }
+
+    
+    //This method is a custom method for type checking binary nodes.
+    public IASTNode? VisitBinaryExpression(ExpressionNode node)
+    {
+        Console.WriteLine("Type checking binary expression node: " + node);
+
+        IASTNode? leftOperand = node.LeftOperand;
+        IASTNode? rightOperand = node.RightOperand;
+        OperatorNode? operatorNode = node.OperatorNode;
+        
+        // Visit left operand and right operand and perform type check.
+        if ((operatorNode?.OperatorSymbol == "and") || (operatorNode?.OperatorSymbol == "or")) //If the binary expression is a logical expression
+        {
+            IdentifierNode? decoratedLeftIdentifier = null;
+            IdentifierNode? decoratedRightIdentifier = null;
+            IdentifierNode? leftIdentifier = null;
+            IdentifierNode? rightIdentifier = null;
+
+            if (leftOperand is IdentifierNode leftIdent) 
+            {
+                leftIdentifier = leftIdent;
+                decoratedLeftIdentifier = (IdentifierNode?)Visit(leftIdentifier) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
+            }
+
+            if (rightOperand is IdentifierNode rightIdent)
+            {
+                rightIdentifier = rightIdent;
+                decoratedRightIdentifier = (IdentifierNode?)Visit(rightIdentifier) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
+            }
+
+            if (leftOperand is BooleanLiteralNode leftBool && rightOperand is BooleanLiteralNode rightBool) //If both operands are boolean literals
+            {
+                Visit(leftBool);
+                Visit(rightBool);
+            }
+            else if (leftIdentifier != null && rightIdentifier != null && leftIdentifier.VariableType == VariableType.Bool && rightIdentifier.VariableType == VariableType.Bool) //If both operands are identifiers and both are of type boolean
+            {
+                Visit(leftIdentifier);
+                Visit(rightIdentifier);
+            }
+            else if (leftIdentifier != null && leftIdentifier.VariableType == VariableType.Bool && rightOperand is BooleanLiteralNode rightBoolLiteral) //If left operand is an identifier and is of type boolean and right operand is a boolean literal
+            {
+                Visit(leftIdentifier);
+                Visit(rightBoolLiteral);
+            }
+            else if (rightIdentifier != null && rightIdentifier.VariableType == VariableType.Bool && leftOperand is BooleanLiteralNode leftBoolLiteral) //If right operand is an identifier and is of type boolean and left operand is a boolean literal
+            {
+                Visit(leftBoolLiteral);
+                Visit(rightIdentifier);
+            }
+            else //If none ofthe operands are booleans 
+            {
+                throw new InvalidOperationException($"{leftOperand} and {rightOperand} must be of type boolean.");
+            }
+        }
+        if (leftOperand is IdentifierNode leftIdentifierNode)
+        {
+            Visit(leftIdentifierNode);
+        }
+        else if (leftOperand is ExpressionNode leftExpressionNode)
+        {
+            Visit(leftExpressionNode);
+        }
+        else if (leftOperand is IntegerLiteralNode leftIntegerLiteralNode)
+        {
+            Visit(leftIntegerLiteralNode);
+        }
+        else if (leftOperand is FloatLiteralNode leftFloatLiteralNode)
+        {
+            Visit(leftFloatLiteralNode);
+        }
+        if (rightOperand is IdentifierNode rightIdentifierNode)
+        {
+            Visit(rightIdentifierNode);
+        }
+        else if (rightOperand is ExpressionNode rightExpressionNode)
+        {
+            Visit(rightExpressionNode);
+        }
+        
+        return node;
+    }
+
 
 
 
@@ -999,9 +1095,21 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
             {
                 decoratedParameter = Visit(callParameterNode);
             }
+            else if (parameter is ExpressionNode expressionNode)
+            {
+                decoratedParameter = Visit(expressionNode);
+            }
+            else if (parameter is TupleNode tupleNode)
+            {
+                decoratedParameter = Visit(tupleNode);
+            }
+            else if (parameter is ArgumentNode argNode)
+            {
+                decoratedParameter = Visit(argNode);
+            }
             else
             {
-                throw new InvalidOperationException("Unexpected parameter type.");
+                throw new InvalidOperationException($"Unexpected parameter type: {parameter.GetType().Name}");
             }
 
             if (decoratedParameter != null)
@@ -1019,6 +1127,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         Console.WriteLine("Type checked transition node");
         return decoratedTransitionNode;
     }
+
 
     
     public override IASTNode? Visit(TupleNode node)

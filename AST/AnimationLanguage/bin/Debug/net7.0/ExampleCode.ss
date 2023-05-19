@@ -19,16 +19,17 @@ int function hejsa(){
     int i = 1;
     int a = 1 + 5;
     int j = 1;
+    bool b = true;
     i = j;
     if (i < 2){
         i = 1;
     }
-    else if(2 and i){
+    else if(i > 1 and b == true){
         i = 3;
     }
 
     int hej = 5;
-    for(int i = 1; i or 3; i-= 1){
+    for(int i = 1; i < 3 or b == true; i-= 1){
         i = 5;
     }
     return 2;

@@ -98,12 +98,6 @@ public interface IAnimationLanguageRulesVisitor<Result> : IParseTreeVisitor<Resu
 	/// <return>The visitor result.</return>
 	Result VisitAssOps([NotNull] AnimationLanguageRulesParser.AssOpsContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitTerm([NotNull] AnimationLanguageRulesParser.TermContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="AnimationLanguageRulesParser.type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
