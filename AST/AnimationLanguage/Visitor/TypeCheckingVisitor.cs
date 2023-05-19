@@ -143,7 +143,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     public override IASTNode? Visit(IdentifierNode node)
     {
         Console.WriteLine("Type checking identifier node");
-
+        Console.WriteLine(node);
         if (PredefinedKeywords.Contains(node.Name))
         {
             // If the identifier is a predefined keyword, return the node without further checking
@@ -167,6 +167,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
         // Look up the corresponding symbol in the symbol table
         Symbol? symbol = _symbolTable.Lookup(node.Name);
+        Console.WriteLine($"Looking up '{node.Name}' in symbol table, found: {symbol != null}");
 
         // Set the Type property of the IdentifierNode to the type of the symbol
         if (symbol != null)
@@ -191,7 +192,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     public override IASTNode Visit(AssignmentNode node)
     {
         Console.WriteLine("Type checking assignment node");
-        Console.WriteLine(node);
+        Console.WriteLine("Node Identifier Name: " + node.Identifier.Name);
 
         // Type check ExpressionNode
         ExpressionNode decoratedExpressionNode = (ExpressionNode?)Visit(node.Expression) ?? throw new InvalidOperationException("Failed to create a decorated expression node.");
@@ -308,6 +309,10 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         {
             decoratedValue = Visit(tupleNode) ?? throw new InvalidOperationException("Failed to create a decorated tuple node.");
         }
+        else if (node.Value is FunctionCallNode functionCallNode)
+        {
+            decoratedValue = Visit(functionCallNode) ?? throw new InvalidOperationException("Failed to create a decorated function call node.");
+        }
         else
         {
             throw new InvalidOperationException($"Unrecognized value type for argument '{node.Name}' at {node.SourceLocation}");
@@ -325,15 +330,65 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     {
         Console.WriteLine("Type checking function declaration node");
 
+        if(!(_symbolTable.IsDefined("Prototype: " + node.Identifier.Name))) //If the prototype does not exist, throw an error
+        {
+            throw new InvalidOperationException($"Prototype for function '{node.Identifier.Name}' do not exist.");
+        }
+
+        string parametersString = "";
+        foreach (var parameter in node.Parameters)
+        {
+            parametersString += parameter.DataType + ", "; //Add the parameters to a string
+        }
+        
+        
+        Symbol? symbol = _symbolTable.Lookup("Prototype: " + node.Identifier.Name); //fetch the prototype data
+        StringLiteralNode? prototypeParameters; // used to compare the parameters of the prototype with the function declaration
+        
+        if (symbol == null)
+        {
+            throw new ArgumentNullException($"Prototype for function {node.Identifier.Name} not found.");
+        }
+        if (symbol.Value == null)
+        {
+            throw new ArgumentNullException($"symbol.Value is null");
+        }
+        
+        prototypeParameters = (StringLiteralNode)symbol.Value;
+
+        if (symbol.Type != node.ReturnType.ToString()) //If the return type matches the prototype proceed.
+        {
+            throw new ArgumentException("Return type of function " + node.Identifier.Name + " does not match return type of prototype.");
+        }
+        if(parametersString != "" && (prototypeParameters.Value != parametersString)) // If the parameters do not match the prototype
+        {
+            throw new ArgumentException("Parameters of function " + node.Identifier.Name + " do not match parameters of prototype.");
+        }
+        if (prototypeParameters.Value == "" && parametersString != "")
+        {
+            throw new ArgumentException($"Prototype of function {node.Identifier.Name} do not have any parameters.");
+        }
+        if (prototypeParameters.Value != "" && parametersString == "")
+        {
+            throw new ArgumentException("Function '" + node.Identifier.Name + "' do not have any parameters, while the prototype do.");
+        }
+
         // Visit ReturnType and Identifier nodes.
         TypeNode decoratedReturnType = (TypeNode?)Visit(node.ReturnType) ?? throw new InvalidOperationException("Fail in node: " + node.Identifier +". Failed to create a decorated return type node.");
-        IdentifierNode decoratedIdentifier = (IdentifierNode?)Visit(node.Identifier) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
+        
 
+        // Add function to the symbol table
+        Console.WriteLine($"Adding function {node.Identifier.Name} to symbol table");
+        _symbolTable.AddFunction(node.Identifier.Name, decoratedReturnType.ToString());
+        IdentifierNode decoratedIdentifier = (IdentifierNode?)Visit(node.Identifier) ?? throw new InvalidOperationException("Failed to create a decorated identifier node.");
         // Visit Parameter nodes and create a list of decorated parameters.
         List<ParameterNode> decoratedParameters = new List<ParameterNode>();
-        foreach (ParameterNode parameterNode in node.Parameters)
+        if (node.Parameters != null)
         {
-            decoratedParameters.Add((ParameterNode)Visit(parameterNode) ?? throw new InvalidOperationException("Failed to create a decorated parameter node."));
+            foreach (ParameterNode parameterNode in node.Parameters)
+            {
+                decoratedParameters.Add((ParameterNode)Visit(parameterNode) ?? throw new InvalidOperationException("Failed to create a decorated parameter node."));
+            }
         }
 
         // Enter the scope for the function declaration.
@@ -352,9 +407,13 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         return decoratedFunctionDeclarationNode;
     }
 
+
+
     
     public override IASTNode? Visit(FunctionCallNode node)
     {
+        Console.WriteLine("Type checking function call node");
+        Console.WriteLine(node);
         List<IASTNode> decoratedArguments = new List<IASTNode>();
 
         foreach (IASTNode argument in node.Arguments)
@@ -374,6 +433,9 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
                     break;
                 case IdentifierNode identifierNode:
                     decoratedArgument = Visit(identifierNode);
+                    break;
+                case FunctionCallNode functionCallNode: // Added this line
+                    decoratedArgument = Visit(functionCallNode);
                     break;
 
                 // Add more cases here for other types of nodes that can be used as arguments.
@@ -437,7 +499,15 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         }
         else //If not, then add it to the symbol table
         {
-            _symbolTable.AddFunction(functionName, returnType.ToString());
+            string parameterString = "";
+            foreach (var parameter in parameters)
+            {
+                parameterString += parameter.DataType + ", ";
+            }
+
+            StringLiteralNode parameterStringNode = new StringLiteralNode(parameterString, node.SourceLocation);
+            Console.WriteLine($"Adding prototype '{functionName}' to symbol table with parameters: {parameterString}");
+            _symbolTable.AddPrototype(("Prototype: " + functionName), returnType.ToString(), parameterStringNode);
         }
 
         // Visit all of the parameters in the prototype and create a list of decorated parameters.
@@ -1022,6 +1092,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     public override IASTNode? Visit(ShapeInitNode node)
     {
         Console.WriteLine("Type checking shape initialization node");
+        Console.WriteLine("Shape type: " + node.ShapeType);
 
         // Visit the arguments and create decorated arguments
         Dictionary<string, IASTNode> decoratedArguments = new Dictionary<string, IASTNode>();

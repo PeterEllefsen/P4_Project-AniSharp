@@ -7,6 +7,7 @@ public class Symbol
 {
     public string Name { get; } // The name of the symbol.
     public string Type { get; } // The type of the symbol.
+    public bool IsPrototype { get;} // Whether the symbol is a prototype or not.
     public IASTNode? Value { get; set; } // The value of the symbol, if any.
 
     public Symbol(string name, string type, IASTNode? value = null)
@@ -14,6 +15,14 @@ public class Symbol
         Name = name;
         Type = type;
         Value = value;
+    }
+
+    public Symbol(string name, string type, bool isPrototype, IASTNode parameters)
+    {
+        Name = name;
+        Type = type;
+        IsPrototype = isPrototype;
+        Value = parameters;
     }
 }
 
@@ -45,14 +54,14 @@ public class SymbolTable
         symbols[name] = new Symbol(name, returnType); // Add the function to the symbol table by using the name as the key and a new symbol as the value.
     }
 
-    public void AddPrototype(string name, string type) // This method adds a prototype to the symbol table.
+    public void AddPrototype(string name, string type, IASTNode? value) // This method adds a prototype to the symbol table.
     {
         if (symbols.ContainsKey(name)) // Check if the prototype already exists in the table.
         {
             throw new InvalidOperationException($"Prototype '{name}' already exists.");
         }
 
-        symbols[name] = new Symbol(name, type); // Add the prototype to the symbol table by using the name as the key and a new symbol as the value.
+        symbols[name] = new Symbol(name, type, value); // Add the prototype to the symbol table by using the name as the key and a new symbol as the value.
     }
 
     public void AddSequence(string name) // This method adds a sequence to the symbol table.
@@ -104,9 +113,9 @@ public class ScopedSymbolTable
         _scopeStack.Peek().AddFunction(name, returnType);
     }
 
-    public void AddPrototype(string name, string type) // This method adds a prototype to the scope in the top of the stack
+    public void AddPrototype(string name, string type, IASTNode? value) // This method adds a prototype to the scope in the top of the stack
     {
-        _scopeStack.Peek().AddPrototype(name, type);
+        _scopeStack.Peek().AddPrototype(name, type, value);
     }
 
     public void AddSequence(string name) // This method adds a sequence to the scope in the top of the stack.

@@ -1,7 +1,8 @@
 prototypes {
-    group function hejsa(int i, int j);
+    group function hejsa(int i, int j, float f);
     int function hej();
     int function hejsa2();
+    int function ColorBasedOnNumber(int i);
     }
 
 
@@ -15,7 +16,7 @@ setup [
 
 
 
-int function hejsa(){
+int function ColorBasedOnNumber(int i){
     int i = 1;
     int a = 1 + 5;
     int j = 1;
@@ -63,6 +64,7 @@ seq CarDrivingOnScreen() {
 }
 
 seq CircleGoVroomInTriangle() {
+    cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
     cirkel1->repeat()->(EndFrame: 50, x: 50, color: Rgb(ColorBasedOnNumber(5)))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
 }
 
