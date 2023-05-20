@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Channels;
+using System.Xml;
 using AnimationLanguage.ASTNodes;
 
 namespace AnimationLanguage.Visitor;
@@ -1031,9 +1032,10 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     public override IASTNode Visit(SequenceCallNode node)
     {
         Console.WriteLine("Type checking sequence call node");
-
+        IdentifierNode decoratedName = node.Name;
+        Console.WriteLine("Sequence call name is " + decoratedName.Name);
         // Check if the sequence exists in the symbol table
-        Symbol? sequenceSymbol = _symbolTable.Lookup(node.Name.ToString());
+        Symbol? sequenceSymbol = _symbolTable.Lookup(decoratedName.Name);
         if (sequenceSymbol == null || sequenceSymbol.Type != "seq")
         {
             throw new InvalidOperationException($"Sequence '{node.Name.ToString()}' is not defined.");
@@ -1060,9 +1062,9 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
         // Visit Identifier node.
         IdentifierNode decoratedName = node.Name;
-        
         // Add the sequence identifier to the symbol table before entering the sequence scope
         _symbolTable.AddSequence(decoratedName.Name);
+        Console.WriteLine($"Added sequence {decoratedName.Name} to symbol table");
 
         // Visit Parameter nodes and create a list of decorated parameters.
         List<ParameterNode> decoratedParameters = new List<ParameterNode>();

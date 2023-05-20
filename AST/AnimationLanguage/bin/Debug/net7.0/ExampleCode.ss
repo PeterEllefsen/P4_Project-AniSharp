@@ -39,15 +39,15 @@ int function ColorBasedOnNumber(int i){
 seq CarDrivingOnScreen() {
 
     //Headlights
-  circleHeadlight = Circle(center: (x: 327, y: 135), radius: 10, color: Rgb(255,255,0)); //yellow
+  circleHeadlight = Circle(center: (x: 327, y: 135), radius: 10, color: rgb(255,255,0)); //yellow
   
   //Back Wheel
-  circle1wheel = Circle(center: (x: 187, y: 170), radius: 25, color: Rgb(0,0,0));
-  circle1wheelinner = Circle(center: (x: 187, y: 170), radius: 12.5, color: Rgb(165,165,165));
+  circle1wheel = Circle(center: (x: 187, y: 170), radius: 25, color: rgb(0,0,0));
+  circle1wheelinner = Circle(center: (x: 187, y: 170), radius: 12.5, color: rgb(165,165,165));
     
   //Front Wheel
-  circle2wheel = Circle(center: (x: 276, y: 157), radius: 25, color: Rgb(0,0,0));
-  circle2wheelinner = Circle(center: (x: 276, y: 157), radius: 12.5, color: Rgb(165,165,165));  
+  circle2wheel = Circle(center: (x: 276, y: 157), radius: 25, color: rgb(0,0,0));
+  circle2wheelinner = Circle(center: (x: 276, y: 157), radius: 12.5, color: rgb(165,165,165));  
 
   cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
   
@@ -65,7 +65,7 @@ seq CarDrivingOnScreen() {
 
 seq CircleGoVroomInTriangle() {
     cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
-    cirkel1->repeat()->(EndFrame: 50, x: 50, color: Rgb(ColorBasedOnNumber(5)))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
+    cirkel1->repeat()->(EndFrame: 50, x: 50, color: rgb(ColorBasedOnNumber(5)))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
 }
 
 
