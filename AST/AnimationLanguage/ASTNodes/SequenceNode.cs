@@ -41,7 +41,17 @@ public class SequenceNode : IASTNode
     public override string ToString()
     {
         string parametersStr = string.Join(", ", Parameters.Select(p => p.ToString()));
-        return $"{Name}({parametersStr})";
+
+        if (parametersStr.Length > 0)
+        {
+            return $"{Name}(int frameoffset, {parametersStr})";
+        }
+        else
+        {
+            return $"{Name}(int frameoffset)";
+        }
+
+        
     }
     
     

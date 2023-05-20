@@ -45,7 +45,7 @@ int function ColorBasedOnNumber(int number) {
 
 string function ColorBasedOnText(string text) {
 
-    text = "hej jeg er sej" + "hej";
+    text += "hej jeg er sej" + "hej";
     
     return text;
 }
@@ -75,19 +75,14 @@ seq CarDrivingOnScreen() {
         circleHeadlight
   ];
 
-  car->repeat(5)->(EndFrame: 180, x: 250)->(EndFrame: 180, x: 250)->(EndFrame: 180, x: 250);
-
+  circle2wheel->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
+  
+  
 }
 
-seq CircleGoVroomInTriangle() {
-    carTop3 = Polygon(point1: (x: 250, y: 118), point2: (x: 302, y: 118), point3: (x: 276, y: 73), color: Rgb(165,165,165)); 
-
-    cirkel1->repeat()->(EndFrame: 50, x: 50, color: Rgb(255,129,125))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
-}
 
 
 timeline {
-    Frame 1 : CircleGoVroomInTriangle(); //At frame 1 in the timeline the CircleGoVroomInTriangle sequence is called
-
-    Frame 10 : CarDrivingOnScreen(); //At frame 10, start the CarDrivingOnScreen sequence, on top of the CircleGoVroomInTriangle sequence.
+    Frame 1 : CarDrivingOnScreen(); //At frame 10, start the CarDrivingOnScreen sequence, on top of the CircleGoVroomInTriangle sequence.
+    
   }

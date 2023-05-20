@@ -764,8 +764,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         ExpressionNode condition = (ExpressionNode)VisitExpression(context.expression());
         BlockNode body = (BlockNode)VisitBlock(context.block());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
-
-        Console.WriteLine(condition);
+        
         return new WhileLoopNode(condition, body, sourceLocation);
     }
     
@@ -859,20 +858,41 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //     return new SequencesNode(sequences, GetSourceLocation(context.Start));
     // }
     
-    public List<SequenceNode> VisitAndGetSequences(AnimationLanguageRulesParser.SequencesContext context)
+    public List<SequenceNode> VisitAndGetSequences(AnimationLanguageRulesParser.SequencesContext context) 
     {
-        var sequences = new List<SequenceNode>(); // Create a list to contain all of the individual sequences.
+        List<SequenceNode> sequenceNodes = new List<SequenceNode>();
 
-        foreach (var child in context.children) // For each child of the sequences rule, visit it.
+        // Visit the first sequence
+        SequenceNode firstSequence = (SequenceNode)VisitSequence(context.sequence());
+        sequenceNodes.Add(firstSequence);
+
+        // If there are more sequences, visit them as well
+        if (context.sequences() != null)
         {
-            IASTNode node = Visit(child);
-            if (node is SequenceNode sequenceNode) 
-            {
-                sequences.Add(sequenceNode); // If the child is a sequence, visit it and add it to the list.
-            }
+            List<SequenceNode> otherSequences = VisitAndGetSequences(context.sequences());
+            sequenceNodes.AddRange(otherSequences);
         }
-        return sequences;
+
+        return sequenceNodes;
     }
+    
+    // public List<SequenceNode> VisitAndGetSequences(AnimationLanguageRulesParser.SequencesContext context)
+    // {
+    //     var sequences = new List<SequenceNode>(); // Create a list to contain all of the individual sequences.
+    //     
+    //     
+    //     
+    //     foreach (var child in context.children) // For each child of the sequences rule, visit it.
+    //     {
+    //
+    //         IASTNode node = Visit(child);
+    //         if (node is SequenceNode sequenceNode) 
+    //         {
+    //             sequences.Add(sequenceNode); // If the child is a sequence, visit it and add it to the list.
+    //         }
+    //     }
+    //     return sequences;
+    // }
 
 
 
@@ -965,9 +985,9 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         IdentifierNode name = new IdentifierNode(context.IDENTIFIER().GetText(), GetSourceLocation(context.IDENTIFIER().Symbol));
 
         List<ExpressionNode> arguments = new List<ExpressionNode>();
-        if (context.call_parameters() != null)
+        if (context.call_parameter() != null)
         {
-            var callParameterContexts = context.call_parameters().GetRuleContexts<AnimationLanguageRulesParser.Call_parameterContext>();
+            var callParameterContexts = context.call_parameter();
             foreach (var arg in callParameterContexts)
             {
                 if (arg.arg() != null)

@@ -41,7 +41,7 @@ public class AnimationNode : IASTNode
     
     public override string ToString()
     {
-        return $"AnimationNode: {Identifier}";
+        return $"{Identifier}";
     }
     
     

@@ -46,10 +46,10 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
     private void insertBoilerplate()
     {
         codeBuilder("w", @"public class Circle{
-    public (int, int) center { get; set; }
+      public (double, double) center { get; set; }
     public double radius { get; set; }
     public string color { get; set; }
-    public int borderWidth { get; set; }
+    public double borderWidth { get; set; }
 
          public Circle()
         {
@@ -81,15 +81,192 @@ public class group : Dictionary<string, object>
    }
 }
 ");
+        
+        codeBuilder("w", @"public class Animation
+{
+    public int endframe { get; set; }
+    public int? x { get; set; }
+    public int? y { get; set; }
+    public int? radius { get; set; }
+    public string? color { get; set; }
+    public int? borderWidth { get; set; }
+}");
     }
 
     private void insertFuncBoilerplate()
     {
-        codeBuilder("w", @"public static string Rgb(int red, int green, int blue)
+        codeBuilder("w", @"public static string rgb(int red, int green, int blue)
 {
     string hex = $""#{red:X2}{green:X2}{blue:X2}"";
     return hex;
 }");
+        
+        codeBuilder("w", @" public static void PrintFramebuffer(List<List<string>> framebuffer)
+        {
+            for (int frameIndex = 0; frameIndex < framebuffer.Count; frameIndex++)
+            {
+                Console.WriteLine($""Frame {frameIndex + 1}:"");
+        foreach (string details in framebuffer[frameIndex])
+        {
+            Console.WriteLine(details);
+        }
+
+        Console.WriteLine();
+    }
+}");
+        
+        codeBuilder("w", @" public static (int, int, int) HexToRgb(string hex)
+        {
+            // Remove the '#' symbol if present
+            hex = hex.TrimStart('#');
+
+            // Convert the hex code to RGB values
+            int r = int.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            int g = int.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            int b = int.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+
+            return (r, g, b);
+        }");
+        
+        
+        codeBuilder("w", @" public static List<List<string>> animate(object item, List<Animation> animations, List<List<string>> framebuffer,
+        int frameOffset)
+    {
+        int totalFrames = 0;
+    
+        foreach (var animation in animations)
+        {
+            if (animation.endframe > totalFrames)
+            {
+                totalFrames = animation.endframe + frameOffset;
+            }
+        }
+    
+        //wait until start frame
+        for (int frame = 0; frame <= totalFrames; frame++)
+        {
+            framebuffer.Add(new List<string>() { """" }); //wait
+        }
+    
+        if (item is group group)
+        {
+            // Code to animate a group
+            // ...
+        }
+        else if (item is Circle circle)
+        {
+            // Code to animate an object of SomeObjectType
+    
+    
+            for (int i = 0; i < animations.Count; i++)
+            {
+                int animationFrameCount =
+                    i == 0 ? animations[i].endframe : animations[i].endframe - animations[i - 1].endframe;
+    
+                // Create a new list for the frame in the framebuffer
+                List<string> frameList = new List<string>();
+    
+                for (int frame = 0; frame < animationFrameCount; frame++)
+                {
+                    if (animations[i].color != null)
+                    {
+                        (int r, int g, int b) startColor = HexToRgb(circle.color);
+                        (int r, int g, int b) endColor = HexToRgb(animations[i].color);
+    
+                        // Calculate the color change per frame for each RGB component
+                        int dr = (endColor.r - startColor.r) / (animationFrameCount - 1);
+                        int dg = (endColor.g - startColor.g) / (animationFrameCount - 1);
+                        int db = (endColor.b - startColor.b) / (animationFrameCount - 1);
+    
+                        // Animate the color for each frame
+                        int currentR = startColor.r + (dr * frame);
+                        int currentG = startColor.g + (dg * frame);
+                        int currentB = startColor.b + (db * frame);
+    
+                        // Convert the RGB values back to a hex color code
+                        string currentColor = rgb(currentR, currentG, currentB);
+    
+                        // Animate the color property
+                        circle.color = currentColor;
+                    }
+    
+                    if (animations[i].x != null)
+                    {
+                        double startX = circle.center.Item1;
+                        double endX = animations[i].x.Value;
+    
+                        double dx = (endX - startX) / (animationFrameCount - 1);
+    
+                        // Animate the x-coordinate for each frame
+                        double currentX = startX + (dx * frame);
+                        circle.center = (currentX, circle.center.Item2);
+                    }
+    
+                    if (animations[i].y != null)
+                    {
+                        double startY = circle.center.Item2;
+                        double endY = animations[i].y.Value;
+    
+                        double dy = (endY - startY) / (animationFrameCount - 1);
+    
+                        // Animate the y-coordinate for each frame
+                        double currentY = startY + (dy * frame);
+                        circle.center = (circle.center.Item1, currentY);
+                    }
+    
+                    if (animations[i].radius != null)
+                    {
+                        double startRadius = circle.radius;
+                        double endRadius = animations[i].radius.Value;
+    
+                        double dr = (endRadius - startRadius) / (animationFrameCount - 1);
+    
+                        // Animate the radius for each frame
+                        double currentRadius = startRadius + (dr * frame);
+                        circle.radius = currentRadius;
+                    }
+    
+                    if (animations[i].borderWidth != null)
+                    {
+                        double startBorderWidth = circle.borderWidth;
+                        double endBorderWidth = animations[i].borderWidth.Value;
+    
+                        double dbw = (endBorderWidth - startBorderWidth) / (animationFrameCount - 1);
+    
+                        // Animate the borderWidth for each frame
+                        double currentBorderWidth = startBorderWidth + (dbw * frame);
+                        circle.borderWidth = currentBorderWidth;
+                    }
+                    
+                    int frameIndex = frameOffset + (i == 0 ? 0 : animations[i - 1].endframe + frameOffset) + frame;
+                    
+                    while (framebuffer.Count <= frameIndex)
+                    {
+                        framebuffer.Add(new List<string>());
+                    }
+                    
+
+                    //Add the frame to the framebuffer
+                    framebuffer[frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame].Add($""circle|{circle.center.Item1}|{circle.center.Item2}|{circle.radius}|{circle.borderWidth}|{circle.color}"");
+                    
+   
+                    
+                    
+                }
+            }
+
+            PrintFramebuffer(framebuffer);
+        }
+        else if (item is Polygon polygon)
+        {
+            // Code to animate an object of SomeObjectType
+            // ...
+        }
+    
+        return framebuffer;
+    }");
+        
+        
     }
 
 
@@ -109,6 +286,8 @@ public class group : Dictionary<string, object>
 
         foreach (var child in node.GetChildren())
         {
+            //Console.WriteLine(child.GetType());
+            
             if (child is SequenceNode sequenceNode)
             {
                 codeBuilder("a", "\tpublic static List<List<string>>" + child.ToString() + " { \n");
@@ -470,6 +649,11 @@ public class group : Dictionary<string, object>
 
     public override IASTNode? Visit(SeqBlockNode node)
     {
+        bool hasAnimations = false;
+        string groupIdentifier = "";
+        string animationsIdentifier = "";
+        Dictionary<string, bool> initializationStatusDict = new Dictionary<string, bool>();
+        
         //get type
         foreach (var child in node.GetChildren())
         {
@@ -499,7 +683,7 @@ public class group : Dictionary<string, object>
                                         codeBuilder("a", ",");
                                     }
 
-                                    codeBuilder("a", $"{arg.Key} = Functions.{functionCallNode.FunctionIdentifier}(");
+                                    codeBuilder("a", $"{arg.Key} = Functions.{functionCallNode.FunctionIdentifier.ToString().ToLower()}(");
                                     parameterCount++;
                                     int Count = 0;
                                     foreach (var Farg in functionCallNode.Arguments)
@@ -557,7 +741,8 @@ public class group : Dictionary<string, object>
                                 }
                             }
                         }
-                        else if (shapeInitNode.ShapeType.ToString() == "Polygon")
+                        
+                        if (shapeInitNode.ShapeType.ToString() == "Polygon")
                         {
                             
                             foreach (var arg in shapeInitNode.Arguments)
@@ -599,7 +784,7 @@ public class group : Dictionary<string, object>
 
                                     if (Regex.IsMatch(arg.Key.ToString(), @"point\d+"))
                                     {
-                                        Console.WriteLine(arg.Value);
+                                        //Console.WriteLine(arg.Value);
                                         if (points != "")
                                         {
                                             points += ",";
@@ -669,10 +854,47 @@ public class group : Dictionary<string, object>
 
         foreach (var child in node.GetChildren())
         {
+            if (child is AnimationNode animationNode)
+            {
+                bool isItem1Initialized;
+                if (initializationStatusDict.TryGetValue($"{child.ToString()}", out isItem1Initialized))
+                {
+                    Console.WriteLine($"{child.ToString()} is already initialized");
+                    codeBuilder("w", $"{child.ToString()}Animations.Clear();");
+                }
+                else
+                {
+                    // The key does not exist in the dictionary
+                    codeBuilder("w", $"List<Animation> {child.ToString()}Animations = new List<Animation>();");
+                    initializationStatusDict[$"{child.ToString()}"] = true;
+                }
+                
+               
+                animationsIdentifier = $"{child.ToString()}Animations";
+                groupIdentifier = $"{child.ToString()}";
+                foreach (var transition in animationNode.Transitions)
+                {
+                    if (transition is TransitionNode transitionNode)
+                    {
+                        codeBuilder("w", $"{child.ToString()}Animations.Add(");
+                        Visit(transition);
+                        codeBuilder("a", ");");
+                        hasAnimations = true;
+                    }
+                    
+                    
+                }
+                
+            }
+            
+            if (hasAnimations)
+            {
+                codeBuilder("w", $"framebuffer = Functions.animate({groupIdentifier}, {animationsIdentifier}, framebuffer, frameoffset);");
+            }
+            
             if (child is IdentifierGroupingNode identifierGroupingNode)
             {
                 codeBuilder("a", $"group {identifierGroupingNode.Identifier} = new group();\n");
-
 
                 foreach (var expressionNode in identifierGroupingNode.GroupingElements.Expressions)
                 {
@@ -694,7 +916,10 @@ public class group : Dictionary<string, object>
             }
         }
 
-
+        
+        
+       
+        
         return node;
     }
 
@@ -758,14 +983,24 @@ public class group : Dictionary<string, object>
             node.SequenceCall.ToString().Substring(0, node.SequenceCall.ToString().IndexOf('(') + 1);
         string sequenceCallParams =
             node.SequenceCall.ToString().Substring(node.SequenceCall.ToString().IndexOf('(') + 1);
-
+        
         if (sequenceCallParams.Substring(0, sequenceCallParams.IndexOf(')')) != "")
         {
             sequenceCallParams = $", {sequenceCallParams}";
         }
 
-        codeBuilder("w", $"\t \t \t {sequenceCallWithoutParams}{node.FrameTime}{sequenceCallParams};");
+        codeBuilder("w", $"\t \t \t Sequences.{sequenceCallWithoutParams}{node.FrameTime}{sequenceCallParams};");
 
+        foreach (var child in node.GetChildren())
+        {
+            if (child is SequenceCallNode sequenceCallNode)
+            {
+                Visit(sequenceCallNode);
+            }
+            
+        }
+        
+        
         return node;
     }
 
@@ -808,6 +1043,7 @@ public class group : Dictionary<string, object>
 
     public override IASTNode? Visit(SequenceCallNode node)
     {
+
         return node;
     }
 
@@ -865,6 +1101,46 @@ public class group : Dictionary<string, object>
 
     public override IASTNode? Visit(TransitionNode node)
     {
+        List<string> arguements = new List<string>();
+        
+        foreach (var argument in node.GetChildren())
+        {
+            if (argument is ArgumentNode argumentNode)
+            {
+                if (argumentNode.Value is FunctionCallNode)
+                {
+                    string argKeyValue = $"{argumentNode.Name.Replace(":", "").ToLower()} = Functions.{argumentNode.Value} ";
+                    arguements.Add(argKeyValue);
+                }
+                else
+                {
+                    string argKeyValue = $"{argumentNode.Name.Replace(":", "").ToLower()} = {argumentNode.Value} ";
+                    arguements.Add(argKeyValue);
+                }
+                
+                //Console.WriteLine(argument);
+                
+            }
+        }
+
+        codeBuilder("a", "new Animation {");
+        
+        for (int i = 0; i < arguements.Count; i++)
+        {
+            if (i != 0)
+            {
+                codeBuilder("a", ",");
+            }
+            
+            string argOut = arguements[i].ToString();
+            
+            codeBuilder("a", $"{argOut}");
+            
+        }
+        
+        codeBuilder("a", "} ");
+
+        
         return node;
     }
 
