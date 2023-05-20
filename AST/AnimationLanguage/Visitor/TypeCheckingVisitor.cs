@@ -411,56 +411,119 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
 
     
-    public override IASTNode? Visit(FunctionCallNode node)
+public override IASTNode? Visit(FunctionCallNode node)
+{
+    Console.WriteLine("Type checking function call node");
+    Console.WriteLine("arg count: " + node.Arguments.Count);
+    foreach (var arg in node.Arguments)
     {
-        Console.WriteLine("Type checking function call node");
-        Console.WriteLine(node);
-        List<IASTNode> decoratedArguments = new List<IASTNode>();
+        Console.WriteLine("Argument: " + arg);
+    }
+    
+    string functionCallName = node.FunctionIdentifier.Name;
+    List<IASTNode> decoratedArguments = new List<IASTNode>();
 
-        foreach (IASTNode argument in node.Arguments)
+    string parametersString = "";
+
+    foreach (IASTNode argument in node.Arguments)
+    {
+        IASTNode? decoratedArgument;
+        Console.WriteLine("Argument: " + argument);
+        switch (argument)
         {
-            IASTNode? decoratedArgument;
+            case ArgumentNode argumentNode:
+                decoratedArgument = Visit(argumentNode);
+                if (decoratedArgument != null)
+                {
+                    parametersString += ((ArgumentNode)decoratedArgument) + ", ";
+                }
+                break;
+            case IntegerLiteralNode integerNode:
+                decoratedArgument = Visit(integerNode);
+                if (decoratedArgument != null)
+                {
+                    parametersString += ((IntegerLiteralNode)decoratedArgument).Type + ", ";
+                }
+                break;
+            case FloatLiteralNode floatNode:
+                decoratedArgument = Visit(floatNode);
+                if (decoratedArgument != null)
+                {
+                    Console.WriteLine("FloatLiteralNode: " + ((FloatLiteralNode)decoratedArgument).Type);
+                    parametersString += ((FloatLiteralNode)decoratedArgument).Type + ", ";
+                }
+                break;
+            case IdentifierNode identifierNode:
+                decoratedArgument = Visit(identifierNode);
+                if (decoratedArgument != null)
+                {
+                    parametersString += ((IdentifierNode)decoratedArgument).Type + ", ";
+                }
+                break;
+            case FunctionCallNode functionCallNode:
+                decoratedArgument = Visit(functionCallNode);
+                if (decoratedArgument != null)
+                {
+                    parametersString += ((FunctionCallNode)decoratedArgument).Type + ", ";
+                }
+                break;
+            default:
+                throw new InvalidOperationException($"Invalid argument type: {argument.GetType().Name}. Expected a valid argument type.");
+        }
 
-            switch (argument)
-            {
-                case ArgumentNode argumentNode:
-                    decoratedArgument = Visit(argumentNode);
-                    break;
-                case IntegerLiteralNode integerNode:
-                    decoratedArgument = Visit(integerNode);
-                    break;
-                case FloatLiteralNode floatNode:
-                    decoratedArgument = Visit(floatNode);
-                    break;
-                case IdentifierNode identifierNode:
-                    decoratedArgument = Visit(identifierNode);
-                    break;
-                case FunctionCallNode functionCallNode: // Added this line
-                    decoratedArgument = Visit(functionCallNode);
-                    break;
+        if (decoratedArgument == null)
+        {
+            throw new InvalidOperationException($"Failed to create a decorated argument node for argument: {argument}");
+        }
+        decoratedArguments.Add(decoratedArgument);
+    }
 
-                // Add more cases here for other types of nodes that can be used as arguments.
-                default:
-                    throw new InvalidOperationException($"Invalid argument type: {argument.GetType().Name}. Expected a valid argument type.");
-            }
+    TypeNode.TypeKind returnType;
 
-            if (decoratedArgument == null)
-            {
-                throw new InvalidOperationException($"Failed to create a decorated argument node for argument: {argument}");
-            }
-            decoratedArguments.Add(decoratedArgument);
+    // Check if the function is a built-in function
+    TypeNode.TypeKind? builtInReturnType = GetBuiltInFunctionReturnType(functionCallName);
+    if (builtInReturnType.HasValue)
+    {
+        returnType = builtInReturnType.Value;
+    }
+    else
+    {
+        // Check if the actual arguments types match the expected parameters types
+        Symbol? prototypeSymbol = _symbolTable.Lookup("Prototype: " + functionCallName);
+        if (prototypeSymbol == null || prototypeSymbol.Value == null)
+        {
+            throw new InvalidOperationException($"Prototype for function {functionCallName} not found.");
+        }
+
+        StringLiteralNode? prototypeParametersNode = prototypeSymbol?.Value as StringLiteralNode;
+        Console.WriteLine("parametersString: " + parametersString);
+        Console.WriteLine("prototypeParametersNode: " + prototypeParametersNode?.Value);
+        
+        if (prototypeParametersNode == null || prototypeParametersNode.Value != parametersString)
+        {
+            throw new InvalidOperationException(
+                $"Function call {functionCallName} argument types do not match function parameters. Cannot use parameters of type {parametersString}for function {functionCallName} with parameters of type {prototypeParametersNode?.Value}");
         }
 
         // Use the GetFunctionReturnType method to get the return type of the function call.
-        TypeNode.TypeKind returnType = GetFunctionReturnType(node.FunctionIdentifier);
-
-        TypeNode typeNode = new TypeNode(returnType, node.SourceLocation);
-        FunctionCallNode decoratedFunctionCallNode = new FunctionCallNode(node.FunctionIdentifier, decoratedArguments, node.SourceLocation);
-        decoratedFunctionCallNode.Type = typeNode;
-
-        Console.WriteLine("HERE IS THE RETURN TYPE OF FUNCTION CALL: " + decoratedFunctionCallNode.FunctionIdentifier.ToString() + " " + decoratedFunctionCallNode.Type);
-        return decoratedFunctionCallNode;
+        returnType = GetFunctionReturnType(node.FunctionIdentifier);
     }
+
+    TypeNode typeNode = new TypeNode(returnType, node.SourceLocation);
+    FunctionCallNode decoratedFunctionCallNode = new FunctionCallNode(node.FunctionIdentifier, decoratedArguments, node.SourceLocation);
+    decoratedFunctionCallNode.Type = typeNode;
+
+    Console.WriteLine("HERE IS THE RETURN TYPE OF FUNCTION CALL: " + functionCallName + " " + decoratedFunctionCallNode.Type);
+    return decoratedFunctionCallNode;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -1336,7 +1399,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     {
         switch (functionName)
         {
-            case "rgb":
+            case "Rgb":
                 return TypeNode.TypeKind.String;
             case "MoveTo":
                 return TypeNode.TypeKind.String;

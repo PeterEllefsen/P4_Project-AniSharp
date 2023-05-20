@@ -32,7 +32,7 @@ namespace AnimationLanguage
             IASTNode? decoratedAstRoot = typeCheckingVisitor.Visit((ProgramNode)astRoot);
 
 
-            //PrintAST(astRoot);
+            PrintAST(decoratedAstRoot);
         }
 
         public static void PrintAST(IASTNode? node, int indentation = 0)

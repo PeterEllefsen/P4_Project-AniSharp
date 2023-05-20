@@ -7,7 +7,6 @@ public class Symbol
 {
     public string Name { get; } // The name of the symbol.
     public string Type { get; } // The type of the symbol.
-    public bool IsPrototype { get;} // Whether the symbol is a prototype or not.
     public IASTNode? Value { get; set; } // The value of the symbol, if any.
 
     public Symbol(string name, string type, IASTNode? value = null)
@@ -21,7 +20,6 @@ public class Symbol
     {
         Name = name;
         Type = type;
-        IsPrototype = isPrototype;
         Value = parameters;
     }
 }
@@ -72,6 +70,17 @@ public class SymbolTable
         }
 
         symbols[name] = new Symbol(name, "seq"); // Add the sequence to the symbol table by using the name as the key and a new symbol as the value.
+    }
+    
+    
+    public void AddParameter(string name, string type, IASTNode? value = null)
+    {
+        if (symbols.ContainsKey(name))
+        {
+            throw new InvalidOperationException($"Parameter '{name}' already exists.");
+        }
+
+        symbols[name] = new Symbol(name, type, value);
     }
 
     public Symbol? Lookup(string name) // This method looks up a symbol in the symbol table. It will be used in the type checker to check if a variable or function exists.
