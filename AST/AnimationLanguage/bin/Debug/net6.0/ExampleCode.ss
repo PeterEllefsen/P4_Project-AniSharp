@@ -13,17 +13,58 @@ setup [
 
 
 
-seq house() {
-housebase = Polygon(
-        point1: (x: 100, y: 300),
-        point2: (x: 300, y: 300),
-        point3: (x: 300, y: 200),
-        point4: (x: 100, y: 200),
-    color: rgb(255, 255, 255)
+seq road() {
+
+road = Polygon(
+    point1: (x: 0, y: 250),
+    point2: (x: 1080, y: 250),
+    point3: (x: 1080, y: 500),
+    point4: (x: 0, y: 500),
+    color: Rgb(50, 50, 50)
 )
 
-    house->(EndFrame: 20, y: 250)->(EndFrame: 1000);
 
+road->(EndFrame: 1000);
+
+}
+
+seq house() {
+housebase = Polygon(
+    point1: (x: 100, y: 300),
+    point2: (x: 300, y: 300),
+    point3: (x: 300, y: 200),
+    point4: (x: 100, y: 200),
+    color: Rgb(150, 0, 0)
+)
+
+roof = Polygon(
+    point1: (x: 100, y: 200),
+    point2: (x: 200, y: 100),
+    point3: (x: 300, y: 200),
+    color: Rgb(255, 0, 0)
+)
+
+door = Polygon(
+    point1: (x: 150, y: 300),
+    point2: (x: 200, y: 300),
+    point3: (x: 200, y: 220),
+    point4: (x: 150, y: 220),
+    color: Rgb(255, 255, 255)
+)
+
+window = Polygon(
+    point1: (x: 220, y: 250),
+    point2: (x: 280, y: 250),
+    point3: (x: 280, y: 220),
+    point4: (x: 220, y: 220),
+    color: Rgb(10, 0, 255)
+)
+
+    housebase->(EndFrame: 1000);
+    roof->(EndFrame: 1000);
+    door->(EndFrame: 1000);
+    window->(EndFrame: 1000);
+    
 }
 
 
@@ -44,15 +85,17 @@ body = Polygon(
 ); 
 
 
-body->repeat(5)->(EndFrame: 1000, x: 1000, y: 100);
-wheel1->repeat(5)->(EndFrame: 1000, x: 1000, y: 100);
-wheel2->repeat(5)->(EndFrame: 1000, x: 1000, y: 100);
+body->(EndFrame: 100, y: 100)->(EndFrame: 500, x: 1000);
+wheel1->(EndFrame: 100, y: 100)->(EndFrame: 500, x: 1000);
+wheel2->(EndFrame: 100, y: 100)->(EndFrame: 500, x: 1000);
 
 }
 
 
 
 timeline {
-    Frame 10 : car();
-    Frame 20 : face();
+   
+    Frame 0 : house();
+    Frame 0 : road();
+    Frame 0 : car();
   }
