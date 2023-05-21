@@ -63,7 +63,7 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 public class Polygon{
     public List<double[]> points { get; set; }
     public string color { get; set; }
-    public int borderWidth { get; set; }
+    public double borderWidth { get; set; }
 
      public Polygon()
     {
@@ -281,8 +281,111 @@ public class group : Dictionary<string, object>
         }
         else if (item is Polygon polygon)
         {
-            // Code to animate an object of SomeObjectType
-            // ...
+
+            for (int i = 0; i < animations.Count; i++)
+            {
+                int animationFrameCount =
+                    i == 0 ? animations[i].endframe : animations[i].endframe - animations[i - 1].endframe;
+
+                // Create a new list for the frame in the framebuffer
+                List<string> frameList = new List<string>();
+
+
+                if (animations[i].x != null)
+                {
+                    dx = (double)animations[i].x / (animationFrameCount - 1);
+                }
+                
+                if (animations[i].y != null)
+                {
+                    dy = (double)animations[i].y / (animationFrameCount - 1);
+                }
+
+                if (animations[i].borderWidth != null)
+                {
+                    double startBorderWidth = polygon.borderWidth;
+                    double endBorderWidth = (double)animations[i].borderWidth;
+
+                    dbw = (endBorderWidth - startBorderWidth) / (animationFrameCount - 1);
+                }
+
+                if (animations[i].color != null)
+                {
+                    (int r, int g, int b) startColor = HexToRgb(polygon.color);
+                    (int r, int g, int b) endColor = HexToRgb(animations[i].color);
+
+                    // Calculate the color change per frame for each RGB component
+                     dr = (endColor.r - startColor.r) / (animationFrameCount - 1);
+                     dg = (endColor.g - startColor.g) / (animationFrameCount - 1);
+                     db = (endColor.b - startColor.b) / (animationFrameCount - 1);
+                }
+                
+
+
+                for (int frame = 0; frame < animationFrameCount; frame++)
+                {
+                    if (frame != 0)
+                    {
+                        if (animations[i].color != null)
+                        {
+                        
+                            (int r, int g, int b) currentColorHex = HexToRgb(polygon.color);
+                            // Animate the color for each frame
+                            int currentR = currentColorHex.r + dr;
+                            int currentG = currentColorHex.g + dg;
+                            int currentB = currentColorHex.b + db;
+
+                            // Convert the RGB values back to a hex color code
+                            string currentColor = rgb(currentR, currentG, currentB);
+
+                            // Animate the color property
+                            polygon.color = currentColor;
+                        }
+
+                        if (animations[i].x != null)
+                        {
+                            // Animate the x-coordinate for each frame
+                            foreach (var point in polygon.points) {
+                                point[0] += dx;
+                            }
+                        }
+
+                        if (animations[i].y != null)
+                        {
+                            // Animate the y-coordinate for each frame
+                            foreach (var point in polygon.points) {
+                                point[1] += dy;
+                            }
+                        }
+
+                        if (animations[i].borderWidth != null)
+                        {
+                            // Animate the borderWidth for each frame
+                            double currentBorderWidth = polygon.borderWidth + dbw;
+                            polygon.borderWidth = currentBorderWidth;
+                        }
+                    }
+
+
+                    int frameIndex = frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame;
+
+                    while (framebuffer.Count <= frameIndex)
+                    {
+                        framebuffer.Add(new List<string>());
+                    }
+
+                    string polygonString = """";
+                    polygonString += $""polygon{polygon.points.Count}|"";
+                    foreach (var point in polygon.points) {
+                        polygonString += $""{point[0]}|{point[1]}|"";
+                    }
+                    polygonString += $""{polygon.borderWidth}|{polygon.color}"";
+                    //Add the frame to the framebuffer
+                    framebuffer[frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame].Add(polygonString);
+                }
+            }
+
+            PrintFramebuffer(framebuffer);
         }
 
         return framebuffer;

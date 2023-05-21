@@ -69,13 +69,13 @@ seq CarDrivingOnScreen() {
 
   poly1 = Polygon(color: Rgb(165,165,165), borderWidth: 3, point1: (x: 327, y: 135), point2: (x: 327, y: 135), point3: (x: 327, y: 135));
  
-  car[
-        circle1wheel, 
-        circle1wheelinner, 
-        circle2wheel, 
-        circle2wheelinner, 
-        circleHeadlight
-  ];
+  //car[
+  //      circle1wheel, 
+  //      circle1wheelinner, 
+  //      circle2wheel, 
+  //      circle2wheelinner, 
+  //      circleHeadlight
+  //];
 
   poly1->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
  
