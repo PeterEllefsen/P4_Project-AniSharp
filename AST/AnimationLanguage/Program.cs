@@ -25,7 +25,7 @@ namespace AnimationLanguage
             AnimationLanguageVisitor visitor = new AnimationLanguageVisitor();
             IASTNode? astRoot = visitor.Visit(parseTreeRoot);
 
-            // Instantiate the ScopedSymbolTable.
+            //Instantiate the ScopedSymbolTable.
             ScopedSymbolTable scopedSymbolTable = new ScopedSymbolTable();
             //Instantiate the TypeCheckingVisitor to perform type checking on the AST.
             TypeCheckingVisitor typeCheckingVisitor = new TypeCheckingVisitor(scopedSymbolTable);

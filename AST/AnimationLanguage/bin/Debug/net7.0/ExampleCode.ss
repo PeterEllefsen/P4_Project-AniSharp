@@ -36,11 +36,13 @@ int function ColorBasedOnNumber(int f){
     return 2;
 }
 
-seq CarDrivingOnScreen() {
+seq CarDrivingOnScreen(int i) {
 
     //Headlights
   circleHeadlight = Circle(center: (x: 327, y: 135), radius: 10, color: Rgb(255,255,0)); //yellow
   
+  int i = 1;
+
   //Back Wheel
   circle1wheel = Circle(center: (x: 187, y: 170), radius: 25, color: Rgb(0,0,0));
   circle1wheelinner = Circle(center: (x: 187, y: 170), radius: 12.5, color: Rgb(165,165,165));

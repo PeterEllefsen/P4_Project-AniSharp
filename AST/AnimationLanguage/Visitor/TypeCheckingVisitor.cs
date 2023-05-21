@@ -199,7 +199,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         ExpressionNode decoratedExpressionNode = (ExpressionNode?)Visit(node.Expression) ?? throw new InvalidOperationException("Failed to create a decorated expression node.");
         Console.WriteLine("heii");
         // Check if the identifier already exists in the symbol table
-        if (_symbolTable.IsDefined(node.Identifier.Name))
+        if (_symbolTable.IsDefinedInCurrentScope(node.Identifier.Name))
         {
             // If the assignment is not a declaration (node.VariableType is Null), 
             // then the variable type should match the type of the variable in the symbol table
@@ -212,6 +212,10 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
                 {
                     throw new InvalidOperationException(
                         $"Type mismatch in assignment. Cannot assign a value of type '{decoratedExpressionNode.VariableType}' to variable '{node.Identifier.Name}' whose type is '{symbolVariableType}'");
+                }
+                if (node.IsDeclaration == true)
+                {
+                    throw new InvalidOperationException($"Variable '{node.Identifier.Name}' is already defined. " + node.SourceLocation);
                 }
             }
         }
@@ -240,6 +244,15 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
             node.SourceLocation
         );
 
+        if (node.IsDeclaration == true)
+        {
+            decoratedAssignmentNode.IsDeclaration = true;
+        }
+        else
+        {
+            decoratedAssignmentNode.IsDeclaration = false;
+        }
+        
         Console.WriteLine("Type checked assignment node");
         return decoratedAssignmentNode;
     }
@@ -721,15 +734,14 @@ public override IASTNode? Visit(FunctionCallNode node)
     {
         Console.WriteLine("Type checking for loop node");
 
+        _symbolTable.EnterScope(); // Enter new scope
         // Perform type checking and other operations on the ForLoopNode's properties
         // For example:
         Visit((AssignmentNode)node.Initialization);
         Visit((ExpressionNode)node.Condition);
         Visit((AssignmentNode)node.Update);
 
-
-
-        _symbolTable.EnterScope(); // Enter new scope
+        
         Visit(node.Body);
         _symbolTable.ExitScope();
 

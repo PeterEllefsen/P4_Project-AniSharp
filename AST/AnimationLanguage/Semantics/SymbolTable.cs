@@ -145,6 +145,19 @@ public class ScopedSymbolTable
         return null;
     }
     
+    public Symbol? LookupInCurrentScope(string name) 
+    {
+        // Lookup in the current scope only
+        return _scopeStack.Peek().Lookup(name);
+    }
+    
+    
+    public bool IsDefinedInCurrentScope(string name) 
+    {
+        // Check if the variable is defined in the current scope only
+        return LookupInCurrentScope(name) != null;
+    }
+    
     
     public bool IsDefined(string name) // Does the same as the lookup method, but returns a boolean value
     {
