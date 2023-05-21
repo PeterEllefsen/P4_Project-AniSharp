@@ -129,11 +129,18 @@ public class group : Dictionary<string, object>
         }");
         
         
-        codeBuilder("w", @" public static List<List<string>> animate(object item, List<Animation> animations, List<List<string>> framebuffer,
+        codeBuilder("w", @"  public static List<List<string>> animate(object item, List<Animation> animations, List<List<string>> framebuffer,
         int frameOffset)
     {
         int totalFrames = 0;
-    
+        double dx = 0;
+        double dy = 0;
+        double drad = 0;
+        double dbw = 0;
+        int dr = 0;
+        int dg = 0;
+        int db = 0;
+
         foreach (var animation in animations)
         {
             if (animation.endframe > totalFrames)
@@ -141,13 +148,13 @@ public class group : Dictionary<string, object>
                 totalFrames = animation.endframe + frameOffset;
             }
         }
-    
+
         //wait until start frame
         for (int frame = 0; frame <= totalFrames; frame++)
         {
             framebuffer.Add(new List<string>() { """" }); //wait
         }
-    
+
         if (item is group group)
         {
             // Code to animate a group
@@ -156,102 +163,121 @@ public class group : Dictionary<string, object>
         else if (item is Circle circle)
         {
             // Code to animate an object of SomeObjectType
-    
-    
+
+
             for (int i = 0; i < animations.Count; i++)
             {
                 int animationFrameCount =
                     i == 0 ? animations[i].endframe : animations[i].endframe - animations[i - 1].endframe;
-    
+
                 // Create a new list for the frame in the framebuffer
                 List<string> frameList = new List<string>();
-    
+
+
+                if (animations[i].x != null)
+                {
+                    double startX = circle.center.Item1;
+                    double endX = (double)animations[i].x;
+                    dx = (endX - startX) / (animationFrameCount - 1);
+                }
+                
+                if (animations[i].y != null)
+                {
+                    double startY = circle.center.Item2;
+                    double endY = animations[i].y.Value;
+                    dy = (endY - startY) / (animationFrameCount - 1);
+                }
+
+                if (animations[i].radius != null)
+                {
+                    double startRadius = circle.radius;
+                    double endRadius = (double)animations[i].radius;
+
+                    drad = (endRadius - startRadius) / (animationFrameCount - 1);
+                }
+
+                if (animations[i].borderWidth != null)
+                {
+                    double startBorderWidth = circle.borderWidth;
+                    double endBorderWidth = (double)animations[i].borderWidth;
+
+                    dbw = (endBorderWidth - startBorderWidth) / (animationFrameCount - 1);
+                }
+
+                if (animations[i].color != null)
+                {
+                    (int r, int g, int b) startColor = HexToRgb(circle.color);
+                    (int r, int g, int b) endColor = HexToRgb(animations[i].color);
+
+                    // Calculate the color change per frame for each RGB component
+                     dr = (endColor.r - startColor.r) / (animationFrameCount - 1);
+                     dg = (endColor.g - startColor.g) / (animationFrameCount - 1);
+                     db = (endColor.b - startColor.b) / (animationFrameCount - 1);
+                }
+                
+
+
                 for (int frame = 0; frame < animationFrameCount; frame++)
                 {
-                    if (animations[i].color != null)
+                    if (frame != 0)
                     {
-                        (int r, int g, int b) startColor = HexToRgb(circle.color);
-                        (int r, int g, int b) endColor = HexToRgb(animations[i].color);
-    
-                        // Calculate the color change per frame for each RGB component
-                        int dr = (endColor.r - startColor.r) / (animationFrameCount - 1);
-                        int dg = (endColor.g - startColor.g) / (animationFrameCount - 1);
-                        int db = (endColor.b - startColor.b) / (animationFrameCount - 1);
-    
-                        // Animate the color for each frame
-                        int currentR = startColor.r + (dr * frame);
-                        int currentG = startColor.g + (dg * frame);
-                        int currentB = startColor.b + (db * frame);
-    
-                        // Convert the RGB values back to a hex color code
-                        string currentColor = rgb(currentR, currentG, currentB);
-    
-                        // Animate the color property
-                        circle.color = currentColor;
+                        if (animations[i].color != null)
+                        {
+                        
+                            (int r, int g, int b) currentColorHex = HexToRgb(circle.color);
+                            // Animate the color for each frame
+                            int currentR = currentColorHex.r + dr;
+                            int currentG = currentColorHex.g + dg;
+                            int currentB = currentColorHex.b + db;
+
+                            // Convert the RGB values back to a hex color code
+                            string currentColor = rgb(currentR, currentG, currentB);
+
+                            // Animate the color property
+                            circle.color = currentColor;
+                        }
+
+                        if (animations[i].x != null)
+                        {
+                            // Animate the x-coordinate for each frame
+                            double currentX = circle.center.Item1 + dx;
+                            circle.center = (currentX, circle.center.Item2);
+                        }
+
+                        if (animations[i].y != null)
+                        {
+                            // Animate the y-coordinate for each frame
+                            double currentY = circle.center.Item2 + dy;
+                            circle.center = (circle.center.Item1, currentY);
+                        }
+
+                        if (animations[i].radius != null)
+                        {
+                            // Animate the radius for each frame
+                            double currentRadius = circle.radius + drad;
+                            circle.radius = currentRadius;
+                        }
+
+                        if (animations[i].borderWidth != null)
+                        {
+                            // Animate the borderWidth for each frame
+                            double currentBorderWidth = circle.borderWidth + dbw;
+                            circle.borderWidth = currentBorderWidth;
+                        }
                     }
-    
-                    if (animations[i].x != null)
-                    {
-                        double startX = circle.center.Item1;
-                        double endX = animations[i].x.Value;
-    
-                        double dx = (endX - startX) / (animationFrameCount - 1);
-    
-                        // Animate the x-coordinate for each frame
-                        double currentX = startX + (dx * frame);
-                        circle.center = (currentX, circle.center.Item2);
-                    }
-    
-                    if (animations[i].y != null)
-                    {
-                        double startY = circle.center.Item2;
-                        double endY = animations[i].y.Value;
-    
-                        double dy = (endY - startY) / (animationFrameCount - 1);
-    
-                        // Animate the y-coordinate for each frame
-                        double currentY = startY + (dy * frame);
-                        circle.center = (circle.center.Item1, currentY);
-                    }
-    
-                    if (animations[i].radius != null)
-                    {
-                        double startRadius = circle.radius;
-                        double endRadius = animations[i].radius.Value;
-    
-                        double dr = (endRadius - startRadius) / (animationFrameCount - 1);
-    
-                        // Animate the radius for each frame
-                        double currentRadius = startRadius + (dr * frame);
-                        circle.radius = currentRadius;
-                    }
-    
-                    if (animations[i].borderWidth != null)
-                    {
-                        double startBorderWidth = circle.borderWidth;
-                        double endBorderWidth = animations[i].borderWidth.Value;
-    
-                        double dbw = (endBorderWidth - startBorderWidth) / (animationFrameCount - 1);
-    
-                        // Animate the borderWidth for each frame
-                        double currentBorderWidth = startBorderWidth + (dbw * frame);
-                        circle.borderWidth = currentBorderWidth;
-                    }
-                    
-                    int frameIndex = frameOffset + (i == 0 ? 0 : animations[i - 1].endframe + frameOffset) + frame;
-                    
+
+
+                    int frameIndex = frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame;
+
                     while (framebuffer.Count <= frameIndex)
                     {
                         framebuffer.Add(new List<string>());
                     }
-                    
+
 
                     //Add the frame to the framebuffer
-                    framebuffer[frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame].Add($""circle|{circle.center.Item1}|{circle.center.Item2}|{circle.radius}|{circle.borderWidth}|{circle.color}"");
-                    
-   
-                    
-                    
+                    framebuffer[frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame].Add(
+                        $""circle|{circle.center.Item1}|{circle.center.Item2}|{circle.radius}|{circle.borderWidth}|{circle.color}"");
                 }
             }
 
@@ -262,7 +288,7 @@ public class group : Dictionary<string, object>
             // Code to animate an object of SomeObjectType
             // ...
         }
-    
+
         return framebuffer;
     }");
         

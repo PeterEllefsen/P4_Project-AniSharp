@@ -76,10 +76,10 @@ seq CarDrivingOnScreen() {
   ];
 
   circle2wheel->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
+  circle1wheelinner->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
   
   
 }
-
 
 
 timeline {
