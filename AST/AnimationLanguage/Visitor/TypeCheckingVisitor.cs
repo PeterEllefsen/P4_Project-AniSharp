@@ -163,7 +163,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 
         if (!_symbolTable.IsDefined(node.Name))
         {
-            throw new InvalidOperationException($"Identifier '{node.Name}' is not defined.");
+            throw new InvalidOperationException($"Identifier '{node.Name}' is not defined at {node.SourceLocation}");
         }
 
         // Look up the corresponding symbol in the symbol table
@@ -225,7 +225,7 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
             Console.WriteLine("Here is decorated expression node variable type: " + decoratedExpressionNode.VariableType);
             if (decoratedExpressionNode.VariableType != node.VariableType)
             {
-                throw new InvalidOperationException($"Type mismatch in assignment. Cannot assign a value of type '{decoratedExpressionNode.VariableType}' to variable of type '{node.VariableType}'.");
+                throw new InvalidOperationException($"Type mismatch in assignment. Cannot assign a value of type '{decoratedExpressionNode.VariableType}' to variable of type '{node.VariableType}' at {node.SourceLocation}.");
             }
             
             _symbolTable.AddVariable(node.Identifier.Name, ConvertVariableTypeToString(decoratedExpressionNode.VariableType), decoratedExpressionNode);
@@ -739,9 +739,15 @@ public override IASTNode? Visit(FunctionCallNode node)
         // For example:
         Visit((AssignmentNode)node.Initialization);
         Visit((ExpressionNode)node.Condition);
-        Visit((AssignmentNode)node.Update);
+        if (node.Update is AssignmentNode assignmentNode)
+        {
+            Visit((AssignmentNode)node.Update);
+        }
+        else if (node.Update is UnaryOperationNode unaryOperationNode)
+        {
+            Visit((UnaryOperationNode)node.Update);
+        }
 
-        
         Visit(node.Body);
         _symbolTable.ExitScope();
 

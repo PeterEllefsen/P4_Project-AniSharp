@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from /home/daniel/P4-Project/AST/AnimationLanguage/Content/AnimationLanguageRules.g4 by ANTLR 4.12.0
+// Generated from C:/Users/pelle/Git/P4-Project/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
 
 // Unreachable code detected
 #pragma warning disable 0162

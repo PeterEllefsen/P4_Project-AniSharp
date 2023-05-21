@@ -117,7 +117,7 @@ public class BooleanLiteralNode : ExpressionNode
     
     public override string ToString()
     {
-        return $"BooleanLiteralNode: {Value}";
+        return $"{Value.ToString().ToLower()}";
     }
     
     

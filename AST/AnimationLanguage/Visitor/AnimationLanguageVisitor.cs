@@ -352,23 +352,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         return VariableType.Null;
     }
 
-
-
-    public override IASTNode VisitOperator(AnimationLanguageRulesParser.OperatorContext operatorContext)
-    {
-        if (operatorContext.logicOpp() != null)
-        {
-            return VisitLogicOpp(operatorContext.logicOpp());
-        }
-
-        string operatorString = operatorContext.GetText();
-        OperatorNode operatorNode = new OperatorNode(operatorString, GetSourceLocation(operatorContext.Start));
-        return operatorNode;
-    }
-
-
-
-    
     
 
     public override IASTNode VisitOperator(AnimationLanguageRulesParser.OperatorContext operatorContext)
@@ -421,8 +404,18 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
     public override IASTNode VisitBooleanExpression(AnimationLanguageRulesParser.BooleanExpressionContext context)
     {
-        bool value = context.boolean().TRUE() != null;
-        return new BooleanLiteralNode(value, GetSourceLocation(context.Start));
+        if(context.boolean().TRUE() != null)
+        {
+            return new BooleanLiteralNode(true, GetSourceLocation(context.Start));
+        }
+        else if(context.boolean().FALSE() != null)
+        {
+            return new BooleanLiteralNode(false, GetSourceLocation(context.Start));
+        }
+        else
+        {
+            throw new InvalidOperationException($"Unexpected boolean type in VisitBooleanExpression at {GetSourceLocation(context.Start)}");
+        }
     }
 
     //This method is called when a function call is encountered in the code.

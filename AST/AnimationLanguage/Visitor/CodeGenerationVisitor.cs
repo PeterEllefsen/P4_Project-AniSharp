@@ -16,7 +16,7 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
         //Program.cs for main
         //function class for all functions
         //Sequence class containing methods that create sequences
-        using (var fs = File.Create("../../../codegen/Program.cs", 1024))
+        using (var fs = File.Create("../../codegen/Program.cs", 1024))
         {
         }
     }
@@ -24,7 +24,7 @@ public class CodeGenerationVisitor : ASTVisitor<IASTNode>
     private void codeBuilder(string p, string appendingString)
     {
         var path = "";
-        path = "../../../codegen/Program.cs";
+        path = "../../codegen/Program.cs";
 
 
         if (p == "a")
@@ -107,7 +107,7 @@ public class group : Dictionary<string, object>
         codeBuilder("w", @"    private static void codeBuilder(string p, string appendingString)
     {
         var path = """";
-        path = ""../../../output.html"";
+        path = ""output.html"";
 
 
         if (p == ""a"")
@@ -602,12 +602,12 @@ Your browser does not support the HTML canvas tag.</canvas>
         codeBuilder("w", @"private static void CreateFilesForCompilation()
     {
         //if file exists delete it
-        if (File.Exists(""../../codegen/output.html"")) File.Delete(""../../output.html"");
+        if (File.Exists(""output.html"")) File.Delete(""output.html"");
         //files to create
         //Program.cs for main
         //function class for all functions
         //Sequence class containing methods that create sequences
-        using (var fs = File.Create(""../../../output.html"", 1024))
+        using (var fs = File.Create(""output.html"", 1024))
         {
         }
     }");
@@ -696,7 +696,7 @@ Your browser does not support the HTML canvas tag.</canvas>
 
            if (Child is FunctionCallNode functionCallNode)
            {
-               codeBuilder("a", $"Functions.{functionCallNode.ToString()};");
+               codeBuilder("a", $"Functions.{functionCallNode.ToString().ToLower()};");
            }
            
            
@@ -774,7 +774,7 @@ Your browser does not support the HTML canvas tag.</canvas>
 
     public override IASTNode? Visit(FunctionDeclarationNode node)
     {
-        codeBuilder("a", $"           static {node.ReturnType.ToString().ToLower()} {node.Identifier}(");
+        codeBuilder("a", $"           public static {node.ReturnType.ToString().ToLower()} {node.Identifier}(");
         foreach (var Child in node.GetChildren())
         {
             if (Child is ParameterNode parameterNode)
