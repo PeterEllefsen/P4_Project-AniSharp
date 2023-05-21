@@ -176,16 +176,12 @@ public class group : Dictionary<string, object>
 
                 if (animations[i].x != null)
                 {
-                    double startX = circle.center.Item1;
-                    double endX = (double)animations[i].x;
-                    dx = (endX - startX) / (animationFrameCount - 1);
+                    dx = (double)animations[i].x / (animationFrameCount - 1);
                 }
                 
                 if (animations[i].y != null)
                 {
-                    double startY = circle.center.Item2;
-                    double endY = animations[i].y.Value;
-                    dy = (endY - startY) / (animationFrameCount - 1);
+                    dy = (double)animations[i].y / (animationFrameCount - 1);
                 }
 
                 if (animations[i].radius != null)
@@ -770,10 +766,10 @@ public class group : Dictionary<string, object>
                         
                         if (shapeInitNode.ShapeType.ToString() == "Polygon")
                         {
-                            
+                            int parameterCount = 0;
                             foreach (var arg in shapeInitNode.Arguments)
                             {
-                                int parameterCount = 0;
+                                
 
                                 if (arg.Value is FunctionCallNode functionCallNode)
                                 {
@@ -782,7 +778,7 @@ public class group : Dictionary<string, object>
                                         codeBuilder("a", ",");
                                     }
 
-                                    codeBuilder("a", $"{arg.Key} = Functions.{functionCallNode.FunctionIdentifier}(");
+                                    codeBuilder("a", $"{arg.Key} = Functions.{functionCallNode.FunctionIdentifier.ToString().ToLower()}(");
                                     parameterCount++;
                                     int Count = 0;
                                     foreach (var Farg in functionCallNode.Arguments)
@@ -803,10 +799,12 @@ public class group : Dictionary<string, object>
 
                                 if (arg.Value is TupleNode tupleNode)
                                 {
+                                    /*
                                     if (parameterCount > 0)
                                     {
                                         codeBuilder("a", ",");
                                     }
+                                    */
 
                                     if (Regex.IsMatch(arg.Key.ToString(), @"point\d+"))
                                     {

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/daniel/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj": {}
+    "/home/klint/Git/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj": {}
   },
   "projects": {
-    "/home/daniel/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj": {
+    "/home/klint/Git/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/daniel/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj",
+        "projectUniqueName": "/home/klint/Git/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj",
         "projectName": "AnimationLanguage",
-        "projectPath": "/home/daniel/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj",
-        "packagesPath": "/home/daniel/.nuget/packages/",
-        "outputPath": "/home/daniel/P4-Project/AST/AnimationLanguage/obj/",
+        "projectPath": "/home/klint/Git/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj",
+        "packagesPath": "/home/klint/.nuget/packages/",
+        "outputPath": "/home/klint/Git/P4-Project/AST/AnimationLanguage/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/daniel/.nuget/NuGet/NuGet.Config"
+          "/home/klint/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -53,7 +53,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/6.0.116/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.114/RuntimeIdentifierGraph.json"
         }
       }
     }
