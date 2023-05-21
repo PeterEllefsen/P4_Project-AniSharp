@@ -10,7 +10,7 @@ namespace AnimationLanguage
         static void Main(string[] args)
         {
             // The location of the input source code file is defined here.
-            string inputSourceCode = File.ReadAllText("Content/ExampleCode.ss");
+            string inputSourceCode = File.ReadAllText("ExampleCode.ss");
 
             // CharStream is an interface in the ANTLR4 library that represents a stream of characters.
             // It is used to convert the input code of a language into a stream that can be read by the lexer.

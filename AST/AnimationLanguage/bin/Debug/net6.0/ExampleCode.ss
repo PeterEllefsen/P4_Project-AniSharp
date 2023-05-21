@@ -54,35 +54,27 @@ string function ColorBasedOnText(string text) {
 seq CarDrivingOnScreen() {
 
     //Headlights
-  circleHeadlight = Circle(center: (x: 327, y: 135), radius: 10, color: Rgb(255,255,0)); //yellow
+  circle1 = Circle(center: (x: 327, y: 135), radius: 10, color: Rgb(255,255,0));
+  circle2 = Circle(center: (x: 0, y: 0), radius: 20, color: Rgb(0,255,0));
+    
 
+  circle1->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
+  circle2->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
+}
 
-  //Back Wheel
-  circle1wheel = Circle(center: (x: 187, y: 170), radius: 25, color: Rgb(0,0,0));
-  circle1wheelinner = Circle(center: (x: 187, y: 170), radius: 12.5, color: Rgb(165,165,165));
+seq CarDrivingOnScreen2() {
 
-  //Front Wheel
-  circle2wheel = Circle(center: (x: 276, y: 157), radius: 25, color: Rgb(0,0,0));
-  circle2wheelinner = Circle(center: (x: 276, y: 157), radius: 12.5, color: Rgb(165,165,165));
+    //Headlights
+  circle1 = Circle(center: (x: 327, y: 135), radius: 10, color: Rgb(255,255,0));
+  circle2 = Circle(center: (x: 0, y: 0), radius: 20, color: Rgb(0,255,0));
+    
 
-  cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
-
-  car[
-        circle1wheel, 
-        circle1wheelinner, 
-        circle2wheel, 
-        circle2wheelinner, 
-        circleHeadlight
-  ];
-
-  circle2wheel->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
-  circle1wheelinner->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
-  
-  
+  circle1->repeat(5)->(EndFrame: 5, x: 10)->(EndFrame: 10, x: 20)->(EndFrame: 20, x: 30, color: rgb(255, 0, 25));
+  circle2->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 25));
 }
 
 
 timeline {
-    Frame 1 : CarDrivingOnScreen(); //At frame 10, start the CarDrivingOnScreen sequence, on top of the CircleGoVroomInTriangle sequence.
-    
+    Frame 0 : CarDrivingOnScreen(); 
+    Frame 10 : CarDrivingOnScreen2(); 
   }

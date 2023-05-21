@@ -95,6 +95,29 @@ public class group : Dictionary<string, object>
 
     private void insertFuncBoilerplate()
     {
+        codeBuilder("w", @"    private static void codeBuilder(string p, string appendingString)
+    {
+        var path = """";
+        path = ""../../../output.txt"";
+
+
+        if (p == ""a"")
+        {
+            using (var sw = File.AppendText(path))
+            {
+                sw.Write(appendingString);
+            }
+        }
+        else if (p == ""w"")
+        {
+            using (var sw = File.AppendText(path))
+            {
+                sw.WriteLine(appendingString);
+            }
+        }
+    }
+    ");
+        
         codeBuilder("w", @"public static string rgb(int red, int green, int blue)
 {
     string hex = $""#{red:X2}{green:X2}{blue:X2}"";
@@ -119,7 +142,7 @@ public class group : Dictionary<string, object>
             
         }
         
-        Console.WriteLine($""frames.push([{frameContent}]);"");
+        codeBuilder(""w"", $""frames.push([{frameContent}]);"");
     }
 }");
         
@@ -137,7 +160,40 @@ public class group : Dictionary<string, object>
         }");
         
         
-        codeBuilder("w", @"  public static List<List<string>> animate(object item, List<Animation> animations, List<List<string>> framebuffer,
+        codeBuilder("w", @"    public static List<List<string>> mergeFramebuffer(List<List<string>> framebuffer1, List<List<string>> framebuffer2)
+    {
+        int maxframes = framebuffer1.Count >= framebuffer2.Count ? framebuffer2.Count : framebuffer1.Count;
+
+        if (framebuffer1.Count != 0)
+        {
+            if (framebuffer1.Count > framebuffer2.Count)
+            {
+                for (int frameIndex = 0; frameIndex < framebuffer2.Count; frameIndex++)
+                {
+                    framebuffer1[frameIndex].AddRange(framebuffer2[frameIndex]);
+                }
+
+                return framebuffer1;
+            }
+            else if (framebuffer2.Count > framebuffer1.Count || framebuffer1.Count == framebuffer2.Count)
+            {
+                for (int frameIndex = 0; frameIndex < framebuffer1.Count; frameIndex++)
+                {
+                    framebuffer2[frameIndex].AddRange(framebuffer1[frameIndex]);
+                }
+
+                return framebuffer2;
+            }
+        }else
+        {
+            return framebuffer2;
+        }
+
+        return framebuffer2;
+
+    }");
+        
+        codeBuilder("w", @" public static List<List<string>> animate(object item, List<Animation> animations, List<List<string>> framebuffer,
         int frameOffset)
     {
         int totalFrames = 0;
@@ -156,11 +212,11 @@ public class group : Dictionary<string, object>
                 totalFrames = animation.endframe + frameOffset;
             }
         }
-
+        
         //wait until start frame
-        for (int frame = 0; frame <= totalFrames; frame++)
+        for (int frame = framebuffer.Count; frame < totalFrames; frame++)
         {
-            framebuffer.Add(new List<string>() { """" }); //wait
+            framebuffer.Add(new List<string>()); //wait
         }
 
         if (item is group group)
@@ -186,7 +242,7 @@ public class group : Dictionary<string, object>
                 {
                     dx = (double)animations[i].x / (animationFrameCount - 1);
                 }
-                
+
                 if (animations[i].y != null)
                 {
                     dy = (double)animations[i].y / (animationFrameCount - 1);
@@ -214,11 +270,10 @@ public class group : Dictionary<string, object>
                     (int r, int g, int b) endColor = HexToRgb(animations[i].color);
 
                     // Calculate the color change per frame for each RGB component
-                     dr = (endColor.r - startColor.r) / (animationFrameCount - 1);
-                     dg = (endColor.g - startColor.g) / (animationFrameCount - 1);
-                     db = (endColor.b - startColor.b) / (animationFrameCount - 1);
+                    dr = (endColor.r - startColor.r) / (animationFrameCount - 1);
+                    dg = (endColor.g - startColor.g) / (animationFrameCount - 1);
+                    db = (endColor.b - startColor.b) / (animationFrameCount - 1);
                 }
-                
 
 
                 for (int frame = 0; frame < animationFrameCount; frame++)
@@ -227,7 +282,6 @@ public class group : Dictionary<string, object>
                     {
                         if (animations[i].color != null)
                         {
-                        
                             (int r, int g, int b) currentColorHex = HexToRgb(circle.color);
                             // Animate the color for each frame
                             int currentR = currentColorHex.r + dr;
@@ -272,11 +326,7 @@ public class group : Dictionary<string, object>
 
 
                     int frameIndex = frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame;
-
-                    while (framebuffer.Count <= frameIndex)
-                    {
-                        framebuffer.Add(new List<string>());
-                    }
+                    
 
 
                     //Add the frame to the framebuffer
@@ -287,7 +337,6 @@ public class group : Dictionary<string, object>
         }
         else if (item is Polygon polygon)
         {
-
             for (int i = 0; i < animations.Count; i++)
             {
                 int animationFrameCount =
@@ -301,7 +350,7 @@ public class group : Dictionary<string, object>
                 {
                     dx = (double)animations[i].x / (animationFrameCount - 1);
                 }
-                
+
                 if (animations[i].y != null)
                 {
                     dy = (double)animations[i].y / (animationFrameCount - 1);
@@ -321,11 +370,10 @@ public class group : Dictionary<string, object>
                     (int r, int g, int b) endColor = HexToRgb(animations[i].color);
 
                     // Calculate the color change per frame for each RGB component
-                     dr = (endColor.r - startColor.r) / (animationFrameCount - 1);
-                     dg = (endColor.g - startColor.g) / (animationFrameCount - 1);
-                     db = (endColor.b - startColor.b) / (animationFrameCount - 1);
+                    dr = (endColor.r - startColor.r) / (animationFrameCount - 1);
+                    dg = (endColor.g - startColor.g) / (animationFrameCount - 1);
+                    db = (endColor.b - startColor.b) / (animationFrameCount - 1);
                 }
-                
 
 
                 for (int frame = 0; frame < animationFrameCount; frame++)
@@ -334,7 +382,6 @@ public class group : Dictionary<string, object>
                     {
                         if (animations[i].color != null)
                         {
-                        
                             (int r, int g, int b) currentColorHex = HexToRgb(polygon.color);
                             // Animate the color for each frame
                             int currentR = currentColorHex.r + dr;
@@ -351,7 +398,8 @@ public class group : Dictionary<string, object>
                         if (animations[i].x != null)
                         {
                             // Animate the x-coordinate for each frame
-                            foreach (var point in polygon.points) {
+                            foreach (var point in polygon.points)
+                            {
                                 point[0] += dx;
                             }
                         }
@@ -359,7 +407,8 @@ public class group : Dictionary<string, object>
                         if (animations[i].y != null)
                         {
                             // Animate the y-coordinate for each frame
-                            foreach (var point in polygon.points) {
+                            foreach (var point in polygon.points)
+                            {
                                 point[1] += dy;
                             }
                         }
@@ -371,20 +420,14 @@ public class group : Dictionary<string, object>
                             polygon.borderWidth = currentBorderWidth;
                         }
                     }
-
-
-                    int frameIndex = frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame;
-
-                    while (framebuffer.Count <= frameIndex)
-                    {
-                        framebuffer.Add(new List<string>());
-                    }
-
+                    
                     string polygonString = """";
                     polygonString += $""polygon{polygon.points.Count}|"";
-                    foreach (var point in polygon.points) {
+                    foreach (var point in polygon.points)
+                    {
                         polygonString += $""{point[0]}|{point[1]}|"";
                     }
+
                     polygonString += $""{polygon.borderWidth}|{polygon.color}"";
                     //Add the frame to the framebuffer
                     framebuffer[frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame].Add(polygonString);
@@ -394,8 +437,6 @@ public class group : Dictionary<string, object>
 
         return framebuffer;
     }");
-        
-        
     }
 
 
@@ -445,8 +486,26 @@ public class group : Dictionary<string, object>
 
         codeBuilder("w", "public static class Program");
         codeBuilder("w", "{");
+        
+        codeBuilder("w", @"private static void CreateFilesForCompilation()
+    {
+        //if file exists delete it
+        if (File.Exists(""../../codegen/output.cs"")) File.Delete(""../../output.txt"");
+        //files to create
+        //Program.cs for main
+        //function class for all functions
+        //Sequence class containing methods that create sequences
+        using (var fs = File.Create(""../../../output.txt"", 1024))
+        {
+        }
+    }");
+        
         codeBuilder("w", "   public static void Main()");
         codeBuilder("w", "   {");
+        
+        codeBuilder("w", "CreateFilesForCompilation();");
+
+        codeBuilder("w", "List<List<string>> framebuffer = new List<List<string>>();");
 
         foreach (var child in node.GetChildren())
         {
@@ -458,6 +517,8 @@ public class group : Dictionary<string, object>
                 }
             }
         }
+        
+        codeBuilder("w", "Functions.PrintFramebuffer(framebuffer);");
 
         codeBuilder("w", "   }");
         codeBuilder("w", "}");
@@ -1120,7 +1181,7 @@ public class group : Dictionary<string, object>
             sequenceCallParams = $", {sequenceCallParams}";
         }
 
-        codeBuilder("w", $"\t \t \tFunctions.PrintFramebuffer(Sequences.{sequenceCallWithoutParams}{node.FrameTime}{sequenceCallParams});");
+        codeBuilder("w", $"\t \t \tframebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.{sequenceCallWithoutParams}{node.FrameTime}{sequenceCallParams});");
 
         foreach (var child in node.GetChildren())
         {

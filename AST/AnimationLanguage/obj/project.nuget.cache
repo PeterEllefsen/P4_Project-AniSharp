@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "mcRYuBoZtl4XbyXAU9KtzvuPDQsoNni7ZWyKemt9QBPC3gqSFCnm5G/WKycb1y2HOZy6GgQ2PaPDo7uv40TPxw==",
+  "dgSpecHash": "Dzl1/4YHKNHSQnFYOK7W5w33xoKuoRWIxr72wKsiYVHMm9Ksh/gRt3qb2duVeHm6dJPfjYfP8xY7fr4X0HEENA==",
   "success": true,
-  "projectFilePath": "/home/klint/Git/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj",
+  "projectFilePath": "/home/daniel/P4-Project/AST/AnimationLanguage/AnimationLanguage.csproj",
   "expectedPackageFiles": [
-    "/home/klint/.nuget/packages/antlr4.runtime.standard/4.12.0/antlr4.runtime.standard.4.12.0.nupkg.sha512"
+    "/home/daniel/.nuget/packages/antlr4.runtime.standard/4.12.0/antlr4.runtime.standard.4.12.0.nupkg.sha512"
   ],
   "logs": []
 }
