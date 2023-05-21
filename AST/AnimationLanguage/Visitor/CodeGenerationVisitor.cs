@@ -91,6 +91,15 @@ public class group : Dictionary<string, object>
     public string? color { get; set; }
     public int? borderWidth { get; set; }
 }");
+        
+        
+        codeBuilder("w",@"public class setup
+{
+    public int sceneWidth = 500;
+    public int sceneHeight = 300;
+    public int framerate = 60;
+    public string backgroundColor = ""#ffffff"";
+    }");
     }
 
     private void insertFuncBoilerplate()
@@ -98,7 +107,7 @@ public class group : Dictionary<string, object>
         codeBuilder("w", @"    private static void codeBuilder(string p, string appendingString)
     {
         var path = """";
-        path = ""../../../output.txt"";
+        path = ""../../../output.html"";
 
 
         if (p == ""a"")
@@ -123,29 +132,132 @@ public class group : Dictionary<string, object>
     string hex = $""#{red:X2}{green:X2}{blue:X2}"";
     return hex;
 }");
+
+        codeBuilder("w", @"    public static void PrintFramebuffer(List<List<string>> framebuffer, setup setup)
+    {
+        string frames = """";
         
-        codeBuilder("w", @" public static void PrintFramebuffer(List<List<string>> framebuffer)
+        for (int frameIndex = 0; frameIndex < framebuffer.Count; frameIndex++)
         {
-            for (int frameIndex = 0; frameIndex < framebuffer.Count; frameIndex++)
+            //Console.WriteLine($""Frame {frameIndex + 1}:"");
+            string frameContent = """";
+            int contentCount = 0;
+            foreach (string details in framebuffer[frameIndex])
             {
-                //Console.WriteLine($""Frame {frameIndex + 1}:"");
-                string frameContent = """";
-                int contentCount = 0;
-        foreach (string details in framebuffer[frameIndex])
-        {
-            if (contentCount > 0) {
-                frameContent += $"", '{details}'"";    
-            } else {
-                frameContent += $""'{details}'"";
+                if (contentCount > 0)
+                {
+                    frameContent += $"", '{details}'"";
+                }
+                else
+                {
+                    frameContent += $""'{details}'"";
+                }
+
+                contentCount++;
             }
-            contentCount++;
-            
+
+            frames +=  $""frames.push([{frameContent}]); \n"";
         }
         
-        codeBuilder(""w"", $""frames.push([{frameContent}]);"");
-    }
-}");
         
+        codeBuilder(""w"", @$""<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id=""""myCanvas"""" width=""""{setup.sceneWidth}"""" height=""""{setup.sceneHeight}"""" style=""""border:1px solid {setup.backgroundColor};"""">
+Your browser does not support the HTML canvas tag.</canvas>
+
+<button onclick=""""run(0)"""">NEXT SLIDE</button>
+
+
+<script>
+    var frames = [];
+    {frames}
+
+
+    function sleep(ms) {{
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }}
+
+    function blankCanvas() {{
+        ctx.clearRect(0, 0, c.width, c.height);
+    }}
+
+    function drawCircle(x, y, radius, borderwidth, color) {{
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.arc(x, y, radius, 0, 2*Math.PI);
+        ctx.fill();
+        ctx.lineWidth = borderwidth;
+        ctx.strokeStyle = """"#000000"""";
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.fillStyle = """"#000000"""";
+    }}
+    function drawPolygon(points, borderwidth, color) {{
+        
+        let polygon = new Path2D();
+        for (var i = 0; i < (points.length / 2); i++) {{
+            if (i == 0) {{
+                polygon.moveTo(points[i*2], points[(2 * i)+1]);
+                polygon.lineTo(points[(i+1)*2], points[(2 * (i+1))+1])
+            }} else {{
+                polygon.lineTo(points[i*2], points[(2 * i)+1]);
+                
+            }}
+        }}
+        polygon.closePath();
+        ctx.lineWidth = borderwidth;
+        ctx.fillStyle = color;
+        ctx.strokeStyle = """"#000000"""";
+        ctx.fill(polygon);
+        ctx.stroke(polygon);
+        ctx.fillStyle = """"#000000"""";
+    }}
+
+    function drawText (x, y, text, fontsize, color, font) {{
+        ctx.font = fontsize + """"px """" + font;
+        ctx.fillText(text,x,y);
+    }}
+    var c = document.getElementById(""""myCanvas"""");
+    var ctx = c.getContext(""""2d"""");
+
+    function run(frame) {{
+        if (frame != frames.length) {{
+            sleep({1000 / setup.framerate})
+                .then(() => blankCanvas())
+                .then(() => run(frame + 1))
+            for (j = 0; j < frames[frame].length; j++) {{
+                obj = frames[frame][j].split(""""|"""");
+                console.log(obj)
+                if (obj[0] == """"circle"""") {{
+                    drawCircle(Math.round(obj[1].replace(/\,/g,""""."""")), Math.round(obj[2].replace(/\,/g,""""."""")),  Math.round(obj[3].replace(/\,/g,""""."""")), Math.round(obj[4]), obj[5]);
+                }} else if (obj[0].includes(""""polygon"""") ) {{
+                    console.log(obj[0].substring(7));
+                    var points = [];
+                    var pointsAmount = Number(obj[0].substring(7)) + 1;
+                    for (var i = 1; i < pointsAmount; i++) {{
+                        points.push(obj[(i*2)-1]);
+                        points.push(obj[i*2]);
+                        
+                    }}
+
+                    drawPolygon(points, obj[obj.length-2], obj[obj.length - 1]);
+                }}
+            }}
+
+        }} else {{
+            blankCanvas();
+        }}
+    }}
+
+</script> 
+
+</body>
+</html>""); 
+}");
+
         codeBuilder("w", @" public static (int, int, int) HexToRgb(string hex)
         {
             // Remove the '#' symbol if present
@@ -490,25 +602,30 @@ public class group : Dictionary<string, object>
         codeBuilder("w", @"private static void CreateFilesForCompilation()
     {
         //if file exists delete it
-        if (File.Exists(""../../codegen/output.cs"")) File.Delete(""../../output.txt"");
+        if (File.Exists(""../../codegen/output.html"")) File.Delete(""../../output.html"");
         //files to create
         //Program.cs for main
         //function class for all functions
         //Sequence class containing methods that create sequences
-        using (var fs = File.Create(""../../../output.txt"", 1024))
+        using (var fs = File.Create(""../../../output.html"", 1024))
         {
         }
     }");
         
         codeBuilder("w", "   public static void Main()");
         codeBuilder("w", "   {");
-        
+        codeBuilder("w", "setup setup = new setup();");
         codeBuilder("w", "CreateFilesForCompilation();");
 
         codeBuilder("w", "List<List<string>> framebuffer = new List<List<string>>();");
 
         foreach (var child in node.GetChildren())
         {
+            if (child is SetupNode setupNode)
+            {
+                Visit(setupNode);
+            }
+            
             if (child.GetType() == typeof(TimelineBlockNode))
             {
                 foreach (var timelineChild in child.GetChildren())
@@ -518,7 +635,7 @@ public class group : Dictionary<string, object>
             }
         }
         
-        codeBuilder("w", "Functions.PrintFramebuffer(framebuffer);");
+        codeBuilder("w", "Functions.PrintFramebuffer(framebuffer, setup);");
 
         codeBuilder("w", "   }");
         codeBuilder("w", "}");
@@ -559,15 +676,30 @@ public class group : Dictionary<string, object>
     {
         foreach (var Child in node.GetChildren())
         {
-            if (Child is IntegerLiteralNode integerLiteralNode)
-            {
-                //AppendToFile("main", Child.ToString() + ";\n");
-            }
-            else if (Child is IdentifierNode identifierNode)
-            {
-                //AppendToFile("main", "int ");
-                Visit(identifierNode);
-            }
+           Console.WriteLine(Child);
+
+           if (Child is IdentifierNode identifierNode)
+           {
+               codeBuilder("w", $"setup.{identifierNode.ToString()} =");
+           }
+
+           if (Child is IntegerLiteralNode integerLiteralNode)
+           {
+               codeBuilder("a", $"{integerLiteralNode.ToString()};");
+
+           }
+
+           if (Child is StringLiteralNode stringLiteralNode)
+           {
+               codeBuilder("a", $"{stringLiteralNode.ToString()};");
+           }
+
+           if (Child is FunctionCallNode functionCallNode)
+           {
+               codeBuilder("a", $"Functions.{functionCallNode.ToString()};");
+           }
+           
+           
         }
 
         return node;
@@ -866,6 +998,7 @@ public class group : Dictionary<string, object>
                             int parameterCount = 0;
                             foreach (var arg in shapeInitNode.Arguments)
                             {
+
                                 if (arg.Value is FunctionCallNode functionCallNode)
                                 {
                                     if (parameterCount > 0)
@@ -989,7 +1122,7 @@ public class group : Dictionary<string, object>
                                         codeBuilder("a", $"{arg.Key} = ({arg.Value})");
                                     }
                                     
-                                    parameterCount++;
+                                    //parameterCount++;
                                     //Console.WriteLine(tupleNode);
                                 }
 
@@ -1051,7 +1184,7 @@ public class group : Dictionary<string, object>
                 bool isItem1Initialized;
                 if (initializationStatusDict.TryGetValue($"{child.ToString()}", out isItem1Initialized))
                 {
-                    Console.WriteLine($"{child.ToString()} is already initialized");
+                   // Console.WriteLine($"{child.ToString()} is already initialized");
                     codeBuilder("w", $"{child.ToString()}Animations.Clear();");
                 }
                 else
@@ -1295,8 +1428,12 @@ public class group : Dictionary<string, object>
     {
         List<string> arguements = new List<string>();
         
+        //Console.WriteLine(node);
+        
         foreach (var argument in node.GetChildren())
         {
+            //Console.WriteLine(argument);
+            
             if (argument is ArgumentNode argumentNode)
             {
                 if (argumentNode.Value is FunctionCallNode)
@@ -1310,7 +1447,7 @@ public class group : Dictionary<string, object>
                     arguements.Add(argKeyValue);
                 }
                 
-                //Console.WriteLine(argument);
+                
                 
             }
         }
