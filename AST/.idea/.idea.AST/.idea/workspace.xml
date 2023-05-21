@@ -8,7 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9f85605a-0bd1-484f-927f-ce14f6de14d3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/AST.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/AST.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AST/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AST/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AST/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AST/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/ExampleCode.ss" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/ExampleCode.ss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Visitor/CodeGenerationVisitor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Visitor/CodeGenerationVisitor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +24,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/def187e0c0304e4d8496b6f837262782950400/dc/f3fc3e3e/String.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../codegen/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
@@ -37,7 +42,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "Master",
-    "last_opened_file_path": "/home/daniel/RiderProjects/program",
+    "last_opened_file_path": "/home/daniel/P4-Project/AST/AnimationLanguage",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -56,9 +61,9 @@
 }]]></component>
   <component name="RunManager">
     <configuration name="AnimationLanguage" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/AnimationLanguage/bin/Debug/net6.0/AnimationLanguage" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/AnimationLanguage" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -66,9 +71,9 @@
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/AnimationLanguage/AnimationLanguage.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="0" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
+      <option name="PROJECT_TFM" value="net6.0" />
       <method v="2">
         <option name="Build" />
       </method>

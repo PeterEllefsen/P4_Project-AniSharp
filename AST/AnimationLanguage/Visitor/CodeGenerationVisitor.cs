@@ -165,82 +165,150 @@ public class group : Dictionary<string, object>
 <head>
     <title>My Canvas</title>
     <style>
-        body {
+        body {{
             margin: 0;
             padding: 0;
-        }
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6C63FF, #2D91FF);
+        }}
 
-        #myCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 1px solid #FFFFFF;
-        }
+        #myCanvas.active {{
+            transform: scale(1);
+        }}
 
-        #nextSlideBtn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            margin: 0;
-            padding: 8px 16px;
+        #myCanvas {{
+            background-color: {setup.backgroundColor};
+            border-radius: 8px;
+            max-width: 100%;
+            max-height: 80vh;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }}
+
+        #nextSlideBtn {{
+            margin-top: 20px;
+            padding: 12px 24px;
             font-size: 16px;
             background-color: #4CAF50;
             color: #FFFFFF;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-        }
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }}
+
+        #nextSlideBtn:hover {{
+            background-color: #45A049;
+        }}
+
+        #nextSlideBtn:active {{
+            transform: scale(0.95);
+        }}
+
+        #nextSlideBtn.disabled {{
+            cursor: not-allowed;
+            background-color: gray;
+        }}
+
+        #frameInfo {{
+            margin-top: 20px;
+            font-size: 14px;
+            color: #FFFFFF;
+        }}
+
+        #progressBar {{
+            width: 80%;
+            height: 14px;
+            background-color: #E5E5E5;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }}
+
+        #progressBar .progress {{
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.3s ease;
+        }}
     </style>
 </head>
 <body>
+<div id=""""frameInfo""""></div>
+<canvas id=""""myCanvas"""" width=""""{setup.sceneWidth}"""" height=""""{setup.sceneHeight}"""">Your browser does not support the HTML canvas tag.</canvas>
+<div id=""""progressBar"""">
+    <div class=""""progress""""></div>
+</div>
 
-<canvas id=""""myCanvas"""" width=""""{setup.sceneWidth}"""" height=""""{setup.sceneHeight}"""" style=""""border:1px solid {setup.backgroundColor};"""">
-Your browser does not support the HTML canvas tag.</canvas>
-
-<button class=""nextSlideBtn"" onclick=""""run(0)"""">NEXT SLIDE</button>
+<button id=""""nextSlideBtn"""" onclick=""""playAnimation()"""">PLAY</button>
 
 
 <script>
+    var currentFrame = 0;
     var frames = [];
     {frames}
 
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+    var frameInfo = document.getElementById('frameInfo');
+    var button = document.getElementById('nextSlideBtn');
+    var progressBar = document.querySelector('#progressBar .progress');
+
+    function updateFrameInfo() {{
+        frameInfo.textContent = '{setup.framerate} - Frame: ' + (currentFrame + 1) + ' / ' + frames.length;
+    }}
+
+    function updateProgressBar() {{
+        var progress = (currentFrame / (frames.length - 1)) * 100;
+        progressBar.style.width = progress + '%';
+    }}
+
+    function playAnimation() {{
+        canvas.classList.add('active');
+        button.disabled = true;
+        button.classList.add('disabled');
+
+        updateFrameInfo();
+        updateProgressBar();
+        run(0);
+    }}
 
     function sleep(ms) {{
         return new Promise(resolve => setTimeout(resolve, ms));
     }}
 
     function blankCanvas() {{
-        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }}
 
-    function drawCircle(x, y, radius, borderwidth, color) {{
+    function drawCircle(x, y, radius, borderWidth, color) {{
         ctx.beginPath();
         ctx.fillStyle = color;
-        ctx.arc(x, y, radius, 0, 2*Math.PI);
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
         ctx.fill();
-        ctx.lineWidth = borderwidth;
+        ctx.lineWidth = borderWidth;
         ctx.strokeStyle = """"#000000"""";
         ctx.stroke();
         ctx.closePath();
-
         ctx.fillStyle = """"#000000"""";
     }}
-    function drawPolygon(points, borderwidth, color) {{
-        
+
+    function drawPolygon(points, borderWidth, color) {{
         let polygon = new Path2D();
-        for (var i = 0; i < (points.length / 2); i++) {{
-            if (i == 0) {{
-                polygon.moveTo(points[i*2], points[(2 * i)+1]);
-                polygon.lineTo(points[(i+1)*2], points[(2 * (i+1))+1])
+        for (var i = 0; i < points.length / 2; i++) {{
+            if (i === 0) {{
+                polygon.moveTo(points[i * 2], points[2 * i + 1]);
+                polygon.lineTo(points[(i + 1) * 2], points[2 * (i + 1) + 1]);
             }} else {{
-                polygon.lineTo(points[i*2], points[(2 * i)+1]);
-                
+                polygon.lineTo(points[i * 2], points[2 * i + 1]);
             }}
         }}
         polygon.closePath();
-        ctx.lineWidth = borderwidth;
+        ctx.lineWidth = borderWidth;
         ctx.fillStyle = color;
         ctx.strokeStyle = """"#000000"""";
         ctx.fill(polygon);
@@ -248,60 +316,49 @@ Your browser does not support the HTML canvas tag.</canvas>
         ctx.fillStyle = """"#000000"""";
     }}
 
-    function drawText (x, y, text, fontsize, color, font) {{
+    function drawText(x, y, text, fontsize, color, font) {{
         ctx.font = fontsize + """"px """" + font;
-        ctx.fillText(text,x,y);
+        ctx.fillText(text, x, y);
     }}
-    var c = document.getElementById(""""myCanvas"""");
-    var ctx = c.getContext(""""2d"""");
 
     function run(frame) {{
-        if (frame != frames.length) {{
-            sleep({1000 / setup.framerate})
-                .then(() => blankCanvas())
-                .then(() => run(frame + 1))
-            for (j = 0; j < frames[frame].length; j++) {{
-                obj = frames[frame][j].split(""""|"""");
-                console.log(obj)
-                if (obj[0] == """"circle"""") {{
-                    drawCircle(Math.round(obj[1].replace(/\,/g,""""."""")), Math.round(obj[2].replace(/\,/g,""""."""")),  Math.round(obj[3].replace(/\,/g,""""."""")), Math.round(obj[4]), obj[5]);
-                }} else if (obj[0].includes(""""polygon"""") ) {{
-                    console.log(obj[0].substring(7));
-                    var points = [];
-                    var pointsAmount = Number(obj[0].substring(7)) + 1;
-                    for (var i = 1; i < pointsAmount; i++) {{
-                        points.push(obj[(i*2)-1]);
-                        points.push(obj[i*2]);
-                        
-                    }}
-
-                    drawPolygon(points, obj[obj.length-2], obj[obj.length - 1]);
-                }}
-            }}
-
-        }} else {{
+        if (frame === frames.length) {{
             blankCanvas();
+            button.disabled = false;
+            button.className = """"active"""";
+            currentFrame = 0;
+            updateFrameInfo();
+            updateProgressBar();
+            return;
         }}
+
+        sleep({1000 / setup.framerate})
+            .then(() => {{
+                blankCanvas();
+                for (var j = 0; j < frames[frame].length; j++) {{
+                    var obj = frames[frame][j].split(""""|"""");
+                    if (obj[0] === """"circle"""") {{
+                        drawCircle(parseFloat(obj[1]), parseFloat(obj[2]), parseFloat(obj[3]), parseFloat(obj[4]), obj[5]);
+                    }} else if (obj[0].includes(""""polygon"""")) {{
+                        var points = [];
+                        var pointsAmount = parseInt(obj[0].substring(7)) + 1;
+                        for (var i = 1; i < pointsAmount; i++) {{
+                            points.push(parseFloat(obj[i * 2 - 1]));
+                            points.push(parseFloat(obj[i * 2]));
+                        }}
+                        drawPolygon(points, parseFloat(obj[obj.length - 2]), obj[obj.length - 1]);
+                    }}
+                }}
+                currentFrame = frame;
+                updateFrameInfo();
+                updateProgressBar();
+                run(frame + 1);
+            }});
     }}
-
-</script> 
-
+</script>
 </body>
-</html>""); 
-}");
-
-        codeBuilder("w", @" public static (int, int, int) HexToRgb(string hex)
-        {
-            // Remove the '#' symbol if present
-            hex = hex.TrimStart('#');
-
-            // Convert the hex code to RGB values
-            int r = int.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-            int g = int.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-            int b = int.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-
-            return (r, g, b);
-        }");
+</html>
+"");}");
         
         
         codeBuilder("w", @"    public static List<List<string>> mergeFramebuffer(List<List<string>> framebuffer1, List<List<string>> framebuffer2)
@@ -581,6 +638,20 @@ Your browser does not support the HTML canvas tag.</canvas>
 
         return framebuffer;
     }");
+        
+        
+        codeBuilder("w", @" public static (int, int, int) HexToRgb(string hex)
+        {
+            // Remove the '#' symbol if present
+            hex = hex.TrimStart('#');
+
+            // Convert the hex code to RGB values
+            int r = int.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            int g = int.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            int b = int.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+
+            return (r, g, b);
+        }");
     }
 
 

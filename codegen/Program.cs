@@ -55,35 +55,81 @@ public class setup
     public string backgroundColor = "#ffffff";
     }
 public static class Sequences {
-	public static List<List<string>>CarDrivingOnScreen(int frameoffset, int i) { 
+	public static List<List<string>>road(int frameoffset) { 
 		List<List<string>> framebuffer = new List<List<string>>(); 
-         Circle circleHeadlight = new Circle{center = (327, 135),radius = 10,color = Functions.rgb(255,255,0)};
-         Circle circle1wheel = new Circle{center = (187, 170),radius = 25,color = Functions.rgb(0,0,0)};
-         Circle circle1wheelinner = new Circle{center = (187, 170),radius = 125,color = Functions.rgb(165,165,165)};
-         Circle circle2wheel = new Circle{center = (276, 157),radius = 25,color = Functions.rgb(0,0,0)};
-         Circle circle2wheelinner = new Circle{center = (276, 157),radius = 125,color = Functions.rgb(165,165,165)};
-         Circle cirkel1 = new Circle{radius = 50,borderWidth = 3,center = (200, 50)};
-group car = new group();
-car.Add("circle1wheel", circle1wheel);
-car.Add("circle1wheelinner", circle1wheelinner);
-car.Add("circle2wheel", circle2wheel);
-car.Add("circle2wheelinner", circle2wheelinner);
-car.Add("circleHeadlight", circleHeadlight);
-List<Animation> carAnimations = new List<Animation>();
-carAnimations.Add(
-new Animation {endframe = 180 ,x = 250 } );carAnimations.Add(
-new Animation {endframe = 180 ,x = 250 } );carAnimations.Add(
-new Animation {endframe = 180 ,x = 250 } );framebuffer = Functions.animate(car, carAnimations, framebuffer, frameoffset);
+         Polygon road = new Polygon{color = Functions.rgb(50,50,50)};
+List<double[]> roadPoints = new List<double[]>
+{
+new double[2] {0, 250},new double[2] {1080, 250},new double[2] {1080, 500},new double[2] {0, 500}
+};
+road.points = roadPoints;
+List<Animation> roadAnimations = new List<Animation>();
+roadAnimations.Add(
+new Animation {endframe = 1000 } );framebuffer = Functions.animate(road, roadAnimations, framebuffer, frameoffset);
 		return framebuffer; 
  	} 
-	public static List<List<string>>CircleGoVroomInTriangle(int frameoffset, float j) { 
+	public static List<List<string>>house(int frameoffset) { 
 		List<List<string>> framebuffer = new List<List<string>>(); 
-         Circle cirkel1 = new Circle{radius = 50,borderWidth = 3,center = (200, 50)};
-List<Animation> cirkel1Animations = new List<Animation>();
-cirkel1Animations.Add(
-new Animation {endframe = 50 ,x = 50 ,color = Functions.ColorBasedOnNumber(4) } );cirkel1Animations.Add(
-new Animation {endframe = 100 ,x = 50 ,y = -50 } );cirkel1Animations.Add(
-new Animation {endframe = 150 ,y = -50 } );framebuffer = Functions.animate(cirkel1, cirkel1Animations, framebuffer, frameoffset);
+         Polygon housebase = new Polygon{color = Functions.rgb(150,0,0)};
+List<double[]> housebasePoints = new List<double[]>
+{
+new double[2] {100, 300},new double[2] {300, 300},new double[2] {300, 200},new double[2] {100, 200}
+};
+housebase.points = housebasePoints;
+         Polygon roof = new Polygon{color = Functions.rgb(255,0,0)};
+List<double[]> roofPoints = new List<double[]>
+{
+new double[2] {100, 200},new double[2] {200, 100},new double[2] {300, 200}
+};
+roof.points = roofPoints;
+         Polygon door = new Polygon{color = Functions.rgb(255,255,255)};
+List<double[]> doorPoints = new List<double[]>
+{
+new double[2] {150, 300},new double[2] {200, 300},new double[2] {200, 220},new double[2] {150, 220}
+};
+door.points = doorPoints;
+         Polygon window = new Polygon{color = Functions.rgb(10,0,255)};
+List<double[]> windowPoints = new List<double[]>
+{
+new double[2] {220, 250},new double[2] {280, 250},new double[2] {280, 220},new double[2] {220, 220}
+};
+window.points = windowPoints;
+List<Animation> housebaseAnimations = new List<Animation>();
+housebaseAnimations.Add(
+new Animation {endframe = 1000 } );framebuffer = Functions.animate(housebase, housebaseAnimations, framebuffer, frameoffset);
+List<Animation> roofAnimations = new List<Animation>();
+roofAnimations.Add(
+new Animation {endframe = 1000 } );framebuffer = Functions.animate(roof, roofAnimations, framebuffer, frameoffset);
+List<Animation> doorAnimations = new List<Animation>();
+doorAnimations.Add(
+new Animation {endframe = 1000 } );framebuffer = Functions.animate(door, doorAnimations, framebuffer, frameoffset);
+List<Animation> windowAnimations = new List<Animation>();
+windowAnimations.Add(
+new Animation {endframe = 1000 } );framebuffer = Functions.animate(window, windowAnimations, framebuffer, frameoffset);
+		return framebuffer; 
+ 	} 
+	public static List<List<string>>car(int frameoffset) { 
+		List<List<string>> framebuffer = new List<List<string>>(); 
+         Circle wheel1 = new Circle{center = (220, 280),radius = 30};
+         Circle wheel2 = new Circle{center = (320, 280),radius = 30};
+         Polygon body = new Polygon{color = Functions.rgb(55,125,155)};
+List<double[]> bodyPoints = new List<double[]>
+{
+new double[2] {200, 250},new double[2] {340, 250},new double[2] {360, 220},new double[2] {330, 190},new double[2] {210, 190},new double[2] {180, 220}
+};
+body.points = bodyPoints;
+List<Animation> bodyAnimations = new List<Animation>();
+bodyAnimations.Add(
+new Animation {endframe = 100 ,y = 100 } );bodyAnimations.Add(
+new Animation {endframe = 500 ,x = 1000 } );framebuffer = Functions.animate(body, bodyAnimations, framebuffer, frameoffset);
+List<Animation> wheel1Animations = new List<Animation>();
+wheel1Animations.Add(
+new Animation {endframe = 100 ,y = 100 } );wheel1Animations.Add(
+new Animation {endframe = 500 ,x = 1000 } );framebuffer = Functions.animate(wheel1, wheel1Animations, framebuffer, frameoffset);
+List<Animation> wheel2Animations = new List<Animation>();
+wheel2Animations.Add(
+new Animation {endframe = 100 ,y = 100 } );wheel2Animations.Add(
+new Animation {endframe = 500 ,x = 1000 } );framebuffer = Functions.animate(wheel2, wheel2Animations, framebuffer, frameoffset);
 		return framebuffer; 
  	} 
 }  
@@ -145,53 +191,153 @@ public static string rgb(int red, int green, int blue)
         
         codeBuilder("w", @$"<!DOCTYPE html>
 <html>
+<head>
+    <title>My Canvas</title>
+    <style>
+        body {{
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6C63FF, #2D91FF);
+        }}
+
+        #myCanvas.active {{
+            transform: scale(1);
+        }}
+
+        #myCanvas {{
+            background-color: {setup.backgroundColor};
+            border-radius: 8px;
+            max-width: 100%;
+            max-height: 80vh;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }}
+
+        #nextSlideBtn {{
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }}
+
+        #nextSlideBtn:hover {{
+            background-color: #45A049;
+        }}
+
+        #nextSlideBtn:active {{
+            transform: scale(0.95);
+        }}
+
+        #nextSlideBtn.disabled {{
+            cursor: not-allowed;
+            background-color: gray;
+        }}
+
+        #frameInfo {{
+            margin-top: 20px;
+            font-size: 14px;
+            color: #FFFFFF;
+        }}
+
+        #progressBar {{
+            width: 80%;
+            height: 14px;
+            background-color: #E5E5E5;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }}
+
+        #progressBar .progress {{
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.3s ease;
+        }}
+    </style>
+</head>
 <body>
+<div id=""frameInfo""></div>
+<canvas id=""myCanvas"" width=""{setup.sceneWidth}"" height=""{setup.sceneHeight}"">Your browser does not support the HTML canvas tag.</canvas>
+<div id=""progressBar"">
+    <div class=""progress""></div>
+</div>
 
-<canvas id=""myCanvas"" width=""{setup.sceneWidth}"" height=""{setup.sceneHeight}"" style=""border:1px solid {setup.backgroundColor};"">
-Your browser does not support the HTML canvas tag.</canvas>
-
-<button onclick=""run(0)"">NEXT SLIDE</button>
+<button id=""nextSlideBtn"" onclick=""playAnimation()"">PLAY</button>
 
 
 <script>
+    var currentFrame = 0;
     var frames = [];
     {frames}
 
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+    var frameInfo = document.getElementById('frameInfo');
+    var button = document.getElementById('nextSlideBtn');
+    var progressBar = document.querySelector('#progressBar .progress');
+
+    function updateFrameInfo() {{
+        frameInfo.textContent = '{setup.framerate} - Frame: ' + (currentFrame + 1) + ' / ' + frames.length;
+    }}
+
+    function updateProgressBar() {{
+        var progress = (currentFrame / (frames.length - 1)) * 100;
+        progressBar.style.width = progress + '%';
+    }}
+
+    function playAnimation() {{
+        canvas.classList.add('active');
+        button.disabled = true;
+        button.classList.add('disabled');
+
+        updateFrameInfo();
+        updateProgressBar();
+        run(0);
+    }}
 
     function sleep(ms) {{
         return new Promise(resolve => setTimeout(resolve, ms));
     }}
 
     function blankCanvas() {{
-        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }}
 
-    function drawCircle(x, y, radius, borderwidth, color) {{
+    function drawCircle(x, y, radius, borderWidth, color) {{
         ctx.beginPath();
         ctx.fillStyle = color;
-        ctx.arc(x, y, radius, 0, 2*Math.PI);
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
         ctx.fill();
-        ctx.lineWidth = borderwidth;
+        ctx.lineWidth = borderWidth;
         ctx.strokeStyle = ""#000000"";
         ctx.stroke();
         ctx.closePath();
-
         ctx.fillStyle = ""#000000"";
     }}
-    function drawPolygon(points, borderwidth, color) {{
-        
+
+    function drawPolygon(points, borderWidth, color) {{
         let polygon = new Path2D();
-        for (var i = 0; i < (points.length / 2); i++) {{
-            if (i == 0) {{
-                polygon.moveTo(points[i*2], points[(2 * i)+1]);
-                polygon.lineTo(points[(i+1)*2], points[(2 * (i+1))+1])
+        for (var i = 0; i < points.length / 2; i++) {{
+            if (i === 0) {{
+                polygon.moveTo(points[i * 2], points[2 * i + 1]);
+                polygon.lineTo(points[(i + 1) * 2], points[2 * (i + 1) + 1]);
             }} else {{
-                polygon.lineTo(points[i*2], points[(2 * i)+1]);
-                
+                polygon.lineTo(points[i * 2], points[2 * i + 1]);
             }}
         }}
         polygon.closePath();
-        ctx.lineWidth = borderwidth;
+        ctx.lineWidth = borderWidth;
         ctx.fillStyle = color;
         ctx.strokeStyle = ""#000000"";
         ctx.fill(polygon);
@@ -199,59 +345,49 @@ Your browser does not support the HTML canvas tag.</canvas>
         ctx.fillStyle = ""#000000"";
     }}
 
-    function drawText (x, y, text, fontsize, color, font) {{
+    function drawText(x, y, text, fontsize, color, font) {{
         ctx.font = fontsize + ""px "" + font;
-        ctx.fillText(text,x,y);
+        ctx.fillText(text, x, y);
     }}
-    var c = document.getElementById(""myCanvas"");
-    var ctx = c.getContext(""2d"");
 
     function run(frame) {{
-        if (frame != frames.length) {{
-            sleep({1000 / setup.framerate})
-                .then(() => blankCanvas())
-                .then(() => run(frame + 1))
-            for (j = 0; j < frames[frame].length; j++) {{
-                obj = frames[frame][j].split(""|"");
-                console.log(obj)
-                if (obj[0] == ""circle"") {{
-                    drawCircle(Math.round(obj[1].replace(/\,/g,""."")), Math.round(obj[2].replace(/\,/g,""."")),  Math.round(obj[3].replace(/\,/g,""."")), Math.round(obj[4]), obj[5]);
-                }} else if (obj[0].includes(""polygon"") ) {{
-                    console.log(obj[0].substring(7));
-                    var points = [];
-                    var pointsAmount = Number(obj[0].substring(7)) + 1;
-                    for (var i = 1; i < pointsAmount; i++) {{
-                        points.push(obj[(i*2)-1]);
-                        points.push(obj[i*2]);
-                        
-                    }}
-
-                    drawPolygon(points, obj[obj.length-2], obj[obj.length - 1]);
-                }}
-            }}
-
-        }} else {{
+        if (frame === frames.length) {{
             blankCanvas();
+            button.disabled = false;
+            button.className = ""active"";
+            currentFrame = 0;
+            updateFrameInfo();
+            updateProgressBar();
+            return;
         }}
+
+        sleep({1000 / setup.framerate})
+            .then(() => {{
+                blankCanvas();
+                for (var j = 0; j < frames[frame].length; j++) {{
+                    var obj = frames[frame][j].split(""|"");
+                    if (obj[0] === ""circle"") {{
+                        drawCircle(parseFloat(obj[1]), parseFloat(obj[2]), parseFloat(obj[3]), parseFloat(obj[4]), obj[5]);
+                    }} else if (obj[0].includes(""polygon"")) {{
+                        var points = [];
+                        var pointsAmount = parseInt(obj[0].substring(7)) + 1;
+                        for (var i = 1; i < pointsAmount; i++) {{
+                            points.push(parseFloat(obj[i * 2 - 1]));
+                            points.push(parseFloat(obj[i * 2]));
+                        }}
+                        drawPolygon(points, parseFloat(obj[obj.length - 2]), obj[obj.length - 1]);
+                    }}
+                }}
+                currentFrame = frame;
+                updateFrameInfo();
+                updateProgressBar();
+                run(frame + 1);
+            }});
     }}
-
-</script> 
-
+</script>
 </body>
-</html>"); 
-}
- public static (int, int, int) HexToRgb(string hex)
-        {
-            // Remove the '#' symbol if present
-            hex = hex.TrimStart('#');
-
-            // Convert the hex code to RGB values
-            int r = int.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-            int g = int.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-            int b = int.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-
-            return (r, g, b);
-        }
+</html>
+");}
     public static List<List<string>> mergeFramebuffer(List<List<string>> framebuffer1, List<List<string>> framebuffer2)
     {
         int maxframes = framebuffer1.Count >= framebuffer2.Count ? framebuffer2.Count : framebuffer1.Count;
@@ -528,29 +664,18 @@ Your browser does not support the HTML canvas tag.</canvas>
 
         return framebuffer;
     }
-           public static string ColorBasedOnNumber(int f)
-           {
-            int i = 1;
-            int a = 1 + 5;
-            int j = 1;
-            bool b = true;
-            i = j;
+ public static (int, int, int) HexToRgb(string hex)
+        {
+            // Remove the '#' symbol if present
+            hex = hex.TrimStart('#');
 
-            if (i < 2){
-               i = 1;
-            }
-            else if (b == true){
-               i = 3;
-            }
-            int hej = 5;
+            // Convert the hex code to RGB values
+            int r = int.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            int g = int.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            int b = int.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
 
-
-            for(            i = 1;
-(i < 3);i--){            i = 5;
-}
-            return "#FFFFFF";
-           }
-
+            return (r, g, b);
+        }
    }
 public static class Program
 {
@@ -572,11 +697,12 @@ setup setup = new setup();
 CreateFilesForCompilation();
 List<List<string>> framebuffer = new List<List<string>>();
 setup.sceneWidth =
-500;setup.sceneHeight =
-300;setup.framerate =
-60;setup.backgroundColor =
-Functions.rgb(255, 255, 255);	 	 	framebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.CircleGoVroomInTriangle(1, 75));
-	 	 	framebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.CarDrivingOnScreen(10, 4));
+1080;setup.sceneHeight =
+720;setup.framerate =
+24;setup.backgroundColor =
+Functions.rgb(255, 255, 255);	 	 	framebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.house(0));
+	 	 	framebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.road(0));
+	 	 	framebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.car(0));
 Functions.PrintFramebuffer(framebuffer, setup);
    }
 }
