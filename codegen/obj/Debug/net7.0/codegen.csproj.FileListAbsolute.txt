@@ -1,0 +1,15 @@
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\codegen.csproj.AssemblyReference.cache
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\codegen.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\codegen.AssemblyInfoInputs.cache
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\codegen.AssemblyInfo.cs
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\codegen.csproj.CoreCompileInputs.cache
+C:\Users\pelle\Git\P4-Project\codegen\bin\Debug\net7.0\codegen.exe
+C:\Users\pelle\Git\P4-Project\codegen\bin\Debug\net7.0\codegen.deps.json
+C:\Users\pelle\Git\P4-Project\codegen\bin\Debug\net7.0\codegen.runtimeconfig.json
+C:\Users\pelle\Git\P4-Project\codegen\bin\Debug\net7.0\codegen.dll
+C:\Users\pelle\Git\P4-Project\codegen\bin\Debug\net7.0\codegen.pdb
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\codegen.dll
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\refint\codegen.dll
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\codegen.pdb
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\codegen.genruntimeconfig.cache
+C:\Users\pelle\Git\P4-Project\codegen\obj\Debug\net7.0\ref\codegen.dll
