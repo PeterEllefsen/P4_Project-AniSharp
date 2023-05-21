@@ -162,12 +162,44 @@ public class group : Dictionary<string, object>
         
         codeBuilder(""w"", @$""<!DOCTYPE html>
 <html>
+<head>
+    <title>My Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #myCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #FFFFFF;
+        }
+
+        #nextSlideBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            margin: 0;
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
 <body>
 
 <canvas id=""""myCanvas"""" width=""""{setup.sceneWidth}"""" height=""""{setup.sceneHeight}"""" style=""""border:1px solid {setup.backgroundColor};"""">
 Your browser does not support the HTML canvas tag.</canvas>
 
-<button onclick=""""run(0)"""">NEXT SLIDE</button>
+<button class=""nextSlideBtn"" onclick=""""run(0)"""">NEXT SLIDE</button>
 
 
 <script>
