@@ -105,13 +105,21 @@ public class group : Dictionary<string, object>
         {
             for (int frameIndex = 0; frameIndex < framebuffer.Count; frameIndex++)
             {
-                Console.WriteLine($""Frame {frameIndex + 1}:"");
+                //Console.WriteLine($""Frame {frameIndex + 1}:"");
+                string frameContent = """";
+                int contentCount = 0;
         foreach (string details in framebuffer[frameIndex])
         {
-            Console.WriteLine(details);
+            if (contentCount > 0) {
+                frameContent += $"", '{details}'"";    
+            } else {
+                frameContent += $""'{details}'"";
+            }
+            contentCount++;
+            
         }
-
-        Console.WriteLine();
+        
+        Console.WriteLine($""frames.push([{frameContent}]);"");
     }
 }");
         
@@ -276,8 +284,6 @@ public class group : Dictionary<string, object>
                         $""circle|{circle.center.Item1}|{circle.center.Item2}|{circle.radius}|{circle.borderWidth}|{circle.color}"");
                 }
             }
-
-            PrintFramebuffer(framebuffer);
         }
         else if (item is Polygon polygon)
         {
@@ -384,8 +390,6 @@ public class group : Dictionary<string, object>
                     framebuffer[frameOffset + (i == 0 ? 0 : animations[i - 1].endframe) + frame].Add(polygonString);
                 }
             }
-
-            PrintFramebuffer(framebuffer);
         }
 
         return framebuffer;
@@ -1116,7 +1120,7 @@ public class group : Dictionary<string, object>
             sequenceCallParams = $", {sequenceCallParams}";
         }
 
-        codeBuilder("w", $"\t \t \t Sequences.{sequenceCallWithoutParams}{node.FrameTime}{sequenceCallParams};");
+        codeBuilder("w", $"\t \t \tFunctions.PrintFramebuffer(Sequences.{sequenceCallWithoutParams}{node.FrameTime}{sequenceCallParams});");
 
         foreach (var child in node.GetChildren())
         {

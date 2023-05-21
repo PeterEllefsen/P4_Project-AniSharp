@@ -53,34 +53,14 @@ string function ColorBasedOnText(string text) {
  
 seq CarDrivingOnScreen() {
  
-    //Headlights
-  circleHeadlight = Circle(center: (x: 327, y: 135), radius: 10, color: Rgb(255,255,0)); //yellow
  
  
-  //Back Wheel
-  circle1wheel = Circle(center: (x: 187, y: 170), radius: 25, color: Rgb(0,0,0));
   circle1wheelinner = Circle(center: (x: 187, y: 170), radius: 12.5, color: Rgb(165,165,165));
  
-  //Front Wheel
-  circle2wheel = Circle(center: (x: 276, y: 157), radius: 25, color: Rgb(0,0,0));
   circle2wheelinner = Circle(center: (x: 276, y: 157), radius: 12.5, color: Rgb(165,165,165));
  
-  cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
-
-  poly1 = Polygon(color: Rgb(165,165,165), borderWidth: 3, point1: (x: 327, y: 135), point2: (x: 327, y: 135), point3: (x: 327, y: 135));
- 
-  //car[
-  //      circle1wheel, 
-  //      circle1wheelinner, 
-  //      circle2wheel, 
-  //      circle2wheelinner, 
-  //      circleHeadlight
-  //];
-
-  poly1->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
- 
-  //circle2wheel->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
-  //circle1wheelinner->repeat(5)->(EndFrame: 5, x: 100)->(EndFrame: 10, x: 200)->(EndFrame: 20, x: 300, color: rgb(255, 0, 255));
+  circle1wheelinner->repeat(5)->(EndFrame: 50, x: 100)->(EndFrame: 100, x: 200)->(EndFrame: 200, x: 300, color: rgb(255, 0, 255));
+  circle2wheelinner->repeat(5)->(EndFrame: 50, x: 100)->(EndFrame: 100, x: 200)->(EndFrame: 200, x: 300, color: rgb(255, 255, 0));
  
  
 }
