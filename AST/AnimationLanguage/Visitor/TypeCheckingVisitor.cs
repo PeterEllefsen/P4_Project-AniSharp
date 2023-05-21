@@ -1108,20 +1108,43 @@ public override IASTNode? Visit(FunctionCallNode node)
     {
         Console.WriteLine("Type checking sequence call node");
         IdentifierNode decoratedName = node.Name;
-        Console.WriteLine("Sequence call name is " + decoratedName.Name);
+        string argumentsString = "";
+        
         // Check if the sequence exists in the symbol table
         Symbol? sequenceSymbol = _symbolTable.Lookup(decoratedName.Name);
-        if (sequenceSymbol == null || sequenceSymbol.Type != "seq")
+        if (sequenceSymbol == null)
         {
-            throw new InvalidOperationException($"Sequence '{node.Name.ToString()}' is not defined.");
+            throw new InvalidOperationException($"Sequence '{node.Name.Name}' is not defined.");
         }
+
+        string sequenceParameters = sequenceSymbol.Type;
 
         // Type check the arguments of the sequence call
         List<ExpressionNode> decoratedArguments = new List<ExpressionNode>();
-        foreach (ExpressionNode argument in node.Arguments)
+        if (node.Arguments.Count > 0)
         {
-            ExpressionNode decoratedArgument = (ExpressionNode?)Visit(argument) ?? throw new InvalidOperationException("Failed to create a decorated argument node.");
-            decoratedArguments.Add(decoratedArgument);
+            foreach (ExpressionNode argument in node.Arguments)
+            {
+                ExpressionNode decoratedArgument = (ExpressionNode?)Visit(argument) ?? throw new InvalidOperationException("Failed to create a decorated argument node.");
+                argumentsString += decoratedArgument.VariableType + ", ";
+                decoratedArguments.Add(decoratedArgument);
+            }
+            
+        }
+        
+        Console.WriteLine($"Arguments: {argumentsString}");
+        Console.WriteLine($"Parameters: {sequenceParameters}");
+        if(sequenceParameters != "" && argumentsString != "" && argumentsString != sequenceParameters) //if the parameters and arguments have values, but do not match
+        {
+            throw new InvalidOperationException($"Sequence '{node.Name.Name}' expects parameters of type '{sequenceParameters}' but got '{argumentsString}'.");
+        }
+        if (sequenceParameters == "" && argumentsString != "") // if the parameters are empty but the arguments are not
+        {
+            throw new InvalidOperationException($"Sequence '{node.Name.Name}' expects no parameters but got '{argumentsString}'.");
+        }
+        if (sequenceParameters != "" && argumentsString == "") // If the parameters are not empty but the arguments are
+        {
+            throw new InvalidOperationException($"Sequence '{node.Name.Name}' expects parameters of type '{sequenceParameters}' but got no parameters.");
         }
 
         SequenceCallNode decoratedSequenceCallNode = new SequenceCallNode(node.Name, decoratedArguments, node.SourceLocation);
@@ -1136,17 +1159,21 @@ public override IASTNode? Visit(FunctionCallNode node)
         Console.WriteLine("Type checking sequence node");
 
         // Visit Identifier node.
-        IdentifierNode decoratedName = node.Name;
-        // Add the sequence identifier to the symbol table before entering the sequence scope
-        _symbolTable.AddSequence(decoratedName.Name);
-        Console.WriteLine($"Added sequence {decoratedName.Name} to symbol table");
-
+        string parametersString = "";
+        
         // Visit Parameter nodes and create a list of decorated parameters.
         List<ParameterNode> decoratedParameters = new List<ParameterNode>();
         foreach (ParameterNode parameterNode in node.Parameters)
         {
+            parametersString += parameterNode.DataType + ", ";
             decoratedParameters.Add((ParameterNode)Visit(parameterNode) ?? throw new InvalidOperationException("Failed to create a decorated parameter node."));
         }
+        
+        // Add the sequence identifier to the symbol table before entering the sequence scope
+        _symbolTable.AddSequence(node.Name.Name, parametersString);
+        Console.WriteLine($"Added sequence '{node.Name.Name}' with parameters: {parametersString}to symbol table.");
+
+        IdentifierNode decoratedName = node.Name;
 
         // Enter the scope for the sequence.
         _symbolTable.EnterScope();

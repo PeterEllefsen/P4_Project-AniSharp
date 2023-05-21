@@ -62,14 +62,14 @@ public class SymbolTable
         symbols[name] = new Symbol(name, type, value); // Add the prototype to the symbol table by using the name as the key and a new symbol as the value.
     }
 
-    public void AddSequence(string name) // This method adds a sequence to the symbol table.
+    public void AddSequence(string name, string parameters) // This method adds a sequence to the symbol table.
     {
         if (symbols.ContainsKey(name)) // Check if the sequence already exists in the table. 
         {
             throw new InvalidOperationException($"Sequence '{name}' already exists.");
         }
 
-        symbols[name] = new Symbol(name, "seq"); // Add the sequence to the symbol table by using the name as the key and a new symbol as the value.
+        symbols[name] = new Symbol(name, parameters); // Add the sequence to the symbol table by using the name as the key and a new symbol as the value.
     }
     
     
@@ -127,9 +127,9 @@ public class ScopedSymbolTable
         _scopeStack.Peek().AddPrototype(name, type, value);
     }
 
-    public void AddSequence(string name) // This method adds a sequence to the scope in the top of the stack.
+    public void AddSequence(string name, string parameters) // This method adds a sequence to the scope in the top of the stack.
     {
-        _scopeStack.Peek().AddSequence(name);
+        _scopeStack.Peek().AddSequence(name, parameters);
     }
 
     public Symbol? Lookup(string name) // This method looks up a symbol in the scope stack. It will be used in the type checker to check if a variable or function exists.

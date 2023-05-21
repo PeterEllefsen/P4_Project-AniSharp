@@ -65,7 +65,7 @@ seq CarDrivingOnScreen(int i) {
 
 }
 
-seq CircleGoVroomInTriangle(int j, float f) {
+seq CircleGoVroomInTriangle(float j) {
     cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
     cirkel1->repeat()->(EndFrame: 50, x: 50, color: ColorBasedOnNumber(4))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
 }
@@ -73,7 +73,7 @@ seq CircleGoVroomInTriangle(int j, float f) {
 
 
 timeline {
-    Frame 1 : CircleGoVroomInTriangle(); //At frame 1 in the timeline the CircleGoVroomInTriangle sequence is called
+    Frame 1 : CircleGoVroomInTriangle(7.5); //At frame 1 in the timeline the CircleGoVroomInTriangle sequence is called
       
-    Frame 10 : CarDrivingOnScreen(); //At frame 10, start the CarDrivingOnScreen sequence, on top of the CircleGoVroomInTriangle sequence.
+    Frame 10 : CarDrivingOnScreen(4); //At frame 10, start the CarDrivingOnScreen sequence, on top of the CircleGoVroomInTriangle sequence.
   }
