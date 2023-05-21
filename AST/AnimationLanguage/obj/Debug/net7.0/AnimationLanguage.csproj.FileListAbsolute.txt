@@ -49,3 +49,20 @@ C:\Users\p-l-g\Documents\GitHub\P4-Project\AST\AnimationLanguage\obj\Debug\net7.
 C:\Users\p-l-g\Documents\GitHub\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.pdb
 C:\Users\p-l-g\Documents\GitHub\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.genruntimeconfig.cache
 C:\Users\p-l-g\Documents\GitHub\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\ref\AnimationLanguage.dll
+D:\Github Repos\P4-Project\AST\AnimationLanguage\bin\Debug\net7.0\AnimationLanguage.exe
+D:\Github Repos\P4-Project\AST\AnimationLanguage\bin\Debug\net7.0\AnimationLanguage.deps.json
+D:\Github Repos\P4-Project\AST\AnimationLanguage\bin\Debug\net7.0\AnimationLanguage.runtimeconfig.json
+D:\Github Repos\P4-Project\AST\AnimationLanguage\bin\Debug\net7.0\AnimationLanguage.dll
+D:\Github Repos\P4-Project\AST\AnimationLanguage\bin\Debug\net7.0\AnimationLanguage.pdb
+D:\Github Repos\P4-Project\AST\AnimationLanguage\bin\Debug\net7.0\Antlr4.Runtime.Standard.dll
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.csproj.AssemblyReference.cache
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.GeneratedMSBuildEditorConfig.editorconfig
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.AssemblyInfoInputs.cache
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.AssemblyInfo.cs
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.csproj.CoreCompileInputs.cache
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.csproj.CopyComplete
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.dll
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\refint\AnimationLanguage.dll
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.pdb
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\AnimationLanguage.genruntimeconfig.cache
+D:\Github Repos\P4-Project\AST\AnimationLanguage\obj\Debug\net7.0\ref\AnimationLanguage.dll

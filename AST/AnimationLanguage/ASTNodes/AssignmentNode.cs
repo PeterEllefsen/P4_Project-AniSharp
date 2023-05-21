@@ -1,4 +1,4 @@
-﻿namespace AnimationLanguage.ASTNodes;
+﻿﻿namespace AnimationLanguage.ASTNodes;
 using ASTCommon;
 
 //This class represents an assignment statement in the animation language.

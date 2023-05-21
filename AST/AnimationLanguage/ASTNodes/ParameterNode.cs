@@ -27,7 +27,7 @@ public class ParameterNode : IASTNode
     
     public override string ToString()
     {
-        return $"ParameterNode: {DataType} {Name}";
+        return $"{DataType.ToString().ToLower()} {Name}";
     }
     
     

@@ -37,7 +37,7 @@ public class FunctionCallNode : IASTNode
     public override string ToString()
     {
         string argumentsStr = string.Join(", ", Arguments.Select(a => a.ToString()));
-        return $"FunctionCallNode: {FunctionIdentifier}({argumentsStr})";
+        return $"{FunctionIdentifier}({argumentsStr})";
     }
     
     

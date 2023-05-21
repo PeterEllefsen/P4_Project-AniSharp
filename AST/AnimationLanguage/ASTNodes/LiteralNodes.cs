@@ -1,4 +1,4 @@
-﻿namespace AnimationLanguage.ASTNodes;
+﻿﻿namespace AnimationLanguage.ASTNodes;
 
 using ASTCommon;
 
@@ -28,7 +28,7 @@ public class IntegerLiteralNode : ExpressionNode
 
     public override string ToString()
     {
-        return $"IntegerLiteralNode: {Value}";
+        return $"{Value}";
     }
 
     public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
@@ -59,7 +59,7 @@ public class FloatLiteralNode : ExpressionNode
     
     public override string ToString()
     {
-        return $"FloatLiteralNode: {Value}";
+        return $"{Value}";
     }
     
     
@@ -88,7 +88,7 @@ public class StringLiteralNode : ExpressionNode
     
     public override string ToString()
     {
-        return $"StringLiteralNode: {Value}";
+        return $"\"{Value}\"";
     }
     
     
@@ -126,4 +126,3 @@ public class BooleanLiteralNode : ExpressionNode
         return visitor.Visit(this);
     }
 }
-

@@ -1,4 +1,4 @@
-﻿namespace AnimationLanguage.ASTNodes;
+﻿﻿namespace AnimationLanguage.ASTNodes;
 using ASTCommon;
 
 //This class represents an expression node in the AST. An expression node is a node that represents an expression in the animation language.
@@ -54,10 +54,10 @@ public class ExpressionNode : IASTNode
     
     public override string ToString()
     {
-        return $"ExpressionNode: {LeftOperand} {OperatorNode} {RightOperand}";
+        return $"({LeftOperand} {OperatorNode} {RightOperand})";
     }
-    
-    
+
+
     public T? Accept<T>(ASTVisitor<T> visitor) where T : IASTNode
     {
         return visitor.Visit(this);

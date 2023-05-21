@@ -24,7 +24,7 @@ public class OperatorNode : IASTNode
     
     public override string ToString()
     {
-        return $"OperatorNode: {OperatorSymbol}";
+        return $"{OperatorSymbol}";
     }
     
     

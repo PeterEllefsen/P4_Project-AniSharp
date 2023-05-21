@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:/Users/pelle/OneDrive/Skrivebord/Kode/GitHub/P4-Project/P4-Project/AST/AnimationLanguage/Content\AnimationLanguageRules.g4 by ANTLR 4.12.0
+// Generated from /home/daniel/P4-Project/AST/AnimationLanguage/Content/AnimationLanguageRules.g4 by ANTLR 4.12.0
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -3648,8 +3648,11 @@ public partial class AnimationLanguageRulesParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(AnimationLanguageRulesParser.IDENTIFIER, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAREN() { return GetToken(AnimationLanguageRulesParser.LPAREN, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAREN() { return GetToken(AnimationLanguageRulesParser.RPAREN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public Call_parametersContext call_parameters() {
-			return GetRuleContext<Call_parametersContext>(0);
+		[System.Diagnostics.DebuggerNonUserCode] public Call_parameterContext[] call_parameter() {
+			return GetRuleContexts<Call_parameterContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public Call_parameterContext call_parameter(int i) {
+			return GetRuleContext<Call_parameterContext>(i);
 		}
 		public SequenceCallContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -3689,11 +3692,15 @@ public partial class AnimationLanguageRulesParser : Parser {
 			State = 457;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 67554544170811392L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 67554544170811392L) != 0)) {
 				{
 				State = 456;
 				call_parameters(0);
 				}
+				}
+				State = 467;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
 			}
 
 			State = 459;

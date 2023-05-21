@@ -193,7 +193,7 @@ sequences: sequence sequences?;
 
 sequence: SEQ IDENTIFIER LPAREN parameters? RPAREN seqBlock;
 
-sequenceCall: IDENTIFIER LPAREN call_parameters? RPAREN;
+sequenceCall: IDENTIFIER LPAREN call_parameter* RPAREN;
 
 seqBlock: LBRACE seqBlockPart* RBRACE;
 
