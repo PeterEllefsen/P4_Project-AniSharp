@@ -1,79 +1,102 @@
 prototypes {
-    group function hejsa(int i, int j, float f);
-    int function hej();
-    int function hejsa2();
-    string function ColorBasedOnNumber(int f);
-    }
+    group function ColorBasedOnNumber(int number);
+    group function hej();
+    string Rgb(int r, int g, int b);
+}
 
 
 setup [
-    sceneWidth = 500,
-    sceneHeight = 300,
-    framerate = 60,
+    sceneWidth = 1080,
+    sceneHeight = 720,
+    framerate = 24,
     backgroundColor = Rgb(255, 255, 255)
-
 ];
 
 
 
-string function ColorBasedOnNumber(int f){
-    int i = 1;
-    int a = 1 + 5;
-    int j = 1;
-    bool b = true;
-    i = j;
-    if (i < 2){
-        i = 1;
-    }
-    else if(i > 1 and b == true){
-        i = 3;
-    }
+seq road() {
 
-    int hej = 5;
-    for(i = 1; i < 3; i--){
-        i = 5;
-    }
-    return "#FFFFFF";
+road = Polygon(
+    point1: (x: 0, y: 250),
+    point2: (x: 1080, y: 250),
+    point3: (x: 1080, y: 500),
+    point4: (x: 0, y: 500),
+    color: Rgb(50, 50, 50)
+)
+
+
+road->(EndFrame: 1000);
+
 }
 
-seq CarDrivingOnScreen(int i) {
+seq house() {
+housebase = Polygon(
+    point1: (x: 100, y: 300),
+    point2: (x: 300, y: 300),
+    point3: (x: 300, y: 200),
+    point4: (x: 100, y: 200),
+    color: Rgb(150, 0, 0)
+)
 
-    //Headlights
-  circleHeadlight = Circle(center: (x: 327, y: 135), radius: 10, color: Rgb(255,255,0)); //yellow
-  
-  int i = 1;
+roof = Polygon(
+    point1: (x: 100, y: 200),
+    point2: (x: 200, y: 100),
+    point3: (x: 300, y: 200),
+    color: Rgb(255, 0, 0)
+)
 
-  //Back Wheel
-  circle1wheel = Circle(center: (x: 187, y: 170), radius: 25, color: Rgb(0,0,0));
-  circle1wheelinner = Circle(center: (x: 187, y: 170), radius: 12.5, color: Rgb(165,165,165));
+door = Polygon(
+    point1: (x: 150, y: 300),
+    point2: (x: 200, y: 300),
+    point3: (x: 200, y: 220),
+    point4: (x: 150, y: 220),
+    color: Rgb(255, 255, 255)
+)
+
+window = Polygon(
+    point1: (x: 220, y: 250),
+    point2: (x: 280, y: 250),
+    point3: (x: 280, y: 220),
+    point4: (x: 220, y: 220),
+    color: Rgb(10, 0, 255)
+)
+
+    housebase->(EndFrame: 1000);
+    roof->(EndFrame: 1000);
+    door->(EndFrame: 1000);
+    window->(EndFrame: 1000);
     
-  //Front Wheel
-  circle2wheel = Circle(center: (x: 276, y: 157), radius: 25, color: Rgb(0,0,0));
-  circle2wheelinner = Circle(center: (x: 276, y: 157), radius: 12.5, color: Rgb(165,165,165));  
-
-  cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
-  
-  car[ 
-        circle1wheel, 
-        circle1wheelinner, 
-        circle2wheel, 
-        circle2wheelinner, 
-        circleHeadlight
-  ];
-  
-  car->repeat(5)->(EndFrame: 180, x: 250)->(EndFrame: 180, x: 250)->(EndFrame: 180, x: 250);
-
 }
 
-seq CircleGoVroomInTriangle(float j) {
-    cirkel1 = Circle(color: red , radius: 50, borderWidth: 3, center: (x: 200, y: 50));
-    cirkel1->repeat()->(EndFrame: 50, x: 50, color: ColorBasedOnNumber(4))->(EndFrame: 100, x: 50, y: -50)->(EndFrame: 150, y: -50);
+
+
+seq car() {
+
+wheel1 = Circle(center: (x: 220, y: 280), radius: 30);
+wheel2 = Circle(center: (x: 320, y: 280), radius: 30);
+
+body = Polygon(
+    point1: (x: 200, y: 250),
+    point2: (x: 340, y: 250),
+    point3: (x: 360, y: 220),
+    point4: (x: 330, y: 190),
+    point5: (x: 210, y: 190),
+    point6: (x: 180, y: 220),
+    color: Rgb(55, 125, 155)
+); 
+
+
+body->(EndFrame: 100, y: 100)->(EndFrame: 500, x: 1000);
+wheel1->(EndFrame: 100, y: 100)->(EndFrame: 500, x: 1000);
+wheel2->(EndFrame: 100, y: 100)->(EndFrame: 500, x: 1000);
+
 }
 
 
 
 timeline {
-    Frame 1 : CircleGoVroomInTriangle(7.5); //At frame 1 in the timeline the CircleGoVroomInTriangle sequence is called
-      
-    Frame 10 : CarDrivingOnScreen(4); //At frame 10, start the CarDrivingOnScreen sequence, on top of the CircleGoVroomInTriangle sequence.
+   
+    Frame 0 : house();
+    Frame 0 : road();
+    Frame 0 : car();
   }
