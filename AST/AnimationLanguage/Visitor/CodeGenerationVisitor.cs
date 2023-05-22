@@ -1072,7 +1072,7 @@ public class group : Dictionary<string, object>
         return node;
     }
 
-    public override IASTNode? Visit(SeqBlockNode node)
+     public override IASTNode? Visit(SeqBlockNode node)
     {
         bool hasAnimations = false;
         string groupIdentifier = "";
@@ -1135,8 +1135,26 @@ public class group : Dictionary<string, object>
                                         codeBuilder("a", ",");
                                     }
 
+                                    int count = 0;
+                                    string pointsValue = "";
+                                    foreach (var Fchild in arg.Value.GetChildren()) {
+                                        string? valueString = Fchild.ToString();
+                                        if (!String.IsNullOrEmpty(valueString)) {
+                                            if (valueString.Contains("(")){
+                                                valueString = $"Functions.{valueString}";
+                                            }
+                                        }
+                                        
+                                        if (count > 0) {
+                                            pointsValue += $", {valueString}";
+                                        } else {
+                                            pointsValue += valueString;
+                                        }
 
-                                    codeBuilder("a", $"{arg.Key} = ({arg.Value})");
+                                        count++;
+                                    }
+                                    Console.WriteLine(pointsValue);
+                                    codeBuilder("a", $"{arg.Key} = ({pointsValue})");
                                     parameterCount++;
                                     //Console.WriteLine(tupleNode);
                                 }
@@ -1217,8 +1235,27 @@ public class group : Dictionary<string, object>
                                         {
                                             points += ",";
                                         }
+                                        int count = 0;
+                                        string pointsValue = "";
+                                        foreach (var Fchild in arg.Value.GetChildren()) {
+                                            string? valueString = Fchild.ToString();
+                                            if (!String.IsNullOrEmpty(valueString)) {
+                                                if (valueString.Contains("(")){
+                                                    valueString = $"Functions.{valueString}";
+                                                }
+                                            }
+                                            
+                                            if (count > 0) {
+                                                pointsValue += $", {valueString}";
+                                            } else {
+                                                pointsValue += valueString;
+                                            }
+
+                                            count++;
+                                        }
+                                        Console.WriteLine(pointsValue);
                                         
-                                        points += $"new double[2] {{{arg.Value}}}";
+                                        points += $"new double[2] {{{pointsValue}}}";
                                     }
                                     else
                                     {
@@ -1350,6 +1387,7 @@ public class group : Dictionary<string, object>
         
         return node;
     }
+
 
     public override IASTNode? Visit(AnimationNode node)
     {
