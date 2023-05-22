@@ -1,8 +1,19 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=970e8cd0_002D48ea_002D46ba_002D81c7_002D5fe575bbf7e7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Solution /&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=970e8cd0_002D48ea_002D46ba_002D81c7_002D5fe575bbf7e7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a4f551e4_002D6ce4_002D4dea_002D82f0_002Dc2cd4eea56b3/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Solution /&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a4f551e4_002D6ce4_002D4dea_002D82f0_002Dc2cd4eea56b3/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=cf0890e2_002Daf1d_002D465f_002D8b67_002D6aad32f6f3f3/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="IdentifierNodeTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::D2B2CBAF-046C-4B8C-AB9A-4320F14786EB::net7.0::Tests.IdentifierNodeTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::D2B2CBAF-046C-4B8C-AB9A-4320F14786EB::net7.0::Tests.SequenceNodeTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::D2B2CBAF-046C-4B8C-AB9A-4320F14786EB::net7.0::Tests.TypeCheckingVisitorTests.Assignment_TypeChecking_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::D2B2CBAF-046C-4B8C-AB9A-4320F14786EB::net7.0::Tests.TypeCheckingVisitorTests.Assignment_TypeMismatch_Bool_And_String&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::D2B2CBAF-046C-4B8C-AB9A-4320F14786EB::net7.0::Tests.TypeCheckingVisitorTests.Assignment_TypeMismatch_Int_And_String&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::D2B2CBAF-046C-4B8C-AB9A-4320F14786EB::net7.0::Tests.TypeCheckingVisitorTests.Assignment_VaraibleTypeMismatch_Int_And_String&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::D2B2CBAF-046C-4B8C-AB9A-4320F14786EB::net7.0::Tests.CodeGenerationTests.Assignment_test&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
