@@ -222,10 +222,25 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         else
         {
             Console.WriteLine("Here is node variable type: " + node.VariableType);
-            Console.WriteLine("Here is decorated expression node variable type: " + decoratedExpressionNode.VariableType);
-            if (decoratedExpressionNode.VariableType != node.VariableType)
+            Console.WriteLine("Here is decorated expression node variable type: " + decoratedExpressionNode.Value);
+            Symbol? symbol = null;
+            if (decoratedExpressionNode.VariableType != node.VariableType && decoratedExpressionNode.VariableType != VariableType.Function)
             {
                 throw new InvalidOperationException($"Type mismatch in assignment. Cannot assign a value of type '{decoratedExpressionNode.VariableType}' to variable of type '{node.VariableType}' at {node.SourceLocation}.");
+            }
+            else if (decoratedExpressionNode.VariableType == VariableType.Function)
+            {
+                string? functionCallName = decoratedExpressionNode.Identifier?.Name;
+                if (functionCallName != null)
+                {
+                    symbol = _symbolTable.Lookup(functionCallName);
+                }
+            }
+
+            Console.WriteLine($"Return type of function '{decoratedExpressionNode.Identifier?.Name}' is: " + symbol?.Type);
+            if (symbol != null && symbol.Type != node.VariableType.ToString())
+            {
+                throw new InvalidOperationException($"Cannot assign function with return type '{symbol.Type}' to variable of type '{node.VariableType}' at {node.SourceLocation}.");
             }
             
             _symbolTable.AddVariable(node.Identifier.Name, ConvertVariableTypeToString(decoratedExpressionNode.VariableType), decoratedExpressionNode);

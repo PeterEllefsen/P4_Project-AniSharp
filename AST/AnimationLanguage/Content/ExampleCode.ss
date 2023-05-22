@@ -2,6 +2,8 @@ prototypes {
     group function ColorBasedOnNumber(int number);
     group function hej();
     string Rgb(int r, int g, int b);
+    int function Test();
+    float function Test2();
 }
 
 
@@ -12,6 +14,14 @@ setup [
     backgroundColor = Rgb(255, 255, 255)
 ];
 
+
+int function Test(){
+    return 1.5;
+}
+
+float function Test2(){
+    int i = Test();
+}
 
 
 seq road() {

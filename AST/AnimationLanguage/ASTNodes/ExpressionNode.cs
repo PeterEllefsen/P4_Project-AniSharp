@@ -9,6 +9,8 @@ public class ExpressionNode : IASTNode
     public NodeType NodeType => NodeType.Expression;
     public IList<IASTNode> Children { get; } = new List<IASTNode>();
     
+    public IdentifierNode? Identifier { get; set; }
+    
     public TypeNode? Type { get; set; }
 
     public ExpressionNodeType ExpressionType { get; set; } //The type of expression this node represents.

@@ -133,6 +133,8 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         ExpressionNode expression = (ExpressionNode)VisitExpression(context.expression());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
+        Console.WriteLine($"Assignment: {identifierNode.Name} {assignmentOperator} {expression} {sourceLocation}");
+
         // Determine the VariableType for the assignment
         VariableType variableType = VariableType.Null;
         bool isDeclaration = false;
@@ -442,7 +444,9 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         }
 
         FunctionCallNode functionCall = new FunctionCallNode(identifier, arguments, GetSourceLocation(context.Start));
-        return functionCall;
+        ExpressionNode decoratedFunctionCall = (ExpressionNode)functionCall;
+        decoratedFunctionCall.Identifier = identifier;
+        return (ExpressionNode)functionCall;
     }
     
 
