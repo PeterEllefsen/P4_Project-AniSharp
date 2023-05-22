@@ -23,6 +23,12 @@ int function bobo(int bb){
 
 int function bibi(int bb){
     int i = bb;
+    int j = bobo(i);
+    
+    if(bobo(3) < 6){
+      i = 6;
+    }
+    
     return 2;
 }
 
@@ -38,6 +44,10 @@ float function Test2(){
 
 
 seq car() {
+int i = 1;
+if(1 < 2){
+    i = 2;
+}
 
 wheel1 = Circle(center: (x: bobo(5), y: 280), radius: 30);
 wheel2 = Circle(center: (x: 320, y: 280), radius: 30);

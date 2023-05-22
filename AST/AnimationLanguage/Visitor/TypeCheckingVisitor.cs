@@ -194,19 +194,38 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
     {
         Console.WriteLine("Type checking assignment node");
 
+        Symbol? symbol = _symbolTable.Lookup("Prototype: " + node.Expression.Identifier?.Name);
+        string functionIdentifier = "";
+        if (symbol != null)
+        {
+            functionIdentifier = symbol.Name.Substring(11);
+        }
+
         // Type check ExpressionNode
         ExpressionNode decoratedExpressionNode = (ExpressionNode?)Visit(node.Expression) ?? throw new InvalidOperationException("Failed to create a decorated expression node.");
         // Check if the identifier already exists in the symbol table
         if (_symbolTable.IsDefinedInCurrentScope(node.Identifier.Name))
         {
-            // If the assignment is not a declaration (node.VariableType is Null), 
-            // then the variable type should match the type of the variable in the symbol table
-            Symbol? symbolDeclaration = _symbolTable.Lookup(node.Identifier.Name);
-            if (symbolDeclaration != null)
+            if (symbol != null)
             {
-                VariableType symbolVariableType = ConvertStringTypeToVariableType(symbolDeclaration.Type);
-                Console.WriteLine("hihihi" + symbolDeclaration.Name + " " + symbolDeclaration.Type + " ");
-                Console.WriteLine("hello decorated expression node " + decoratedExpressionNode.Identifier?.Name + "variable type: " + decoratedExpressionNode.VariableType);
+                string? nodeIdentifier = "";
+                if (node.Identifier.Name != null)
+                {
+                    nodeIdentifier = node.Identifier.Name;
+                }
+
+                Symbol? leftOperand = _symbolTable.Lookup(nodeIdentifier);
+
+                Console.WriteLine("Looked up left operand " + node.Identifier.Name + ". It's return type is " + leftOperand?.Type);
+
+                if (leftOperand?.Type.ToLower() != symbol.Type.ToLower())
+                {
+                    throw new ArgumentException("Cannot assign a value of type " + symbol.Type + " to a variable of type " + leftOperand?.Type + " at " + node.SourceLocation);
+                }
+                
+                VariableType symbolVariableType = ConvertStringTypeToVariableType(symbol.Type);
+                decoratedExpressionNode.VariableType = symbolVariableType;
+
                 if (node.IsDeclaration == false && symbolVariableType != decoratedExpressionNode.VariableType)
                 {
                     throw new InvalidOperationException(
@@ -220,39 +239,22 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
         }
         else
         {
-            Console.WriteLine("Here is node variable type: " + node.VariableType);
-            Symbol? symbolAssignment = _symbolTable.Lookup(node.Identifier.Name);
-            Console.WriteLine("symbolAssignment: " + symbolAssignment?.Name + " " + symbolAssignment?.Type);
             if (decoratedExpressionNode.VariableType != node.VariableType && decoratedExpressionNode.VariableType != VariableType.Function)
             {
                 throw new InvalidOperationException($"Type mismatch in assignment. Cannot assign a value of type '{decoratedExpressionNode.VariableType}' to variable of type '{node.VariableType}' at {node.SourceLocation}.");
             }
-
-            Console.WriteLine("decoratedExpressionNode.VariableType: " + decoratedExpressionNode.VariableType);
             if (decoratedExpressionNode.VariableType.ToString() == VariableType.Function.ToString())
             {
-                string? functionCallName = decoratedExpressionNode.Identifier?.Name;
-                if (functionCallName != null)
+                Console.WriteLine("symbol.type " + symbol?.Type);
+                if (symbol?.Type != null)
                 {
-                    Console.WriteLine("functionCallName: " + functionCallName);
-                    Console.WriteLine("checking symbol tableee " + _symbolTable.Lookup(functionCallName));
-                    symbolAssignment = _symbolTable.Lookup(functionCallName);
-                    Console.WriteLine("symbol: " + symbolAssignment?.Name + " " + symbolAssignment?.Type);
+                    VariableType symbolVariableType = ConvertStringTypeToVariableType(symbol.Type);
+                    decoratedExpressionNode.VariableType = symbolVariableType;
+                    Console.WriteLine("decoratedExpressionType " + decoratedExpressionNode.VariableType);
                 }
+               
             }
-            
-            Console.WriteLine("Here is symbol: " + symbolAssignment?.Name + " " + symbolAssignment?.Type);
-            
-            if (decoratedExpressionNode.VariableType == VariableType.Function)
-            {
-                Console.WriteLine($"Return type of function '{decoratedExpressionNode.Identifier?.Name}' is: " + symbolAssignment?.Type);
-            }
-            
-            if (symbolAssignment != null && symbolAssignment.Type != node.VariableType.ToString())
-            {
-                throw new InvalidOperationException($"Cannot assign function with return type '{symbolAssignment.Type}' to variable of type '{node.VariableType}' at {node.SourceLocation}.");
-            }
-            
+
             _symbolTable.AddVariable(node.Identifier.Name, ConvertVariableTypeToString(decoratedExpressionNode.VariableType), decoratedExpressionNode);
             Console.WriteLine($"Added variable '{node.Identifier.Name}' of type '{ConvertVariableTypeToString(decoratedExpressionNode.VariableType)}' with value '{decoratedExpressionNode}' to symbol table");
         }
