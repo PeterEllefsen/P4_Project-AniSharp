@@ -623,7 +623,7 @@ public static string rgb(int red, int green, int blue)
            public static int bibi(int bb)
            {
             int i = bb;
-            int j = bobo(bb);
+            int K = bobo(bb);
 
             if (bobo(i) < 6){
                i = 6;

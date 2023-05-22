@@ -23,8 +23,7 @@ int function bobo(int bb){
 
 int function bibi(int bb){
     int i = bb;
-    int j = bobo(bb);
-    
+    int K = bobo(bb);
     if(bobo(i) < 6){
       i = 6;
     }
@@ -45,6 +44,7 @@ float function Test2(){
 
 seq car() {
 int i = 1;
+int a = 1;
 if(1 < 2){
     i = 2;
 }

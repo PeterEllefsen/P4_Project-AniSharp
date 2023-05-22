@@ -231,10 +231,6 @@ public class TypeCheckingVisitor : ASTVisitor<IASTNode>
                     throw new InvalidOperationException(
                         $"Type mismatch in assignment. Cannot assign a value of type '{decoratedExpressionNode.VariableType}' to variable '{node.Identifier.Name}' whose type is '{symbolVariableType}' at {node.SourceLocation}.");
                 }
-                if (node.IsDeclaration == true)
-                {
-                    throw new InvalidOperationException($"Variable '{node.Identifier.Name}' is already defined. " + node.SourceLocation);
-                }
             }
         }
         else
@@ -801,6 +797,27 @@ public override IASTNode? Visit(FunctionCallNode node)
         IList<StatementNode> decoratedStatementNodes = new List<StatementNode>();
         foreach (StatementNode statementNode in node.Statements)
         {
+            // Check if the statement is a variable declaration
+            if (statementNode is AssignmentNode assignmentNode)
+            {
+                if(assignmentNode.IsDeclaration)
+                {
+                    Symbol? symbol = _symbolTable.LookupInCurrentScope(assignmentNode.Identifier.Name);
+                    // Check if a variable with the same name already exists in the current scope
+                    if (symbol != null)
+                    {
+                        Console.WriteLine("is nut null" + symbol.Name);
+                        throw new InvalidOperationException($"Variable '{assignmentNode.Identifier.Name}' is already declared in this scope.");
+                    }
+
+                    Console.WriteLine("is null" + assignmentNode.Identifier.Name);
+                    // Add the variable to the symbol table
+                    _symbolTable.AddVariable(assignmentNode.Identifier.Name, ConvertVariableTypeToString(assignmentNode.VariableType));
+                    Console.WriteLine($"Added variable '{assignmentNode.Identifier.Name}' to the symbol table with type: '{ConvertVariableTypeToString(assignmentNode.VariableType)}'.");
+                }
+                
+            }
+
             StatementNode decoratedStatementNode = (StatementNode?)Visit(statementNode) ?? throw new InvalidOperationException("Failed to create a decorated statement node.");
             decoratedStatementNodes.Add(decoratedStatementNode);
         }
@@ -822,6 +839,7 @@ public override IASTNode? Visit(FunctionCallNode node)
 
 
 
+
     public override IASTNode? Visit(SeqBlockNode node)
     {
         Console.WriteLine("Type checking sequence block node");
@@ -831,6 +849,24 @@ public override IASTNode? Visit(FunctionCallNode node)
 
         foreach (var statementNode in node.Statements)
         {
+            if (statementNode is AssignmentNode assignmentNode)
+            {
+                if(assignmentNode.IsDeclaration)
+                {
+                    Symbol? symbol = _symbolTable.LookupInCurrentScope(assignmentNode.Identifier.Name);
+                    // Check if a variable with the same name already exists in the current scope
+                    if (symbol != null)
+                    {
+                        throw new InvalidOperationException($"Variable '{assignmentNode.Identifier.Name}' is already declared in this scope.");
+                    }
+                    
+                    // Add the variable to the symbol table
+                    _symbolTable.AddVariable(assignmentNode.Identifier.Name, ConvertVariableTypeToString(assignmentNode.VariableType));
+                    Console.WriteLine($"Added variable '{assignmentNode.Identifier.Name}' to the symbol table with type: '{ConvertVariableTypeToString(assignmentNode.VariableType)}'.");
+                }
+                
+            }
+            
             StatementNode decoratedStatementNode = (StatementNode?)Visit(statementNode) ?? throw new InvalidOperationException("Failed to create a decorated statement node.");
             decoratedStatements.Add(decoratedStatementNode);
         }
