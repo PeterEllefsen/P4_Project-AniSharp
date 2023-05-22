@@ -134,14 +134,18 @@ public class ScopedSymbolTable
 
     public Symbol? Lookup(string name) // This method looks up a symbol in the scope stack. It will be used in the type checker to check if a variable or function exists.
     {
+        Console.WriteLine("Looking up symbol: " + name);
         foreach (SymbolTable table in _scopeStack) 
         {
             Symbol? symbol = table.Lookup(name); // Try to get the symbol from the symbol table if it exists.
             if (symbol != null)
             {
+                Console.WriteLine("Symbol found: " + symbol.Name + " " + symbol.Type);
                 return symbol; // return the symbol if it exists.
             }
         }
+
+        Console.WriteLine("found nothing matching " + name);
         return null;
     }
     

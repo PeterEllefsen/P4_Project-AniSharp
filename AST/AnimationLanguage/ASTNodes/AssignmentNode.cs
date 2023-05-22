@@ -63,5 +63,6 @@ public enum VariableType //The different types of variables.
     Float,
     String,
     Bool,
+    Function,
     Null,
 }

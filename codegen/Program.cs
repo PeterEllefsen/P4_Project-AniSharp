@@ -55,76 +55,13 @@ public class setup
     public string backgroundColor = "#ffffff";
     }
 public static class Sequences {
-	public static List<List<string>>road(int frameoffset) { 
-		List<List<string>> framebuffer = new List<List<string>>(); 
-         Polygon road = new Polygon{color = Functions.rgb(50,50,50)};
-List<double[]> roadPoints = new List<double[]>
-{
-new double[2] {0, 250},new double[2] {1080, 250},new double[2] {1080, 500},new double[2] {0, 500}
-};
-road.points = roadPoints;
-List<Animation> roadAnimations = new List<Animation>();
-roadAnimations.Add(
-new Animation {endframe = 1000 } );framebuffer = Functions.animate(road, roadAnimations, framebuffer, frameoffset);
-		return framebuffer; 
- 	} 
-	public static List<List<string>>house(int frameoffset) { 
-		List<List<string>> framebuffer = new List<List<string>>(); 
-         Polygon housebase = new Polygon{color = Functions.rgb(150,0,0)};
-List<double[]> housebasePoints = new List<double[]>
-{
-new double[2] {100, 300},new double[2] {300, 300},new double[2] {300, 200},new double[2] {100, 200}
-};
-housebase.points = housebasePoints;
-         Polygon roof = new Polygon{color = Functions.rgb(255,0,0)};
-List<double[]> roofPoints = new List<double[]>
-{
-new double[2] {100, 200},new double[2] {200, 100},new double[2] {300, 200}
-};
-roof.points = roofPoints;
-         Polygon door = new Polygon{color = Functions.rgb(255,255,255)};
-List<double[]> doorPoints = new List<double[]>
-{
-new double[2] {150, 300},new double[2] {200, 300},new double[2] {200, 220},new double[2] {150, 220}
-};
-door.points = doorPoints;
-         Polygon window = new Polygon{color = Functions.rgb(10,0,255)};
-List<double[]> windowPoints = new List<double[]>
-{
-new double[2] {220, 250},new double[2] {280, 250},new double[2] {280, 220},new double[2] {220, 220}
-};
-window.points = windowPoints;
-List<Animation> housebaseAnimations = new List<Animation>();
-housebaseAnimations.Add(
-new Animation {endframe = 1000 } );framebuffer = Functions.animate(housebase, housebaseAnimations, framebuffer, frameoffset);
-List<Animation> roofAnimations = new List<Animation>();
-roofAnimations.Add(
-new Animation {endframe = 1000 } );framebuffer = Functions.animate(roof, roofAnimations, framebuffer, frameoffset);
-List<Animation> doorAnimations = new List<Animation>();
-doorAnimations.Add(
-new Animation {endframe = 1000 } );framebuffer = Functions.animate(door, doorAnimations, framebuffer, frameoffset);
-List<Animation> windowAnimations = new List<Animation>();
-windowAnimations.Add(
-new Animation {endframe = 1000 } );framebuffer = Functions.animate(window, windowAnimations, framebuffer, frameoffset);
-		return framebuffer; 
- 	} 
 	public static List<List<string>>car(int frameoffset) { 
 		List<List<string>> framebuffer = new List<List<string>>(); 
-         Circle wheel1 = new Circle{center = (220, 280),radius = 30};
+         Circle wheel1 = new Circle{center = (Functions.bobo(5), 280),radius = 30};
          Circle wheel2 = new Circle{center = (320, 280),radius = 30};
-         Polygon body = new Polygon{color = Functions.rgb(55,125,155)};
-List<double[]> bodyPoints = new List<double[]>
-{
-new double[2] {200, 250},new double[2] {340, 250},new double[2] {360, 220},new double[2] {330, 190},new double[2] {210, 190},new double[2] {180, 220}
-};
-body.points = bodyPoints;
-List<Animation> bodyAnimations = new List<Animation>();
-bodyAnimations.Add(
-new Animation {endframe = 100 ,y = 100 } );bodyAnimations.Add(
-new Animation {endframe = 500 ,x = 1000 } );framebuffer = Functions.animate(body, bodyAnimations, framebuffer, frameoffset);
 List<Animation> wheel1Animations = new List<Animation>();
 wheel1Animations.Add(
-new Animation {endframe = 100 ,y = 100 } );wheel1Animations.Add(
+new Animation {endframe = Functions.bobo(5) ,y = 100 } );wheel1Animations.Add(
 new Animation {endframe = 500 ,x = 1000 } );framebuffer = Functions.animate(wheel1, wheel1Animations, framebuffer, frameoffset);
 List<Animation> wheel2Animations = new List<Animation>();
 wheel2Animations.Add(
@@ -676,6 +613,33 @@ public static string rgb(int red, int green, int blue)
 
             return (r, g, b);
         }
+           public static int bobo(int bb)
+           {
+            int i = bb;
+
+            return 1;
+           }
+
+           public static int bibi(int bb)
+           {
+            int i = bb;
+            int j = bobo(bb);
+
+            if (bobo(i) < 6){
+               i = 6;
+            }
+
+            return 2;
+           }
+
+           public static float Test2()
+           {
+            int i = bobo(4);
+            i = bibi(3);
+
+            return i;
+           }
+
    }
 public static class Program
 {
@@ -700,9 +664,7 @@ setup.sceneWidth =
 1080;setup.sceneHeight =
 720;setup.framerate =
 24;setup.backgroundColor =
-Functions.rgb(255, 255, 255);	 	 	framebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.house(0));
-	 	 	framebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.road(0));
-	 	 	framebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.car(0));
+Functions.rgb(255, 255, 255);	 	 	framebuffer = Functions.mergeFramebuffer(framebuffer, Sequences.car(0));
 Functions.PrintFramebuffer(framebuffer, setup);
    }
 }
