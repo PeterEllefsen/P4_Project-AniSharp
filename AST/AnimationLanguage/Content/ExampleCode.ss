@@ -23,9 +23,9 @@ int function bobo(int bb){
 
 int function bibi(int bb){
     int i = bb;
-    int j = bobo(i);
+    int j = bobo(bb);
     
-    if(bobo(3) < 6){
+    if(bobo(i) < 6){
       i = 6;
     }
     

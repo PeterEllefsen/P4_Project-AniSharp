@@ -34,7 +34,7 @@ namespace AnimationLanguage
 
             CodeGenerationVisitor codeGenerationVisitor = new CodeGenerationVisitor();
             codeGenerationVisitor.Visit((ProgramNode)astRoot);
-            //PrintAST(astRoot);
+            PrintAST(astRoot);
         }
 
         public static void PrintAST(IASTNode? node, int indentation = 0)

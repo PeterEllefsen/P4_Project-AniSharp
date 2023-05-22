@@ -623,9 +623,9 @@ public static string rgb(int red, int green, int blue)
            public static int bibi(int bb)
            {
             int i = bb;
-            int j = bobo();
+            int j = bobo(bb);
 
-            if (bobo(3) < 6){
+            if (bobo(i) < 6){
                i = 6;
             }
 
