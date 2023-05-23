@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Channels;
 using System.Xml;
 using AnimationLanguage.Visitor;
@@ -13,7 +14,7 @@ using Antlr4.Runtime;
 
 namespace Tests
 {
-    public class IdentifierNodeTests
+    public class ASTNodes
     {
         [Fact]
         public void IdentifierNode_CreateNode_CheckProperties()
@@ -60,10 +61,7 @@ namespace Tests
             // Assert
             Assert.Equal($"myIdentifier", identifierNodeString);
         }
-    }
-
-    public class SequenceNodeTests
-    {
+        
         [Fact]
         public void SequenceNode_CreateNode_CheckProperties()
         {
@@ -112,6 +110,7 @@ namespace Tests
             Assert.Equal(sourceLocation, sequenceNode.SourceLocation);
         }
     }
+
 
     public class AnimationLanguageVisitorTest
     {
@@ -241,9 +240,42 @@ namespace Tests
     public class CodeGenerationTests
     {
         [Theory]
-        [InlineData("int x = 2", "int x = 2;")]
-        public void Assignment_test(string input, string expected)
+        [InlineData("sceneWidth = 2000", "setup.sceneWidth =2000;")]
+        [InlineData("framerate = 60", "setup.framerate =60;")]
+        [InlineData("sceneHeight = 1000", "setup.sceneHeight =1000;")]
+        public void KeyValuePair_Test(string input, string expected)
         {
+            Helper helper = new Helper();
+            
+            ICharStream charStream = CharStreams.fromString(input);
+            AnimationLanguageRulesLexer lexer = new AnimationLanguageRulesLexer(charStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            AnimationLanguageRulesParser parser = new AnimationLanguageRulesParser(tokens);
+            ParserRuleContext parseTreeRoot = parser.keyValuePair();
+            AnimationLanguageVisitor visitor = new AnimationLanguageVisitor();
+            IASTNode? astRoot = visitor.Visit(parseTreeRoot);
+
+            //Instantiate the ScopedSymbolTable.
+            ScopedSymbolTable scopedSymbolTable = new ScopedSymbolTable();
+            //Instantiate the TypeCheckingVisitor to perform type checking on the AST.
+            TypeCheckingVisitor typeCheckingVisitor = new TypeCheckingVisitor(scopedSymbolTable);
+            IASTNode? decoratedAstRoot = typeCheckingVisitor.Visit((KeyValuePairNode)astRoot);
+            
+            String output = helper.Visit((KeyValuePairNode) astRoot);
+            
+            
+            Assert.Equal(expected, output);
+        }
+        
+        [Theory]
+        [InlineData("int x = 2", "int x = 2;")]
+        [InlineData("string y = \"Hello world\"", "string y = \"Hello world\";")]
+        [InlineData("bool b = true", "bool b = true;")]
+        [InlineData("x = 2", "x = 2;")]
+        public void Assignment_Test(string input, string expected)
+        {
+            Helper helper = new Helper();
+            
             ICharStream charStream = CharStreams.fromString(input);
             AnimationLanguageRulesLexer lexer = new AnimationLanguageRulesLexer(charStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -257,14 +289,20 @@ namespace Tests
             //Instantiate the TypeCheckingVisitor to perform type checking on the AST.
             TypeCheckingVisitor typeCheckingVisitor = new TypeCheckingVisitor(scopedSymbolTable);
             IASTNode? decoratedAstRoot = typeCheckingVisitor.Visit((AssignmentNode)astRoot);
-
-
-            CodeGenerationVisitor codeGenerationVisitor = new CodeGenerationVisitor();
-            codeGenerationVisitor.Visit((AssignmentNode)astRoot);
             
-            string path = "../codegen/Program.cs";
-            string readText = File.ReadAllText(path);
-            Assert.Equal(expected, readText);
+            String output = helper.Visit((AssignmentNode) astRoot);
+            
+            
+            Assert.Equal(expected, output);
+        }
+        
+    }
+
+    public class IntegrationTest
+    {
+        public void Assignment_Integration_Test()
+        {
+            
         }
     }
 }

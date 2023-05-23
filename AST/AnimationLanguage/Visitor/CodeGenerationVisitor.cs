@@ -8,7 +8,7 @@ namespace AnimationLanguage.Visitor;
 
 public class CodeGenerationVisitor : ASTVisitor<IASTNode>
 {
-    private void CreateFilesForCompilation()
+    public void CreateFilesForCompilation()
     {
         //if file exists delete it
         if (File.Exists("../../codegen/Program.cs")) File.Delete("../../codegen/Program.cs");
@@ -779,7 +779,7 @@ public class group : Dictionary<string, object>
     {
         foreach (var Child in node.GetChildren())
         {
-           Console.WriteLine(Child);
+           
 
            if (Child is IdentifierNode identifierNode)
            {
