@@ -18,3 +18,8 @@
 7. If the last compilation was successful, that means you have a file in the same directory called "output.html". 
 
 8. Open that file in your browser and press "play" to see your animation.
+
+
+## Extra things
+
+- If you want to look at the AST, then uncomment the "printAST" method inside the Program.cs file in the actual compiler
