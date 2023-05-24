@@ -17,7 +17,7 @@ setup [
 
 
 int function bobo(int bb){
-    int i = bb;
+    int x = 2;
     return 1;
 }
 

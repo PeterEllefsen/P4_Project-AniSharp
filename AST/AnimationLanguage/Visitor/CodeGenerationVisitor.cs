@@ -1053,11 +1053,6 @@ public class group : Dictionary<string, object>
             {
                 Visit(returnNode);
             }
-
-            if (Child is BlockNode blockNode)
-            {
-                Visit(blockNode);
-            }
         }
 
         return node;
@@ -1355,10 +1350,6 @@ public class group : Dictionary<string, object>
             }
         }
 
-        
-        
-       
-        
         return node;
     }
 

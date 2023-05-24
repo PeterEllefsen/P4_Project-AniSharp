@@ -322,8 +322,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
         OperatorNode operatorNode = (OperatorNode)VisitOperator(context.@operator());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
-
-        // Add this line to determine the variable type of the binary expression:
+        
         VariableType variableType = DetermineVariableType(leftOperand, operatorNode, rightOperand);
         
         return new ExpressionNode(
