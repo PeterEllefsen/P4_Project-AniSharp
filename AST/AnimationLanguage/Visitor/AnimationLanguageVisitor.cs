@@ -133,8 +133,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         ExpressionNode expression = (ExpressionNode)VisitExpression(context.expression());
         SourceLocation sourceLocation = GetSourceLocation(context.Start);
 
-        Console.WriteLine($"Assignment: {identifierNode.Name} {assignmentOperator} {expression} {sourceLocation}");
-
         // Determine the VariableType for the assignment
         VariableType variableType = VariableType.Null;
         bool isDeclaration = false;
@@ -423,7 +421,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
     //This method is called when a function call is encountered in the code.
     public override IASTNode VisitFuncCall(AnimationLanguageRulesParser.FuncCallContext context)
     {
-        Console.WriteLine("DETTE ER ET decl: " + context.GetText());
         IdentifierNode identifier = new IdentifierNode(context.IDENTIFIER().GetText(), GetSourceLocation(context.IDENTIFIER().Symbol)); //Create a new IdentifierNode with the name of the function and the SourceLocation of the IDENTIFIER terminal.
 
         List<IASTNode> arguments = new List<IASTNode>(); //Create a new list of IASTNodes to store the arguments of the function call.
@@ -433,7 +430,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
             foreach (var child in funcArgsContext.children)
             {
-                Console.WriteLine("DETTE ER ET CHILD: " + child.GetText());
                 if (child.GetType() == typeof(AnimationLanguageRulesParser.IntegerExpressionContext))
                 {
                     arguments.Add(VisitIntegerExpression((AnimationLanguageRulesParser.IntegerExpressionContext)child));

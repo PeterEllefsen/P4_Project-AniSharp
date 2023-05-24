@@ -671,8 +671,6 @@ public class group : Dictionary<string, object>
 
         foreach (var child in node.GetChildren())
         {
-            //Console.WriteLine(child.GetType());
-            
             if (child is SequenceNode sequenceNode)
             {
                 codeBuilder("a", "\tpublic static List<List<string>>" + child.ToString() + " { \n");
@@ -743,9 +741,6 @@ public class group : Dictionary<string, object>
         codeBuilder("w", "   }");
         codeBuilder("w", "}");
 
-
-        //Console.WriteLine(Child.GetType());
-
         return node;
     }
 
@@ -779,9 +774,7 @@ public class group : Dictionary<string, object>
     {
         foreach (var Child in node.GetChildren())
         {
-           Console.WriteLine(Child);
-
-           if (Child is IdentifierNode identifierNode)
+            if (Child is IdentifierNode identifierNode)
            {
                codeBuilder("w", $"setup.{identifierNode.ToString()} =");
            }
@@ -1019,7 +1012,6 @@ public class group : Dictionary<string, object>
 
     public override IASTNode? Visit(ForLoopNode node)
     {
-        //Console.WriteLine(node.ToString());
         codeBuilder("a", "\n\n");
         codeBuilder("a", "            for(");
 
@@ -1054,7 +1046,6 @@ public class group : Dictionary<string, object>
         {
             if (Child is StatementNode statementNode)
             {
-                //Console.WriteLine(Child.GetType());
                 Visit(statementNode);
             }
 
@@ -1124,8 +1115,6 @@ public class group : Dictionary<string, object>
                                     }
 
                                     codeBuilder("a", ")");
-
-                                    //Console.WriteLine(functionCallNode);
                                 }
 
                                 if (arg.Value is TupleNode tupleNode)
@@ -1153,10 +1142,8 @@ public class group : Dictionary<string, object>
 
                                         count++;
                                     }
-                                    Console.WriteLine(pointsValue);
                                     codeBuilder("a", $"{arg.Key} = ({pointsValue})");
                                     parameterCount++;
-                                    //Console.WriteLine(tupleNode);
                                 }
 
                                 if (arg.Value is IntegerLiteralNode integerLiteralNode)
@@ -1168,7 +1155,6 @@ public class group : Dictionary<string, object>
 
                                     codeBuilder("a", $"{arg.Key} = {integerLiteralNode}");
                                     parameterCount++;
-                                    //Console.WriteLine(integerLiteralNode);
                                 }
 
                                 if (arg.Value is FloatLiteralNode floatLiteralNode)
@@ -1181,7 +1167,6 @@ public class group : Dictionary<string, object>
 
                                     codeBuilder("a", $"{arg.Key} = {floatLiteralNode}");
                                     parameterCount++;
-                                    //Console.WriteLine(floatLiteralNode);
                                 }
                             }
                         }
@@ -1215,8 +1200,6 @@ public class group : Dictionary<string, object>
                                     }
 
                                     codeBuilder("a", ")");
-
-                                    //Console.WriteLine(functionCallNode);
                                 }
 
                                 if (arg.Value is TupleNode tupleNode)
@@ -1230,7 +1213,6 @@ public class group : Dictionary<string, object>
 
                                     if (Regex.IsMatch(arg.Key.ToString(), @"point\d+"))
                                     {
-                                        //Console.WriteLine(arg.Value);
                                         if (points != "")
                                         {
                                             points += ",";
@@ -1253,8 +1235,6 @@ public class group : Dictionary<string, object>
 
                                             count++;
                                         }
-                                        Console.WriteLine(pointsValue);
-                                        
                                         points += $"new double[2] {{{pointsValue}}}";
                                     }
                                     else
@@ -1263,7 +1243,6 @@ public class group : Dictionary<string, object>
                                     }
                                     
                                     //parameterCount++;
-                                    //Console.WriteLine(tupleNode);
                                 }
 
                                 if (arg.Value is IntegerLiteralNode integerLiteralNode)
@@ -1275,7 +1254,6 @@ public class group : Dictionary<string, object>
 
                                     codeBuilder("a", $"{arg.Key} = {integerLiteralNode}");
                                     parameterCount++;
-                                    //Console.WriteLine(integerLiteralNode);
                                 }
 
                                 if (arg.Value is FloatLiteralNode floatLiteralNode)
@@ -1288,7 +1266,6 @@ public class group : Dictionary<string, object>
 
                                     codeBuilder("a", $"{arg.Key} = {floatLiteralNode}");
                                     parameterCount++;
-                                    //Console.WriteLine(floatLiteralNode);
                                 }
                             }
                             
@@ -1324,7 +1301,6 @@ public class group : Dictionary<string, object>
                 bool isItem1Initialized;
                 if (initializationStatusDict.TryGetValue($"{child.ToString()}", out isItem1Initialized))
                 {
-                   // Console.WriteLine($"{child.ToString()} is already initialized");
                     codeBuilder("w", $"{child.ToString()}Animations.Clear();");
                 }
                 else
@@ -1363,8 +1339,6 @@ public class group : Dictionary<string, object>
 
                 foreach (var expressionNode in identifierGroupingNode.GroupingElements.Expressions)
                 {
-                    //Console.WriteLine(expressionNode);
-
                     codeBuilder("w",
                         $"{identifierGroupingNode.Identifier}.Add(\"{expressionNode}\", {expressionNode});");
                 }
@@ -1517,7 +1491,6 @@ public class group : Dictionary<string, object>
     {
         foreach (var child in node.GetChildren())
         {
-            //Console.WriteLine(child.GetType());
             if (child is SeqBlockNode seqBlockNode)
             {
                 Visit(seqBlockNode);
@@ -1568,13 +1541,9 @@ public class group : Dictionary<string, object>
     public override IASTNode? Visit(TransitionNode node)
     {
         List<string> arguements = new List<string>();
-        
-        //Console.WriteLine(node);
-        
+
         foreach (var argument in node.GetChildren())
         {
-            //Console.WriteLine(argument);
-            
             if (argument is ArgumentNode argumentNode)
             {
                 if (argumentNode.Value is FunctionCallNode)
