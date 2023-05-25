@@ -157,12 +157,6 @@ namespace Tests
             // Assert
             Assert.Equal(expected, astRoot.ToString());
         }
-        //[Theory]
-        
-        public void Sequence_test(string input, string expected)
-        {
-            
-        }
     }
 
     public class TypeCheckingVisitorTests
@@ -190,8 +184,14 @@ namespace Tests
             
         }
         [Theory]
-        [InlineData("bool x = \"Hello World\"")]
-        public void Assignment_TypeMismatch_Bool_And_String(string input)
+        [InlineData("bool x = \"Hello World\"", "Type mismatch in assignment. Cannot assign a value of type 'String' to variable of type 'Bool' at Line: 1, Column: 0.")]
+        [InlineData("int x = true", "Type mismatch in assignment. Cannot assign a value of type 'Bool' to variable of type 'Int' at Line: 1, Column: 0.")]
+        [InlineData("float x = true", "Type mismatch in assignment. Cannot assign a value of type 'Bool' to variable of type 'Float' at Line: 1, Column: 0.")]
+        [InlineData("string x = true", "Type mismatch in assignment. Cannot assign a value of type 'Bool' to variable of type 'String' at Line: 1, Column: 0.")]
+        [InlineData("int x = \"Hello World\"", "Type mismatch in assignment. Cannot assign a value of type 'String' to variable of type 'Int' at Line: 1, Column: 0.")]
+        [InlineData("string x = 2", "Type mismatch in assignment. Cannot assign a value of type 'Int' to variable of type 'String' at Line: 1, Column: 0.")]
+        [InlineData("float x = \"Hello World\"", "Type mismatch in assignment. Cannot assign a value of type 'String' to variable of type 'Float' at Line: 1, Column: 0.")]
+        public void Assignment_TypeMismatch(string input, string expected)
         {
             ICharStream charStream = CharStreams.fromString(input);
             AnimationLanguageRulesLexer lexer = new AnimationLanguageRulesLexer(charStream);
@@ -208,7 +208,7 @@ namespace Tests
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => typeCheckingVisitor.Visit((AssignmentNode)astRoot));
             
-            Assert.Equal($"Type mismatch in assignment. Cannot assign a value of type 'String' to variable of type 'Bool' at Line: 1, Column: 0.", exception.Message);
+            Assert.Equal(expected, exception.Message);
             
         }
         
@@ -296,13 +296,5 @@ namespace Tests
             Assert.Equal(expected, output);
         }
         
-    }
-
-    public class IntegrationTest
-    {
-        public void Assignment_Integration_Test()
-        {
-            
-        }
     }
 }
