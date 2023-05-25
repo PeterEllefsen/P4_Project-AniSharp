@@ -7,7 +7,95 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a94604ae-eefc-44a6-9a3e-f3a3dfb31d13" name="Changes" comment="" />
+    <list default="true" id="a94604ae-eefc-44a6-9a3e-f3a3dfb31d13" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/.idea.P4-Project.dir/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/.idea.P4-Project.dir/.idea/projectSettingsUpdater.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/.idea.P4-Project.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/.idea.P4-Project.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AST/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AST/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AST/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AST/.idea/projectSettingsUpdater.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AST/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AST/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AST/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AST/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AST.sln" beforeDir="false" afterPath="$PROJECT_DIR$/AST.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AST.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/AST.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTCommon/IASTNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTCommon/IASTNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTCommon/NodeType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTCommon/NodeType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTCommon/SourceLocation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTCommon/SourceLocation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/AnimationNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/AnimationNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ArgumentNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ArgumentNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/AssignmentNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/AssignmentNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/BlockNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/BlockNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/CommandNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/CommandNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ConditionNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ConditionNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ElseIfNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ElseIfNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ElseNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ElseNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ExpressionNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ExpressionNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ForLoopNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ForLoopNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/FrameDefNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/FrameDefNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/FunctionCallNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/FunctionCallNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/FunctionDeclarationNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/FunctionDeclarationNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/GroupingElementsNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/GroupingElementsNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/IdentifierGroupingNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/IdentifierGroupingNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/IfStatement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/IfStatement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/IndentifierNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/IndentifierNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/KeyValuePairNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/KeyValuePairNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/LiteralNodes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/LiteralNodes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/NodeList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/NodeList.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/OperatorNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/OperatorNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ParameterNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ParameterNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ProgramNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ProgramNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/PrototypeNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/PrototypeNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ReturnNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ReturnNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SeqBlockNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SeqBlockNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SeqBlockPartNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SeqBlockPartNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SequenceCallNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SequenceCallNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SequenceNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SequenceNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SetupNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/SetupNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ShapeInitNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ShapeInitNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ShapeNodes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/ShapeNodes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/StatementNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/StatementNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/TimelineBlockNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/TimelineBlockNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/TransitionNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/TransitionNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/TupleNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/TupleNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/TypeNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/TypeNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/UnaryOperationNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/UnaryOperationNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/WhileLoopNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/ASTNodes/WhileLoopNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/AnimationLanguage.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/AnimationLanguage.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/AnimationLanguageRules.g4" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/AnimationLanguageRules.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/ExampleCode.ss" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/ExampleCode.ss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRules.interp" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRules.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRules.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRules.tokens" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesBaseListener.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesBaseListener.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesBaseVisitor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesBaseVisitor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesLexer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesLexer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesLexer.interp" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesLexer.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesLexer.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesLexer.tokens" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesListener.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesListener.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesVisitor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Content/gen/AnimationLanguageRulesVisitor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Semantics/SymbolTable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Semantics/SymbolTable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Visitor/ASTVisitor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Visitor/ASTVisitor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Visitor/AnimationLanguageVisitor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Visitor/AnimationLanguageVisitor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Visitor/CodeGenerationVisitor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Visitor/CodeGenerationVisitor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnimationLanguage/Visitor/TypeCheckingVisitor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AnimationLanguage/Visitor/TypeCheckingVisitor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/../LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/codegen.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/codegen.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.GlobalUsings.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.GlobalUsings.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.genruntimeconfig.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/Debug/net7.0/codegen.genruntimeconfig.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/codegen.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/codegen.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/codegen.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/codegen.csproj.nuget.g.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/codegen.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/codegen.csproj.nuget.g.targets" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../codegen/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../codegen/obj/project.nuget.cache" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,7 +166,10 @@
       <workItem from="1684762499043" duration="3808000" />
       <workItem from="1684790407770" duration="1134000" />
       <workItem from="1684923809025" duration="658000" />
-      <workItem from="1684929126497" duration="2202000" />
+      <workItem from="1684929126497" duration="3028000" />
+      <workItem from="1684941311170" duration="1166000" />
+      <workItem from="1684950112409" duration="5462000" />
+      <workItem from="1685002352794" duration="2388000" />
     </task>
     <servers />
   </component>

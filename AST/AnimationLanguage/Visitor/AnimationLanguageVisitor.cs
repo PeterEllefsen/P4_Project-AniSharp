@@ -315,6 +315,7 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
 
         if (rightExpressionContext.Parent is AnimationLanguageRulesParser.ParenthesizedExpressionContext parenthesizedExpressionContext)
         {
+            Console.WriteLine("works: " + parenthesizedExpressionContext.GetText());
             rightExpressionContext = parenthesizedExpressionContext.expression();
         }
 
@@ -335,23 +336,6 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
         );
     }
 
-    
-    //This method determines the variable type of a binary expression.
-    private VariableType DetermineVariableType(IASTNode leftOperand, OperatorNode operatorNode, IASTNode rightOperand)
-    {
-        if (leftOperand is ExpressionNode leftExpression && rightOperand is ExpressionNode rightExpression)
-        {
-            if (leftExpression.VariableType == rightExpression.VariableType)
-            {
-                return leftExpression.VariableType;
-            }
-        }
-
-        // If the types do not match or cannot be determined, return Null.
-        return VariableType.Null;
-    }
-
-    
 
     public override IASTNode VisitOperator(AnimationLanguageRulesParser.OperatorContext operatorContext)
     {
@@ -1281,6 +1265,22 @@ public class AnimationLanguageVisitor : AnimationLanguageRulesBaseVisitor<IASTNo
             TypeNode.TypeKind.Bool => VariableType.Bool,
             _ => VariableType.Null
         };
+    }
+    
+    
+    //This method determines the variable type of a binary expression.
+    private VariableType DetermineVariableType(IASTNode leftOperand, OperatorNode operatorNode, IASTNode rightOperand)
+    {
+        if (leftOperand is ExpressionNode leftExpression && rightOperand is ExpressionNode rightExpression)
+        {
+            if (leftExpression.VariableType == rightExpression.VariableType)
+            {
+                return leftExpression.VariableType;
+            }
+        }
+
+        // If the types do not match or cannot be determined, return Null.
+        return VariableType.Null;
     }
 
 }

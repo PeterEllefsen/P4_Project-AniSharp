@@ -1,4 +1,4 @@
-﻿﻿using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Channels;
 using System.Xml;
@@ -6,7 +6,6 @@ using AnimationLanguage.ASTNodes;
 
 namespace AnimationLanguage.Visitor;
 using ASTCommon;
-
 
 public class TypeCheckingVisitor : ASTVisitor<IASTNode>
 {
