@@ -1,6 +1,6 @@
 prototypes {
     group function ColorBasedOnNumber(int number);
-    string Rgb(int r, int g, int b);
+    string function Rgb(int r, int g, int b);
 }
 
 
