@@ -534,7 +534,7 @@ public override IASTNode? Visit(FunctionCallNode node)
         IList<ParameterNode> parameters = node.Parameters;
 
         // Check if the function is already in the symbol table.
-        Symbol? existingSymbol = _symbolTable.Lookup(functionName); //Check if the prototype has already been defined
+        Symbol? existingSymbol = _symbolTable.Lookup("Prototype: " + functionName); //Check if the prototype has already been defined
 
         if (existingSymbol != null)
         {
